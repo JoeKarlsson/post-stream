@@ -14,7 +14,7 @@ var isInDebugMode = process.argv.some(arg =>
 if (isInDebugMode) {
   relativePath = '../template';
 }
-var srcPath = path.resolve(__dirname, relativePath, 'src');
+var srcPath = path.resolve(__dirname, relativePath, 'app');
 var nodeModulesPath = path.join(__dirname, '..', 'node_modules');
 var indexHtmlPath = path.resolve(__dirname, relativePath, 'index.html');
 var faviconPath = path.resolve(__dirname, relativePath, 'favicon.ico');
