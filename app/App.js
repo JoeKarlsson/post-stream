@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import Feed from './Feed';
+import NewsStream from './NewsStream';
 
-const feedData = [
+const streamData = [
   {
     "id": 1,
     "body": "I invented the double-click.",
@@ -41,11 +41,17 @@ const feedData = [
 ];
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.streamData = streamData;
+  }
+
   render() {
     return (
       <div className="App">
         <h1>Post Stream</h1>
-        <Feed />
+        <NewsStream data={this.streamData} />
       </div>
     );
   }

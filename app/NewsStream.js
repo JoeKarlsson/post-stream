@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 
-class Feed extends Component {
+class NewsStream extends Component {
   render() {
+    console.log(this.props.data);
     return (
         <div className="App">
           <h1>Feed</h1>
@@ -10,4 +11,4 @@ class Feed extends Component {
   }
 }
 
-export default Feed;
+export default NewsStream;
