@@ -44,14 +44,14 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.streamData = streamData;
+    this.state = { streamData };
   }
 
   render() {
     return (
       <div className="App">
         <h1>Post Stream</h1>
-        <NewsStream data={this.streamData} />
+        <NewsStream data={this.state.streamData} />
       </div>
     );
   }
