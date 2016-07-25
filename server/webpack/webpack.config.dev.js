@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -14,6 +15,9 @@ module.exports = {
     path: path.resolve(__dirname, '../dist/'),
     filename: '[name].js',
     publicPath: '/',
+  },
+  resolve: {
+    extensions: ['', '.js'],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -29,15 +33,15 @@ module.exports = {
     }),
   ],
   module: {
-    // preLoaders: [
-    //   {
-    //     test: /(\.js$|\.jsx$)/,
-    //     loader: 'eslint',
-    //     exclude: /node_modules/,
-    //   },
-    // ],
+    preLoaders: [
+      {
+        test: /\.js$/,
+        loader: 'eslint',
+        exclude: 'node_modules',
+      }
+    ],
     loaders: [{
-      test: /(\.js$|\.jsx$)/,
+      test: /(\.js$)/,
       exclude: /node_modules/,
       loader: 'babel',
       query: {
@@ -46,6 +50,12 @@ module.exports = {
     }, {
       test: /\.json?$/,
       loader: 'json',
+    }, {
+      test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
+      loader: 'file',
+    }, {
+      test: /\.(mp4|webm)$/,
+      loader: 'url?limit=10000'
     }, {
       test: /(\.scss$|\.css$)/,
       loaders: [
@@ -57,8 +67,10 @@ module.exports = {
     }],
   },
   eslint: {
-    configFile: '.eslintrc.js',
-    failOnWarning: false,
-    failOnError: false,
+    configFile: path.join(__dirname, 'eslint.js'),
+    useEslintrc: false
+  },
+  postcss: function() {
+    return [autoprefixer];
   },
 };
