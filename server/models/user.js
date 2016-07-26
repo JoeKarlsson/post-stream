@@ -8,11 +8,17 @@ module.exports = function(sequelize, DataTypes) {
     },
     first_name: DataTypes.STRING,
     last_name: DataTypes.STRING,
-    bio: DataTypes.TEXT
+    bio: DataTypes.TEXT,
+    following: {
+      type : DataTypes.ARRAY(DataTypes.INTEGER),
+      defaultValue : []
+    }
   }, {
     classMethods: {
-      associate: function(models) {
-        // associations can be defined here
+      associate : function(models) {
+        User.hasMany(models.Post, {
+          onDelete : 'cascade'
+        })
       }
     }
   });

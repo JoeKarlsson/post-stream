@@ -12,18 +12,21 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const favicon = require('express-favicon');
 const Promise = require('bluebird');
+
 const db = require('./models');
-const users = require('/route/users');
-const feed = require('/route/feed');
+const user = require('./routes/user');
+const post = require('./routes/post');
+
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
-
-var bar;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(favicon(`${__dirname}/favicon.ico`));
+
+app.use('/user', user);
+app.use('/post', post);
 
 Promise.onPossiblyUnhandledRejection((err) => {
   throw new Error(err);
