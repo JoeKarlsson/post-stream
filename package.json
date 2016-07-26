@@ -66,8 +66,11 @@
     "express-favicon": "^1.0.1",
     "koa": "^1.2.1",
     "method-override": "^2.3.6",
+    "pg": "^6.0.3",
+    "pg-hstore": "^2.3.2",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "sequelize": "^3.23.6",
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.1"

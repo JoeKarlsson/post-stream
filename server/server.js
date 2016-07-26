@@ -12,6 +12,9 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const favicon = require('express-favicon');
 const Promise = require('bluebird');
+const db = require('./models');
+const users = require('/route/users');
+const feed = require('/route/feed');
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
 
@@ -66,6 +69,7 @@ const onStart = (err) => {
     `==> 🌎 Listening on port ${port}. ` +
     `Open up http://localhost:${port}/ in your browser.`
   );
+  db.sequelize.sync();
 };
 
 if (!module.parent) {
