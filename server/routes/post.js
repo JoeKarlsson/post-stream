@@ -5,6 +5,7 @@ const router = express.Router();
 const db = require('./../models');
 const User = db.User;
 const Post = db.Post;
+const Comment = db.Comment;
 
 const exists = (req) => {
   if (typeof parseInt(req.params.id) === 'number') {
@@ -112,4 +113,63 @@ router.route('/new')
     })
   })
 
+//// Commments on a Post
+
+router.route('/:id/comments')
+  // GETs the comments on a post
+  .get((req, res) => {
+    Comment.findAll({
+      where: {
+        PostId : req.params.id
+      }
+    })
+    .then((comments) => {
+      res.json(comments);
+    })
+    .catch((err) => {
+      res.json({ error: err });
+    })
+  })
+
+router.route('/:PostId/comments/:CommentId/new')
+  // create a new comment on a post
+  // // TODO - updated user when AUTH is working
+  .post((req, res) => {
+    Comment.create({
+      PostId: req.params.PostId,
+      UserId: '3',
+      CommentID: req.params.CommentId
+    })
+    .then((comment) => {
+      res.json(comment);
+    })
+    .catch((err) => {
+      res.json({ error: err });
+    })
+  })
+
+router.route('/:PostId/comments/:CommentId/edit')
+  // find comment by id and update the comment
+  .put((req, res) => {
+    if(exists) {
+      Comment.findById(req.params.CommentId)
+      .then((foundComment) => {
+        // then update
+        foundComment.update({
+          body : req.body.body,
+        })
+        .then((updatedComment) => {
+          res.json(updatedComment);
+        })
+        .catch((err) => {
+          res.json({ error: err });
+        })
+      })
+      .catch((err) => {
+        res.json({ error: err });
+      })
+    } else {
+      res.json({ success: false });
+    }
+  })
 module.exports = router;

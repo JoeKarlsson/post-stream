@@ -88,6 +88,80 @@ module.exports = {
       updatedAt : date,
       UserId: 3
     }
+    ]),
+    queryInterface.bulkInsert('Comments', [
+    {
+      body: 'JohnDoe131 post 1',
+      PostId : 1,
+      CommentId : 1,
+      UserId : 1,
+      createdAt : date,
+      updatedAt : date
+    },
+    {
+      body: 'JohnDoe131 post 2',
+      PostId : 2,
+      CommentId : 1,
+      UserId : 1,
+      createdAt : date,
+      updatedAt : date
+    },
+    {
+      body: 'JohnDoe131 post 3',
+      PostId : 3,
+      CommentId : 1,
+      UserId : 1,
+      createdAt : date,
+      updatedAt : date
+    },
+    {
+      body: 'JaneDoe343 post 1',
+      PostId : 1,
+      CommentId : 2,
+      UserId : 2,
+      createdAt : date,
+      updatedAt : date
+    },
+    {
+      body: 'JaneDoe343 post 2',
+      PostId : 2,
+      CommentId : 2,
+      UserId : 2,
+      createdAt : date,
+      updatedAt : date
+    },
+    {
+      body: 'JaneDoe343 post 3',
+      PostId : 3,
+      CommentId : 3,
+      UserId : 2,
+      createdAt : date,
+      updatedAt : date
+    },
+    {
+      body: 'JoeJoeBinks131 post 1',
+      PostId : 1,
+      CommentId : 1,
+      UserId : 3,
+      createdAt : date,
+      updatedAt : date
+    },
+    {
+      body: 'JoeJoeBinks131 post 2',
+      PostId : 2,
+      CommentId : 2,
+      UserId : 3,
+      createdAt : date,
+      updatedAt : date
+    },
+    {
+      body: 'JoeJoeBinks131 post 3',
+      PostId : 3,
+      CommentId : 3,
+      UserId : 3,
+      createdAt : date,
+      updatedAt : date
+    }
     ])
   },
 
