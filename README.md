@@ -24,6 +24,18 @@ Next, inside the project, you need to install the project's various NPM dependen
 
     npm install
 
+Setup up Postgres, make a new data base and add your DB info to `config.json`
+
+    "username": "root",
+    "password": null,
+    "database": "database_development",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+
+Run the seed scripts to enter the default data in the DB.
+
+    sequelize db:seed:all
+
 And you should now be ready to spin up a development build of your new project:
 
     npm start

@@ -6,12 +6,22 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false,
       unique : true
     },
-    first_name: DataTypes.STRING,
-    last_name: DataTypes.STRING,
-    bio: DataTypes.TEXT,
+    first_name: {
+      type : DataTypes.STRING,
+      notEmpty: true
+    },
+    last_name: {
+      type : DataTypes.STRING,
+      notEmpty: true
+    },
+    bio: {
+      type : DataTypes.STRING,
+      notEmpty: true
+    },
     following: {
       type : DataTypes.ARRAY(DataTypes.INTEGER),
-      defaultValue : []
+      defaultValue : [],
+      isArray: true
     }
   }, {
     classMethods: {

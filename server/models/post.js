@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
   var Post = sequelize.define('Post', {
     body: {
       type : DataTypes.STRING,
-      allowNull : false
+      allowNull : false,
+      notEmpty: true
     }
   }, {
     classMethods: {

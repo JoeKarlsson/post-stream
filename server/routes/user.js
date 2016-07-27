@@ -144,22 +144,21 @@ router.route('/:id/following')
     })
     .then((user) => {
       const following = user[0].dataValues.following;
-      let followingPosts = [];
-      // async issues - I will need to figure out how to do this query
-      for (var i = 0; i < following.length; i++) {
-        Post.findAll({
-          where : {
-            UserId : req.params.id
+
+      Post.findAll({
+        where : {
+          UserId : {
+            $any: following
           }
-        })
-        .then((userPosts) => {
-          followingPosts.push(userPosts);
-        })
-        .catch((err) => {
-          res.json({ error: err });
-        })
-      }
-      res.json(followingPosts);
+        }
+      })
+      .then((userPosts) => {
+        res.json(userPosts);
+      })
+      .catch((err) => {
+        res.json({ error: err });
+      })
+
     })
     .catch((err) => {
       res.json({ error: err });
