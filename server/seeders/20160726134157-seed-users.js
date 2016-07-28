@@ -7,6 +7,7 @@ module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Users', [{
       username: 'JohnDoe131',
+      password: 'p455word',
       first_name: 'John',
       last_name: 'Doe',
       bio: 'I am a new user to this site.',
@@ -16,6 +17,7 @@ module.exports = {
     },
     {
       username: 'JaneDoe343',
+      password: 'p455word',
       first_name: 'Jane',
       last_name: 'Doe',
       bio: 'I am a new user to this site.',
@@ -25,6 +27,7 @@ module.exports = {
     },
     {
       username: 'JoeJoeBinks131',
+      password: 'p455word',
       first_name: 'Joe',
       last_name: 'Carlson',
       bio: 'I am a new user to this site.',
@@ -91,7 +94,7 @@ module.exports = {
     ]),
     queryInterface.bulkInsert('Comments', [
     {
-      body: 'JohnDoe131 post 1',
+      body: 'JohnDoe131 comment 1 post 1',
       PostId : 1,
       CommentId : 1,
       UserId : 1,
@@ -99,7 +102,7 @@ module.exports = {
       updatedAt : date
     },
     {
-      body: 'JohnDoe131 post 2',
+      body: 'JohnDoe131 comment 1 post 2',
       PostId : 2,
       CommentId : 1,
       UserId : 1,
@@ -107,7 +110,7 @@ module.exports = {
       updatedAt : date
     },
     {
-      body: 'JohnDoe131 post 3',
+      body: 'JohnDoe131 comment 1 post 3',
       PostId : 3,
       CommentId : 1,
       UserId : 1,
@@ -115,7 +118,7 @@ module.exports = {
       updatedAt : date
     },
     {
-      body: 'JaneDoe343 post 1',
+      body: 'JaneDoe343 comment 2 post 1',
       PostId : 1,
       CommentId : 2,
       UserId : 2,
@@ -123,7 +126,7 @@ module.exports = {
       updatedAt : date
     },
     {
-      body: 'JaneDoe343 post 2',
+      body: 'JaneDoe343 comment 2 post 2',
       PostId : 2,
       CommentId : 2,
       UserId : 2,
@@ -131,7 +134,7 @@ module.exports = {
       updatedAt : date
     },
     {
-      body: 'JaneDoe343 post 3',
+      body: 'JaneDoe343 comment 2 post 3',
       PostId : 3,
       CommentId : 3,
       UserId : 2,
@@ -139,7 +142,7 @@ module.exports = {
       updatedAt : date
     },
     {
-      body: 'JoeJoeBinks131 post 1',
+      body: 'JoeJoeBinks131 comment 2 post 1',
       PostId : 1,
       CommentId : 1,
       UserId : 3,
@@ -147,7 +150,7 @@ module.exports = {
       updatedAt : date
     },
     {
-      body: 'JoeJoeBinks131 post 2',
+      body: 'JoeJoeBinks131 comment 2 post 2',
       PostId : 2,
       CommentId : 2,
       UserId : 3,
@@ -155,7 +158,7 @@ module.exports = {
       updatedAt : date
     },
     {
-      body: 'JoeJoeBinks131 post 3',
+      body: 'JoeJoeBinks131 comment 2 post 3',
       PostId : 3,
       CommentId : 3,
       UserId : 3,

@@ -1,10 +1,19 @@
 'use strict';
+
+const bcrypt = require('bcrypt');
+
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('User', {
     username: {
       type : DataTypes.STRING,
       allowNull : false,
-      unique : true
+      unique : true,
+      required : true
+    },
+    password : {
+      type : DataTypes.STRING,
+      allowNull : false,
+      required : true
     },
     first_name: {
       type : DataTypes.STRING,
@@ -24,8 +33,8 @@ module.exports = function(sequelize, DataTypes) {
       isArray: true
     }
   }, {
-    classMethods: {
-      associate : function(models) {
+    classMethods : {
+      associate : (models) => {
         User.hasMany(models.Post, {
           onDelete : 'cascade'
         })
@@ -35,5 +44,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+
   return User;
 };

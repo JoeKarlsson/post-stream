@@ -3,7 +3,8 @@ module.exports = function(sequelize, DataTypes) {
   var Comment = sequelize.define('Comment', {
     body: {
       type : DataTypes.STRING,
-      allowNull : false
+      allowNull : false,
+      required : true
     },
     CommentId: {
       type : DataTypes.INTEGER,
@@ -17,5 +18,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+
   return Comment;
 };

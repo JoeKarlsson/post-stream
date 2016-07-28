@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     body: {
       type : DataTypes.STRING,
       allowNull : false,
-      notEmpty: true
+      notEmpty: true,
+      required : true
     }
   }, {
     classMethods: {
@@ -17,5 +18,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+
   return Post;
 };

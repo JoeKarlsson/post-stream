@@ -35,24 +35,6 @@ router.route('/')
     })
   })
 
-router.route('/new')
-  // Create a new user
-  .post((req, res) => {
-    User.create({
-      username: req.body.username,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      bio: req.body.bio,
-      following: [req.body.following]
-    })
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((err) => {
-      res.json({ error: err });
-    })
-  })
-
 router.route('/:id')
   // GET one user by ID
   .get((req, res) => {
