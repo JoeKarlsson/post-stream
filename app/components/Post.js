@@ -2,6 +2,24 @@ import React, { Component } from 'react';
 import CommentCount from './CommentCount';
 
 class Post extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      showComments: false
+    };
+
+    this.togglePostComments = this.togglePostComments.bind(this);
+  }
+
+  togglePostComments() {
+    console.log('togglePostComments triggered');
+
+    if (this.props.comments.length) {
+      this.setState({showComments: !this.state.showComments});
+    }
+  }
+
   render() {
     return (
       <div className="post">
@@ -11,7 +29,13 @@ class Post extends Component {
           <span>{this.props.created_at}</span>
         </header>
         <p>{this.props.body}</p>
-        <CommentCount numOfComments={this.props.comments.length} />
+        <div className="comment-count" onClick={this.togglePostComments}>
+          <CommentCount
+            numOfComments={this.props.comments.length}
+            togglePostComments={this.toggleComments}
+          />
+        </div>
+        {this.state.showComments ? 'showing comments': null }
       </div>
     );
   }

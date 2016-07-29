@@ -12,11 +12,9 @@ const CommentCount = (props) => {
   }
 
   return (
-    <div className="comment-count">
-      <span>
-        {textToDisplay}
-      </span>
-    </div>
+    <span>
+      <a href="#">{textToDisplay}</a>
+    </span>
   );
 };
 
