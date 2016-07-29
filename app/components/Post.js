@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CommentCount from './CommentCount';
 
 class Post extends Component {
   render() {
@@ -10,17 +11,7 @@ class Post extends Component {
           <span>{this.props.created_at}</span>
         </header>
         <p>{this.props.body}</p>
-        <div className="post-comment-count">
-          <span>
-          {(_ => {
-            let numberOfComments = this.props.comments.length;
-            switch (true) {
-              case numberOfComments > 0: return `[ ${numberOfComments} comments ]`;
-              default: return "No Comments";
-            }
-          })()}
-          </span>
-        </div>
+        <CommentCount numOfComments={this.props.comments.length} />
       </div>
     );
   }
