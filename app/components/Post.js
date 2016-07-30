@@ -9,12 +9,10 @@ class Post extends Component {
       showComments: false
     };
 
-    this.togglePostComments = this.togglePostComments.bind(this);
+    this.handleShowingComments = this.handleShowingComments.bind(this);
   }
 
-  togglePostComments() {
-    console.log('togglePostComments triggered');
-
+  handleShowingComments() {
     if (this.props.comments.length) {
       this.setState({showComments: !this.state.showComments});
     }
@@ -29,7 +27,7 @@ class Post extends Component {
           <span>{this.props.created_at}</span>
         </header>
         <p>{this.props.body}</p>
-        <div className="comment-count" onClick={this.togglePostComments}>
+        <div className="comment-count" onClick={this.handleShowingComments}>
           <CommentCount
             numOfComments={this.props.comments.length}
             togglePostComments={this.toggleComments}
