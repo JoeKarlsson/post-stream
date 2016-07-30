@@ -11,24 +11,59 @@ const streamData = [
     "comments": [
       {
         "id": 234,
-        "body": "I invented the double-click.",
-        "real_name": "Bill Atkinson",
-        "username": "billatkinson1337",
-        "created_at": "2016.07.24 10:27:29"
+        "body": "I invented the hotdog",
+        "real_name": "Ray Farias",
+        "username": "sgnl",
+        "created_at": "2016.07.24 10:27:29",
+        "comments": [
+          {
+            "id": 1,
+            "body": "WOCKA WOCKA",
+            "real_name": "Fozzie Bear",
+            "username": "F.Bearsociety",
+            "created_at": "2016.07.24 10:27:29"
+          }
+        ]
       },
       {
         "id": 2,
-        "body": "I invented the double-click.",
-        "real_name": "Bill Atkinson",
-        "username": "billatkinson1337",
+        "body": "I invented Surf Rock",
+        "real_name": "Bill Hicks",
+        "username": "Hill Bicks",
         "created_at": "2016.07.24 10:27:29",
-        "commments": [
+        "comments": [
           {
             "id": 1,
-            "body": "I invented the double-click.",
-            "real_name": "Bill Atkinson",
-            "username": "billatkinson1337",
-            "created_at": "2016.07.24 10:27:29"
+            "body": "WOCKA WOCKA",
+            "real_name": "Fozzie Bear",
+            "username": "F.Bearsociety",
+            "created_at": "2016.07.24 10:27:29",
+            "comments": [
+              {
+                "id": 234,
+                "body": "I invented the hotdog",
+                "real_name": "Ray Farias",
+                "username": "sgnl",
+                "created_at": "2016.07.24 10:27:29"
+              },
+              {
+                "id": 2,
+                "body": "I invented Surf Rock",
+                "real_name": "Bill Hicks",
+                "username": "Hill Bicks",
+                "created_at": "2016.07.24 10:27:29",
+                "comments": [
+                  {
+                    "id": 1,
+                    "body": "WOCKA WOCKA",
+                    "real_name": "Fozzie Bear",
+                    "username": "F.Bearsociety",
+                    "created_at": "2016.07.24 10:27:29"
+                  }
+                ]
+              }
+            ]
+
           }
         ]
       }
