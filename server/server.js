@@ -28,7 +28,6 @@ const root = require('./routes/root');
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
 
-// using express sessions for user authentication
 app.use(session(
   {
     secret : CONFIG.SESSION.secret,
@@ -51,16 +50,7 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function (user, done) {
   return done(null, user);
-})
-
-const validPassword = (password, hashedPassword) => {
-  bcrypt.compare(password, hashedPassword, (err, res) => {
-      if (err) {
-        return false;
-      }
-      return res;
-  });
-}
+});
 
 // local strategy checks our local DB to authenticate users
 passport.use(new LocalStrategy(
@@ -95,7 +85,6 @@ Promise.onPossiblyUnhandledRejection((err) => {
 app.use('/user', user);
 app.use('/post', post);
 app.use('/', root);
-
 
 if (isDeveloping) {
   app.set('host', 'http://localhost');
