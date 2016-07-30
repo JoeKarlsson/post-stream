@@ -33,7 +33,17 @@ class Post extends Component {
             togglePostComments={this.toggleComments}
           />
         </div>
-        {this.state.showComments ? 'showing comments': null }
+        {
+          this.state.showComments && this.props.comments.length && this.props.comments.map(comment => {
+            return (
+              <Post
+                {...comment}
+                comments={comment.hasOwnProperty('comments') ? comment.comments : []}
+                key={comment.id}
+              />
+            );
+          })
+        }
       </div>
     );
   }
