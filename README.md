@@ -18,7 +18,7 @@ Tentative example post:
 Download and unpack [Post Stream](https://github.com/JoeKarlsson1/post-stream). Or alternatively checkout from source:
 
     git clone git@github.com:JoeKarlsson1/post-stream.git
-    cd bechdel-test
+    cd post-stream
 
 Next, inside the project, you need to install the project's various NPM dependencies:
 
