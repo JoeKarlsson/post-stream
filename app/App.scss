@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif:400,700,400italic');
+
+body {
+  font-family: 'Noto Serif', serif;
+  font-weight: 400;
+  font-size: 16px;
+  background-color: #F4F4F4;
+
+  /* resets */
+  box-sizing: border-box;
+  p, h1, h2, h3 {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.app {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: flex-start;
+
+  width: 80%;
+  color: #444;
+
+  & > header {
+    flex: 0 1 auto;
+    width: 100%;
+    padding: 32px 0;
+
+    h1 {
+    }  
+  }
+}

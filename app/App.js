@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NewsStream from './components/NewsStream';
+import Styles from './App.scss';
 
 const streamData = [
   {
@@ -117,8 +118,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <h1>Post Stream</h1>
+      <div className={Styles.app}>
         <NewsStream data={this.state.streamData} />
       </div>
     );
