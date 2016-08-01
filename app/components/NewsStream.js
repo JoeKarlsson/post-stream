@@ -7,8 +7,9 @@ class NewsStream extends Component {
       return (
         <Post
           {...post}
-        key={post.id}
           comments={post.hasOwnProperty('comments') ? post.comments : []}
+          isParentPost={true}
+          key={post.id}
         />
       );
     });
