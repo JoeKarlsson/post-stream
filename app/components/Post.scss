@@ -1,0 +1,58 @@
+$background-primary: #E9E9E9;
+$font-normal: 400;
+$font-heavy: 700;
+
+.realName {
+  font-weight: $font-heavy;
+}
+
+.username {}
+.created_at {}
+
+.post {
+  flex: 0 1 auto;
+  width: 100%;
+  background-color: $background-primary;
+
+  padding: 8px;
+  margin: 32px 0;
+
+  header {
+
+    span+span {
+      margin-left: 16px;
+    }
+  }
+
+  p {
+    padding: 32px 16px;
+  }
+
+  .post {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-content: flex-start;
+
+  margin-bottom: 32px;
+  padding: 8px 0;
+  border-top: 1px dashed #222;
+  border-bottom: 1px dashed #222;
+
+  span {
+    flex: 0 1 auto;
+    display: block;
+    margin: 0 10px;
+    text-align: center;
+  }
+}
+
+.replyPostion {
+}

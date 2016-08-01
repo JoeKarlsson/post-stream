@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CommentCount from './CommentCount';
+import Styles from './Post.scss';
 
 class Post extends Component {
   constructor() {
@@ -23,7 +24,7 @@ class Post extends Component {
   }
 
   handleShowingChild() {
-    if (this.props.comments.length) {
+    if (this.state.comments.length) {
       this.setState({showComments: !this.state.showComments});
     }
   }
@@ -35,7 +36,7 @@ class Post extends Component {
       username: this.props.username,
       body: this.props.body,
       created_at: this.props.created_at,
-      comments: this.props.comments
+      comments: this.props.comments || []
     };
 
     if (newState.comments.length) {
@@ -72,32 +73,45 @@ class Post extends Component {
     }
   }
 
+  renderCommentCount(length, handler) {
+    return (
+      <CommentCount
+        numOfComments={length}
+      />
+    );
+  }
+
   render() {
     return (
-      <div className="post">
+      <div className={Styles.post}>
         <header>
-          <span>{this.state.real_name}</span>
-          <span>{this.state.username}</span>
-          <span>{this.state.created_at}</span>
+          <span className={Styles.realName}>{this.state.real_name}</span>
+          <span className="username">{`[${this.state.username}]`}</span>
+          <span className="createdAt">{this.state.created_at}</span>
         </header>
         <p>{this.props.body}</p>
         <div className="comment-count" onClick={this.handleShowingChild}>
-          <CommentCount
-            numOfComments={this.state.comments.length}
-            togglePostComments={this.toggleComments}
-          />
+          {
+            !this.state.showComments
+            && this.renderCommentCount(this.state.comments.length)
+          }
         </div>
         {
-          this.state.showComments &&
-            <div className="replies">
-            <span onClick={this.handlePrev}>left</span>
-            <span onClick={this.handleNext}>right</span>
-              <Post
-                {...this.state.childContext}
-                isParentPost={false}
-                key={this.state.childContext.id}
-              />
+          this.state.showComments
+          &&
+          <div>
+            <div className={Styles.inputContainer}>
+              <span onClick={this.handlePrev}>&lt;&lt;&nbsp;left</span>
+              <span className="length">{`${this.state.childId + 1} of ${this.state.comments.length}`}</span>
+              <span onClick={this.handleShowingChild}>&#91;close&#93;</span>
+              <span onClick={this.handleNext}>right&nbsp;&gt;&gt;</span>
             </div>
+            <Post
+              {...this.state.childContext}
+              isParentPost={false}
+              key={this.state.childContext.id}
+            />
+          </div>
         }
       </div>
     );
