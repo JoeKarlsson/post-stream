@@ -42,19 +42,22 @@ And you should now be ready to spin up a development build of your new project:
 
 Navigate to [http://localhost:3000](http://localhost:3000) in your browser of choice.
 
+## Update Your Project
+
+In order to get an update from this repo, open your directory and type this command:
+
+    git pull
 
 ### Important concepts
 - No public metrics
   - No visible follower/following numbers
   - No visible like/dislike numbers
-  - Possible fuzzy metrics (Your engagement is {very high} {high} {average})
 - No public feed
   - No Moments
   - No Trending Topics
 - Character limit
   - Brevity
   - Accessibilty
-  - SMS-support
 - No video/images/gifs
   - Unicode support 🆗
 - Contextual responses
@@ -67,9 +70,23 @@ Navigate to [http://localhost:3000](http://localhost:3000) in your browser of ch
   - brilliant
 - No ads or sponsored posts
   - Donation model if anything
-- Filtering of topics
-  - Mute options for keywords
 
+## Todo
+  - EmojiOne support
+  - Verifed Users
+
+## Stretch Goals
+  - Possible fuzzy metrics (Your engagement is {very high} {high} {average})
+  - SMS-support
+  - Filtering of topics
+    - Mute options for keywords
+    - Signup categories - subscribe to posts from only certain categories
+    - Autofilter based on keywords, hashtags
+  - Verification
+    - Keybase???
+  - Highlight text [medium.com]
+  - Permalinks - jump to comment or highlight
+  - Customize Appearance
 
 ### Handling posts
 #### Viewing shared links:
@@ -89,18 +106,6 @@ Navigate to [http://localhost:3000](http://localhost:3000) in your browser of ch
 
 - [Little Voices](http://www.littlevoicesapp.com)
 - [Rainbow Stream](http://www.rainbowstream.org)
-
-
-## Questions 🤔
-
-Unsure on:
-
-* [ ] User sign-up
-* [ ] User sign-out
-* [ ] Identity verification (http://keybase.io)
-* [ ] Customization of appearance
-* [ ] Alternative to “@”  for usernames
-* [ ] Identity/permalink for posts?
 
 ##Contributing
 1. Fork it!
