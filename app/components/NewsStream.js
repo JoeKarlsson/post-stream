@@ -16,7 +16,9 @@ class NewsStream extends Component {
 
     return (
         <div className="App">
-          <h1>Feed</h1>
+          <header>
+            <h1>stream</h1>
+          </header>
           {posts}
         </div>
     );
