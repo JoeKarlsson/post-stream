@@ -285,8 +285,165 @@ response - Returns the new user obj that is stored in memory
       "createdAt": "2016-08-09T01:26:34.359Z"
     }
 
+--------------------
 
+request
 
+    GET /post
+
+response - Returns an array of all the posts in the DB
+
+    [
+      {
+        "id": 1,
+        "body": "JohnDoe131 post 1",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1
+      },
+      {
+        "id": 2,
+        "body": "JohnDoe131 post 2",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1
+      },
+      {
+        "id": 3,
+        "body": "JohnDoe131 post 3",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1
+      },
+      ...
+    ]
+
+request
+
+    GET /post/{:id}
+
+response - Returns an object of a post with :id
+
+    {
+      "id": 1,
+      "body": "JohnDoe131 post 1",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
+
+request
+
+    GET /post/{:id}
+
+response - Returns an object of a post with :id
+
+    {
+      "id": 1,
+      "body": "JohnDoe131 post 1",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
+
+request
+
+    DELETE /post/{:id}
+
+response - Returns an object with whether the command succeded
+
+    {
+      "success": true
+    }
+
+request
+
+    PUT /post/{:id}/edit
+
+response - Returns the updated post object
+
+    {
+      "id": 1,
+      "body": "JohnDoe131 post 1",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
+
+request
+
+    POST /post/{:id}/new
+
+response - Returns the new post object
+
+    {
+      "id": 1,
+      "body": "JohnDoe131 post 1",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
+
+request
+
+    GET /post/{:id}/comments
+
+response - Returns the array of all the comments on a post
+
+    [
+      {
+        "id": 2,
+        "body": "JohnDoe131 comment 1 post 2",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1,
+        "PostId": 2
+      },
+      {
+        "id": 5,
+        "body": "JaneDoe343 comment 2 post 2",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 2,
+        "PostId": 2
+      },
+      {
+        "id": 8,
+        "body": "JoeJoeBinks131 comment 2 post 2",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 3,
+        "PostId": 2
+      }
+    ]
+
+request
+
+    POST /{:PostId}/comments/{:CommentId}/newPost
+
+response - Returns the new comment object on a post
+
+    {
+      "id": 1,
+      "body": "JohnDoe131 post 1",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
+
+request
+
+    PUT /{:PostId}/comments/{:CommentId}/edit
+
+response - Returns the updated comment object on a post
+
+    {
+      "id": 1,
+      "body": "JohnDoe131 post 1",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
 
 ##Contributing
 1. Fork it!
