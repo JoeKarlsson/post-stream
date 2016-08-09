@@ -111,9 +111,11 @@ In order to get an update from this repo, open your directory and type this comm
 ### Routes
 
 request
+
     GET /user
 
 response - Returns an array of all the users in the DB
+
     [
       {
         "id": 1,
@@ -161,9 +163,11 @@ response - Returns an array of all the users in the DB
     ]
 
 request
+
     GET /user/{id}
 
 response - Returns an object of the user of that ID
+
     {
       "id": 1,
       "username": "JohnDoe131",
@@ -180,9 +184,11 @@ response - Returns an object of the user of that ID
     }
 
 request
+
     PUT /user/{id}/edit
 
 response - Returns the updated user object.
+
     {
       "id": 8,
       "username": "joejoebinks67",
@@ -199,9 +205,11 @@ response - Returns the updated user object.
     }
 
 request
+
     GET /user/{id}/posts
 
 response - Retrns an array of all the users posts
+
     [
       {
         "id": 7,
@@ -227,9 +235,11 @@ response - Retrns an array of all the users posts
     ]
 
 request
+
     GET /user/{id}/following
 
 response - Returns an array of all the posts of the users they are following
+
     [
       {
         "id": 1,
@@ -256,9 +266,11 @@ response - Returns an array of all the posts of the users they are following
     ]
 
 request
+
     POST /register
 
 response - Returns the new user obj that is stored in memory
+
     {
       "id": 10,
       "username": "joejoebinks312121",
@@ -273,11 +285,6 @@ response - Returns the new user obj that is stored in memory
       "createdAt": "2016-08-09T01:26:34.359Z"
     }
 
-
-request
-    Get /user/{id}
-
-responses
 
 
 ##Contributing
