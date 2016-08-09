@@ -110,7 +110,7 @@ In order to get an update from this repo, open your directory and type this comm
 
 ### Routes
 
-request
+1. request
 
     GET /user
 
@@ -162,7 +162,7 @@ response - Returns an array of all the users in the DB
       ...
     ]
 
-request
+1. request
 
     GET /user/{id}
 
@@ -183,7 +183,7 @@ response - Returns an object of the user of that ID
       "updatedAt": "2016-07-28T01:37:36.809Z"
     }
 
-request
+1. request
 
     PUT /user/{id}/edit
 
@@ -204,7 +204,7 @@ response - Returns the updated user object.
       "updatedAt": "2016-08-09T01:55:40.073Z"
     }
 
-request
+1. request
 
     GET /user/{id}/posts
 
@@ -234,7 +234,7 @@ response - Retrns an array of all the users posts
       }
     ]
 
-request
+1. request
 
     GET /user/{id}/following
 
@@ -265,7 +265,7 @@ response - Returns an array of all the posts of the users they are following
       ...
     ]
 
-request
+1. request
 
     POST /register
 
