@@ -107,6 +107,178 @@ In order to get an update from this repo, open your directory and type this comm
 - [Little Voices](http://www.littlevoicesapp.com)
 - [Rainbow Stream](http://www.rainbowstream.org)
 
+### Routes
+
+request
+    GET /user
+
+response - Returns an array of all the users in the DB
+    [
+      {
+        "id": 1,
+        "username": "JohnDoe131",
+        "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
+        "first_name": "John",
+        "last_name": "Doe",
+        "bio": "I am a new user to this site.",
+        "following": [
+          2,
+          3
+        ],
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z"
+      },
+      {
+        "id": 2,
+        "username": "JaneDoe343",
+        "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
+        "first_name": "Jane",
+        "last_name": "Doe",
+        "bio": "I am a new user to this site.",
+        "following": [
+          1,
+          3
+        ],
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z"
+      },
+      {
+        "id": 3,
+        "username": "JoeJoeBinks131",
+        "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
+        "first_name": "Joe",
+        "last_name": "Carlson",
+        "bio": "I am a new user to this site.",
+        "following": [
+          1,
+          2
+        ],
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z"
+      },
+      ...
+    ]
+
+request
+    GET /user/{id}
+
+response - Returns an object of the user of that ID
+    {
+      "id": 1,
+      "username": "JohnDoe131",
+      "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
+      "first_name": "John",
+      "last_name": "Doe",
+      "bio": "I am a new user to this site.",
+      "following": [
+        2,
+        3
+      ],
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z"
+    }
+
+request
+    PUT /user/{id}/edit
+
+response - Returns the updated user object.
+    {
+      "id": 8,
+      "username": "joejoebinks67",
+      "password": "$2a$10$sq4.ixJxkHrrEBaUfg6aZeTDzSJxWhfMLlE7U6ecRjjWkYSsv3wKm",
+      "first_name": "Joe",
+      "last_name": "Carlson",
+      "bio": "I am cool",
+      "following": [
+        2,
+        "3"
+      ],
+      "createdAt": "2016-07-28T02:58:23.655Z",
+      "updatedAt": "2016-08-09T01:55:40.073Z"
+    }
+
+request
+    GET /user/{id}/posts
+
+response - Retrns an array of all the users posts
+    [
+      {
+        "id": 7,
+        "body": "JoeJoeBinks131 post 1",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 3
+      },
+      {
+        "id": 8,
+        "body": "JoeJoeBinks131 post 2",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 3
+      },
+      {
+        "id": 9,
+        "body": "JoeJoeBinks131 post 3",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 3
+      }
+    ]
+
+request
+    GET /user/{id}/following
+
+response - Returns an array of all the posts of the users they are following
+    [
+      {
+        "id": 1,
+        "body": "JohnDoe131 post 1",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1
+      },
+      {
+        "id": 2,
+        "body": "JohnDoe131 post 2",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1
+      },
+      {
+        "id": 3,
+        "body": "JohnDoe131 post 3",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1
+      },
+      ...
+    ]
+
+request
+    POST /register
+
+response - Returns the new user obj that is stored in memory
+    {
+      "id": 10,
+      "username": "joejoebinks312121",
+      "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
+      "first_name": "Joe",
+      "last_name": "Carlson",
+      "bio": "I am cool",
+      "following": [
+        2
+      ],
+      "updatedAt": "2016-08-09T01:26:34.359Z",
+      "createdAt": "2016-08-09T01:26:34.359Z"
+    }
+
+
+request
+    Get /user/{id}
+
+responses
+
+
 ##Contributing
 1. Fork it!
 2. Create your feature branch: ```git checkout -b my-new-feature```
