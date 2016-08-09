@@ -52,12 +52,13 @@ In order to get an update from this repo, open your directory and type this comm
 - No public metrics
   - No visible follower/following numbers
   - No visible like/dislike numbers
-- No public feed
-  - No Moments
-  - No Trending Topics
+- No global public feed
+  - No "moments" or news-related feeds
+  - No trending topics to browse
 - Character limit
   - Brevity
   - Accessibilty
+  - Stream shows 256 characters with "read more" expandable to 2048 character limit
 - No video/images/gifs
   - Unicode support 🆗
 - Contextual responses
@@ -69,7 +70,6 @@ In order to get an update from this repo, open your directory and type this comm
   - thank you for sharing
   - brilliant
 - No ads or sponsored posts
-  - Donation model if anything
 
 ## Todo
   - EmojiOne support
@@ -86,18 +86,19 @@ In order to get an update from this repo, open your directory and type this comm
     - Keybase???
   - Highlight text [medium.com]
   - Permalinks - jump to comment or highlight
-  - Customize Appearance
+  - Customize appearance
+    - Theme support (Github, Solarized, Tomorrow, etc.)
 
 ### Handling posts
 #### Viewing shared links:
 
-- collapsible (a la http://www.foldingtext.com)
+- collapsible (a la [Folding Text](http://www.foldingtext.com), [Minimal Reader](http://www.minimalreader))
 - plain-text reader mode stripped of images for articles
 - viewable highlights/annotations from share
 
 #### Idea on infinite nested comments: http://ux.stackexchange.com/a/1736
 
-- collapseable
+- collapsible
 - one comment at a time
 - nested comments display below
 
@@ -286,7 +287,7 @@ responses
 4. Push to the branch: ````git push origin my-new-feature````
 5. Submit a pull request :D
 
-##Credits
+## Credits
 - Ray Farias
 - Jacoby Young
 - Joe Carlson
