@@ -103,7 +103,7 @@ router.route('/new')
   .post((req, res) => {
     Post.create({
       body: req.body.body,
-      UserId: '3'
+      UserId: req.user
     })
     .then((post) => {
       res.json(post);
@@ -133,15 +133,28 @@ router.route('/:id/comments')
 
 router.route('/:PostId/comments/:CommentId/new')
   // create a new comment on a post
-  // // TODO - updated user when AUTH is working
   .post((req, res) => {
     Comment.create({
+      body: req.body.body,
       PostId: req.params.PostId,
-      UserId: '3',
-      CommentID: req.params.CommentId
+      UserId: req.user,
+      commentId: req.params.CommentId
     })
     .then((comment) => {
-      res.json(comment);
+      Post.findById(req.params.PostId)
+      .then((foundPost) => {
+        // then update
+        console.log('foundPost: ', foundPost);
+        foundPost.update({
+          commentCount : ++foundPost.commentCount,
+        })
+        .then((newPost) => {
+          res.json(comment);
+        })
+        .catch((err) => {
+          res.json({ error: err });
+        })
+      })
     })
     .catch((err) => {
       res.json({ error: err });

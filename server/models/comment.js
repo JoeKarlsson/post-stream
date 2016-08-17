@@ -6,6 +6,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false,
       required : true
     },
+    commentId: {
+      type : DataTypes.INTEGER,
+      allowNull : false,
+      required : true
+    },
   }, {
     classMethods: {
       associate: function(models) {

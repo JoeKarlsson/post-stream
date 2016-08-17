@@ -17,8 +17,8 @@ class NewsStream extends Component {
     this.setState({ posts: parsedData });
   };
 
-  onError(data) {
-    console.error(this.props.redditUrl, status, err.toString());
+  onError(err) {
+    console.error('newstream', status, err.toString());
   };
 
   getAllPosts() {

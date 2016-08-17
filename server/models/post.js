@@ -7,6 +7,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false,
       notEmpty: true,
       required : true
+    },
+    commentCount: {
+      type : DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false
     }
   }, {
     classMethods: {

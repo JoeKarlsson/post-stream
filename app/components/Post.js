@@ -14,6 +14,7 @@ class Post extends Component {
       username: '',
       body: '',
       created_at: '',
+      commentCount: 0,
       comments: [],
       childId: null,
       childContext: {}
@@ -30,14 +31,17 @@ class Post extends Component {
   onCommentData(data) {
     const parsedCommentData = JSON.parse(data.currentTarget.response);
     console.log('parsedCommentData: ', parsedCommentData);
-    this.setState({ comments: parsedCommentData });
-    if (this.props.comments.length) {
+    this.setState({
+      comments: parsedCommentData
+    });
+    if (this.props.commentCount) {
+      console.log('hit')
       this.setState({showComments: !this.state.showComments});
     }
   };
 
-  onCommentError(data) {
-    console.error( status, err.toString());
+  onCommentError(err) {
+    console.error(status, err.toString());
   };
 
   getAllComments() {
@@ -60,13 +64,13 @@ class Post extends Component {
       username: this.props.username,
       body: this.props.body,
       created_at: this.props.created_at,
-      comments: this.props.comments
+      commentCount: this.props.commentCount
     };
 
-    if (newState.comments.length) {
-      newState.childId = 0;
-      newState.childContext = newState.comments[0];
-    }
+    // if (newState.commentCount > 0) {
+    //   newState.childId = 0;
+    //   newState.childContext = newState.comments[0];
+    // }
 
     this.setState(newState);
   }
@@ -108,7 +112,7 @@ class Post extends Component {
         <p>{this.props.body}</p>
         <div className="comment-count" onClick={this.handleShowingChild}>
           <CommentCount
-            numOfComments={this.state.comments.length}
+            numOfComments={this.state.commentCount}
             togglePostComments={this.toggleComments}
           />
         </div>
@@ -128,4 +132,5 @@ class Post extends Component {
     );
   }
 }
- export default Post;
+
+export default Post;

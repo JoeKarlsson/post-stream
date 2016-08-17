@@ -39,54 +39,63 @@ module.exports = {
     queryInterface.bulkInsert('Posts', [
     {
       body: 'JohnDoe131 post 1',
+      commentCount: 3,
       createdAt : date,
       updatedAt : date,
       UserId: 1
     },
     {
       body: 'JohnDoe131 post 2',
+      commentCount: 3,
       createdAt : date,
       updatedAt : date,
       UserId: 1
     },
     {
       body: 'JohnDoe131 post 3',
+      commentCount: 0,
       createdAt : date,
       updatedAt : date,
       UserId: 1
     },
     {
       body: 'JaneDoe343 post 1',
+      commentCount: 0,
       createdAt : date,
       updatedAt : date,
       UserId: 2
     },
     {
       body: 'JaneDoe343 post 2',
+      commentCount: 0,
       createdAt : date,
       updatedAt : date,
       UserId: 2
     },
     {
       body: 'JaneDoe343 post 3',
+      commentCount: 0,
       createdAt : date,
       updatedAt : date,
       UserId: 2
     },
     {
       body: 'JoeJoeBinks131 post 1',
+      commentCount: 0,
       createdAt : date,
       updatedAt : date,
       UserId: 3
     },
     {
       body: 'JoeJoeBinks131 post 2',
+      commentCount: 0,
       createdAt : date,
       updatedAt : date,
       UserId: 3
     },
     {
       body: 'JoeJoeBinks131 post 3',
+      commentCount: 0,
       createdAt : date,
       updatedAt : date,
       UserId: 3
@@ -96,7 +105,7 @@ module.exports = {
     {
       body: 'JohnDoe131 comment 1 post 1',
       PostId : 1,
-      CommentId : 1,
+      commentId : 1,
       UserId : 1,
       createdAt : date,
       updatedAt : date
@@ -104,7 +113,7 @@ module.exports = {
     {
       body: 'JohnDoe131 comment 1 post 2',
       PostId : 2,
-      CommentId : 1,
+      commentId : 1,
       UserId : 1,
       createdAt : date,
       updatedAt : date
@@ -112,7 +121,7 @@ module.exports = {
     {
       body: 'JohnDoe131 comment 1 post 3',
       PostId : 3,
-      CommentId : 1,
+      commentId : 1,
       UserId : 1,
       createdAt : date,
       updatedAt : date
@@ -120,7 +129,7 @@ module.exports = {
     {
       body: 'JaneDoe343 comment 2 post 1',
       PostId : 1,
-      CommentId : 2,
+      commentId : 2,
       UserId : 2,
       createdAt : date,
       updatedAt : date
@@ -128,7 +137,7 @@ module.exports = {
     {
       body: 'JaneDoe343 comment 2 post 2',
       PostId : 2,
-      CommentId : 2,
+      commentId : 2,
       UserId : 2,
       createdAt : date,
       updatedAt : date
@@ -136,7 +145,7 @@ module.exports = {
     {
       body: 'JaneDoe343 comment 2 post 3',
       PostId : 3,
-      CommentId : 3,
+      commentId : 3,
       UserId : 2,
       createdAt : date,
       updatedAt : date
@@ -144,7 +153,7 @@ module.exports = {
     {
       body: 'JoeJoeBinks131 comment 2 post 1',
       PostId : 1,
-      CommentId : 1,
+      commentId : 1,
       UserId : 3,
       createdAt : date,
       updatedAt : date
@@ -152,7 +161,7 @@ module.exports = {
     {
       body: 'JoeJoeBinks131 comment 2 post 2',
       PostId : 2,
-      CommentId : 2,
+      commentId : 2,
       UserId : 3,
       createdAt : date,
       updatedAt : date
@@ -160,7 +169,7 @@ module.exports = {
     {
       body: 'JoeJoeBinks131 comment 2 post 3',
       PostId : 3,
-      CommentId : 3,
+      commentId : 3,
       UserId : 3,
       createdAt : date,
       updatedAt : date
