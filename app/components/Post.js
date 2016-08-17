@@ -6,6 +6,8 @@ class Post extends Component {
     super();
 
     this.state = {
+      id: null,
+      showComments: false,
       showChild: false,
       isParentPost: null,
       real_name: '',
@@ -20,16 +22,39 @@ class Post extends Component {
     this.handleShowingChild = this.handleShowingChild.bind(this);
     this.handlePrev = this.handlePrev.bind(this);
     this.handleNext = this.handleNext.bind(this);
+    this.getAllComments = this.getAllComments.bind(this);
+    this.onCommentData = this.onCommentData.bind(this);
+    this.onCommentError = this.onCommentError.bind(this);
   }
 
-  handleShowingChild() {
+  onCommentData(data) {
+    const parsedCommentData = JSON.parse(data.currentTarget.response);
+    console.log('parsedCommentData: ', parsedCommentData);
+    this.setState({ comments: parsedCommentData });
     if (this.props.comments.length) {
       this.setState({showComments: !this.state.showComments});
     }
+  };
+
+  onCommentError(data) {
+    console.error( status, err.toString());
+  };
+
+  getAllComments() {
+    const oReq = new XMLHttpRequest();
+    oReq.addEventListener("load", this.onCommentData);
+    oReq.addEventListener("error", this.onCommentError);
+    oReq.open("GET", `/post/${this.state.id}/comments`);
+    oReq.send();
+  }
+
+  handleShowingChild() {
+    this.getAllComments();
   }
 
   componentDidMount() {
     let newState = {
+      id: this.props.id,
       isParentPost: this.props.isParentPost,
       real_name: this.props.real_name,
       username: this.props.username,
