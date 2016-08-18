@@ -374,7 +374,7 @@ response - Returns the updated post object
 
 request
 
-    POST /post/{:id}/new
+    POST /post/new
 
 response - Returns the new post object
 

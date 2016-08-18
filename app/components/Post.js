@@ -8,7 +8,6 @@ class Post extends Component {
     this.state = {
       id: null,
       showComments: false,
-      showChild: false,
       isParentPost: null,
       real_name: '',
       username: '',
@@ -26,18 +25,17 @@ class Post extends Component {
     this.getAllComments = this.getAllComments.bind(this);
     this.onCommentData = this.onCommentData.bind(this);
     this.onCommentError = this.onCommentError.bind(this);
-  }
+  };
 
   onCommentData(data) {
     const parsedCommentData = JSON.parse(data.currentTarget.response);
     console.log('parsedCommentData: ', parsedCommentData);
     this.setState({
-      comments: parsedCommentData
+      showComments: true,
+      comments: parsedCommentData,
+      childId: 0,
+      childContext: parsedCommentData[0],
     });
-    if (this.props.commentCount) {
-      console.log('hit')
-      this.setState({showComments: !this.state.showComments});
-    }
   };
 
   onCommentError(err) {
@@ -67,10 +65,9 @@ class Post extends Component {
       commentCount: this.props.commentCount
     };
 
-    // if (newState.commentCount > 0) {
-    //   newState.childId = 0;
-    //   newState.childContext = newState.comments[0];
-    // }
+    if (newState.commentCount) {
+      newState.childId = 0;
+    }
 
     this.setState(newState);
   }
@@ -119,18 +116,36 @@ class Post extends Component {
         {
           this.state.showComments &&
             <div className="replies">
-            <span onClick={this.handlePrev}>left</span>
-            <span onClick={this.handleNext}>right</span>
-              <Post
-                {...this.state.childContext}
-                isParentPost={false}
-                key={this.state.childContext.id}
-              />
+              <span onClick={this.handlePrev}>left</span>
+              <span onClick={this.handleNext}> right</span>
+                <Post
+                  {...this.state.childContext}
+                  isParentPost={false}
+                  key={this.state.childContext.id}
+                />
             </div>
         }
       </div>
     );
   }
-}
+};
+
+Post.propTypes = {
+  id: React.PropTypes.number,
+  comments: React.PropTypes.arrayOf(React.PropTypes.object),
+  showComments: React.PropTypes.bool,
+  isParentPost: React.PropTypes.bool,
+  real_name: React.PropTypes.string,
+  username: React.PropTypes.string,
+  body: React.PropTypes.string,
+  created_at: React.PropTypes.number,
+  commentCount: React.PropTypes.number,
+  childId: React.PropTypes.number,
+  childContext: React.PropTypes.object
+};
+
+Post.defaultProps = {
+  comments: [],
+};
 
 export default Post;

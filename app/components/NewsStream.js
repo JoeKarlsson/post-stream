@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Post from './Post';
+import NewPost from './NewPost';
 
 class NewsStream extends Component {
   constructor() {
@@ -9,6 +10,7 @@ class NewsStream extends Component {
     };
     this.onData = this.onData.bind(this);
     this.onError = this.onError.bind(this);
+    this.handleNewPost = this.handleNewPost.bind(this);
   }
 
   onData(data) {
@@ -29,9 +31,17 @@ class NewsStream extends Component {
     oReq.send();
   }
 
+  handleNewPost(newPost) {
+    let newPosts = this.state.posts
+    newPosts.push(newPost);
+    this.setState({
+      posts: newPosts
+    })
+  };
+
   componentDidMount() {
     this.getAllPosts();
-  }
+  };
 
   render() {
     var posts = this.state.posts.map(( post ) => {
@@ -48,6 +58,9 @@ class NewsStream extends Component {
 
     return (
         <div className="App">
+          <NewPost
+            onNewPost={this.handleNewPost}
+          />
           <h1>Feed</h1>
           {posts}
         </div>

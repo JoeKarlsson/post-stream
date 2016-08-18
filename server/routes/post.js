@@ -101,6 +101,7 @@ router.route('/new')
   // create a new post
   // TODO - updated user when AUTH is working
   .post((req, res) => {
+    console.log('req.body: ', req.body);
     Post.create({
       body: req.body.body,
       UserId: req.user
