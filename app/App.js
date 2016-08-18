@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
-import NewsStream from './components/NewsStream';
+import NewsStream from './posts/allPosts/NewsStream';
+import styles from './App.scss';
 
 class App extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    };
-  }
-
   render() {
     return (
-      <div className="App">
+      <div className={styles.app}>
         <h1>Post Stream</h1>
-        <NewsStream data={this.state.streamData} />
+        <NewsStream />
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Post from './Post';
-import NewPost from './NewPost';
+import Post from '../singlePost/Post';
+import NewPost from '../newPost/NewPost';
+import styles from './NewsStream.scss';
 
 class NewsStream extends Component {
   constructor() {
@@ -57,7 +58,7 @@ class NewsStream extends Component {
     });
 
     return (
-        <div className="App">
+        <div className={styles.newsStream}>
           <NewPost
             onNewPost={this.handleNewPost}
           />
