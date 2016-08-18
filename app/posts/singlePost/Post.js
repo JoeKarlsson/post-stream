@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CommentCount from './CommentCount';
+import styles from './Post.scss';
 
 class Post extends Component {
   constructor() {
@@ -100,7 +101,7 @@ class Post extends Component {
 
   render() {
     return (
-      <div className="post">
+      <div className={styles.post}>
         <header>
           <span>{this.state.real_name}</span>
           <span>{this.state.username}</span>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import styles from './NewPost.scss';
 
 class App extends Component {
 
@@ -44,7 +45,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="newPost">
+      <div className={styles.newPost}>
         <form>
           <label htmlFor="body">Body</label>
           <input
