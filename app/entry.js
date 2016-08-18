@@ -1,16 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, browserHistory, IndexRoute } from 'react-router';
-import { createStore, combineReducers } from 'redux';
+import {
+  Router,
+  Route,
+  browserHistory,
+  IndexRoute
+} from 'react-router';
 import { Provider } from 'react-redux';
-import * as reducers from './reducers';
+import configureStore from './configureStore';
 import NoMatch from './static/noMatch/NoMatch.js';
 import About from './static/about/About.js';
 import AllPosts from './posts/allPosts/AllPosts.js';
 import App from './App';
 
-const reducer = combineReducers(reducers);
-const store = createStore(reducer);
+const store = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
