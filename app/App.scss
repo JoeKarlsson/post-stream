@@ -1,5 +1,18 @@
+$red: red;
+$white: white;
 $purple: purple;
 
 .app {
   background-color: $purple;
+}
+
+.footer {
+  background-color: $red;
+  .footer_content {
+    padding: 30px;
+    text-align: center;
+  }
+  a {
+    color: $white;
+  }
 }

@@ -59,6 +59,7 @@ class NewsStream extends Component {
 
     return (
         <div className={styles.newsStream}>
+          <h2>News Feed</h2>
           <NewPost
             onNewPost={this.handleNewPost}
           />
