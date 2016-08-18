@@ -3,6 +3,7 @@ import { Map, List } from 'immutable';
 const initialState = Map({
   isFetching: false,
   didInvalidate: false,
+  lastUpdated: null,
   posts: List(),
 });
 
@@ -19,14 +20,12 @@ const postReducer = (state = initialState, action) => {
         .updateIn(['didInvalidate'], (v) => false);
 
     case 'RECEIVE_POSTS':
-      const newFoo = state.updateIn(['posts'], (list) => {
-        return list.concat(action.data.posts);
+      return state.updateIn(['posts'], (list) => {
+        return list.concat(action.posts);
       })
-      .state.updateIn(['isFetching'], (v) => false)
-      .state.updateIn(['didInvalidate'], (v) => false)
-      .state.updateIn(['lastUpdated'], (v) => action.receivedAt);
-      console.log('newFoo: ', newFoo);
-      return newFoo;
+      .update(['isFetching'], (v) => false)
+      .update(['didInvalidate'], (v) => false)
+      .update(['lastUpdated'], (v) => action.receivedAt);
 
     default:
       newState;
