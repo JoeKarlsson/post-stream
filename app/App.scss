@@ -1,18 +1,13 @@
-$red: red;
-$white: white;
 $purple: purple;
 
 .app {
   background-color: $purple;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
-.footer {
-  background-color: $red;
-  .footer_content {
-    padding: 30px;
-    text-align: center;
-  }
-  a {
-    color: $white;
-  }
+.content {
+  padding-top: 2%;
+  flex: 1;
 }

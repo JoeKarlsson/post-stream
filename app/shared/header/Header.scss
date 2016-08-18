@@ -1,0 +1,50 @@
+$purple: purple;
+$white: white;
+
+header {
+  width: 100%;
+  background-color: $purple;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  font-size: 1.25rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.header_bar {
+  a {
+    color: $white;
+  }
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  li {
+    /*padding: 0 1rem;*/
+    padding: .5rem 1rem;
+  }
+}
+
+.header_logo {
+  padding: .5rem 1rem;
+  padding-left: 5%;
+  flex: 1 0 auto;
+  order: 10;
+  font-weight: 200;
+  font-size: large;
+}
+
+.header_nav {
+  padding-right: 5%;
+  flex: 0 1 auto;
+  order: 20;
+}
