@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Post from '../singlePost/Post';
 import NewPost from '../newPost/NewPost';
-import styles from './NewsStream.scss';
+import styles from './AllPosts.scss';
+import setItems from '../../actions/postActions';
 
 class NewsStream extends Component {
   constructor() {
     super();
-    this.state = {
-      posts: [],
-    };
     this.onData = this.onData.bind(this);
     this.onError = this.onError.bind(this);
     this.handleNewPost = this.handleNewPost.bind(this);
-  }
+  };
 
   onData(data) {
     const parsedData = JSON.parse(data.currentTarget.response);
-    console.log('parsedData: ', parsedData);
-    this.setState({ posts: parsedData });
+    this.props.setItems({ posts: parsedData });
   };
 
   onError(err) {
@@ -30,7 +28,7 @@ class NewsStream extends Component {
     oReq.addEventListener("error", this.onError);
     oReq.open("GET", '/post');
     oReq.send();
-  }
+  };
 
   handleNewPost(newPost) {
     let newPosts = this.state.posts
@@ -45,7 +43,8 @@ class NewsStream extends Component {
   };
 
   render() {
-    var posts = this.state.posts.map(( post ) => {
+    console.log('this.props: ', this.props);
+    var posts = this.props.posts.map(( post ) => {
       return (
         <Post
           {...post}
@@ -68,14 +67,34 @@ class NewsStream extends Component {
         </div>
     );
   }
-}
-
-NewsStream.propTypes = {
-  posts: React.PropTypes.array,
 };
 
-NewsStream.defaultProps = {
-  posts: [],
+// NewsStream.propTypes = {
+//   posts: React.PropTypes.array.isRequired,
+// };
+
+// NewsStream.defaultProps = {
+//   posts: [],
+// };
+
+const mapStateToProps = (state) => {
+  return {
+    posts: state.postReducer.toJS().posts,
+  }
 };
 
-export default NewsStream;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setItems: (data) => {
+      dispatch({
+        type: 'SET_ITEMS',
+        data: data
+      })
+    }
+  }
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewsStream);

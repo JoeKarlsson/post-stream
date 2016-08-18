@@ -1,6 +1,8 @@
-import Immutable from 'immutable';
+import { Map, List, Immutable } from 'immutable';
 
-const initialState = Immutable.List();
+const initialState = Map({
+  posts: List(),
+});
 
 const postReducer = (state = initialState, action) => {
 
@@ -8,10 +10,12 @@ const postReducer = (state = initialState, action) => {
 
   switch(action.type) {
     case 'REMOVE_ITEM':
-      return state.delete(action.index);
+      break;
 
     case 'SET_ITEMS':
-      return Immutable.fromJS(action.data);
+      return state.updateIn(['posts'], (list) => {
+        return list.concat(action.data.posts);
+      });
 
     default:
       newState;
