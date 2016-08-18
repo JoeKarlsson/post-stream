@@ -8,8 +8,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     commentId: {
       type : DataTypes.INTEGER,
-      allowNull : false,
+      defaultValue: null,
       required : true
+    },
+    commentCount: {
+      type : DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false
     },
   }, {
     classMethods: {

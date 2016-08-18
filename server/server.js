@@ -126,7 +126,9 @@ const onStart = (err) => {
     `==> 🌎 Listening on port ${port}. ` +
     `Open up http://localhost:${port}/ in your browser.`
   );
-  db.sequelize.sync();
+  db.sequelize.sync(
+    // {force: true}
+  );
 };
 
 if (!module.parent) {
