@@ -1,46 +1,30 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import {
+  submitNewPost,
+  handleNewPostBodyChange
+} from '../../actions/newPostActions';
 import styles from './NewPost.scss';
 
-class App extends Component {
+class NewPostForm extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      body: '',
-    };
-    this.onPostData = this.onPostData.bind(this);
-    this.onPostError = this.onPostError.bind(this);
-    this.handleBodyChange = this.handleBodyChange.bind(this);
+  constructor() {
+    super();
     this.handleSubmitPost = this.handleSubmitPost.bind(this);
+    this.handleBodyChange = this.handleBodyChange.bind(this);
   }
 
-  onPostData(data) {
-    const parsedData = JSON.parse(data.currentTarget.response);
-    this.props.onNewPost(parsedData)
-  };
-
-  onPostError(err) {
-    console.error('new post', status, err.toString());
-  };
+  handleBodyChange(e) {
+    const { dispatch } = this.props;
+    console.log('e.target.value: ', e.target.value);
+    dispatch(handleNewPostBodyChange(e.target.value))
+  }
 
   handleSubmitPost(e) {
     e.preventDefault();
-
-    const oReq = new XMLHttpRequest();
-    oReq.open("POST", '/post/new', true);
-    oReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    oReq.addEventListener("load", this.onPostData);
-    oReq.addEventListener("error", this.onPostError);
-    oReq.send(`body=${this.state.body}`);
-    this.setState({
-      body: '',
-    });
-  };
-
-  handleBodyChange(e) {
-    this.setState({
-      body: e.target.value,
-    });
+    const { dispatch } = this.props;
+    console.log('this.props.newPostBody: ', this.props.newPostBody);
+    dispatch(submitNewPost(this.props.newPostBody))
   };
 
   render() {
@@ -53,7 +37,7 @@ class App extends Component {
             type='text'
             id='body'
             placeholder='Share it with the world'
-            value={this.state.body}
+            value={this.props.newPostBody}
             onChange={this.handleBodyChange}
           />
           <div className="create-public-private-btns">
@@ -65,4 +49,16 @@ class App extends Component {
   }
 };
 
-export default App;
+NewPostForm.propTypes = {
+
+};
+
+const mapStateToProps = (state) => {
+  return {
+    newPostBody: state.postReducer.get('newPostBody'),
+  }
+};
+
+export default connect(
+  mapStateToProps
+)(NewPostForm);

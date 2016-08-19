@@ -5,27 +5,17 @@ import NewPost from '../newPost/NewPost';
 import styles from './AllPosts.scss';
 import { fetchPostsIfNeeded } from '../../actions/postActions';
 
-class NewsStream extends Component {
-  constructor() {
-    super();
-    this.handleNewPost = this.handleNewPost.bind(this);
-  };
-
-  handleNewPost(newPost) {
-    let newPosts = this.state.posts
-    newPosts.push(newPost);
-    this.setState({
-      posts: newPosts
-    })
-  };
+class AllPosts extends Component {
 
   componentDidMount() {
-    const { dispatch, selectedSubreddit } = this.props;
+    const { dispatch } = this.props;
     dispatch(fetchPostsIfNeeded());
   };
 
   render() {
-    const posts = this.props.posts.map(( post ) => {
+    console.log('this.props: ', this.props);
+
+    const postNode = this.props.posts.map(( post ) => {
       return (
         <Post
           {...post}
@@ -38,18 +28,24 @@ class NewsStream extends Component {
     });
 
     return (
-        <div className={styles.newsStream}>
+        <div className={styles.allPosts}>
           <h2>News Feed</h2>
           <NewPost
             onNewPost={this.handleNewPost}
           />
           <h1>Feed</h1>
-          {posts.length === 0 &&
+
+          <span>
+            Last updated at {new Date(this.props.lastUpdated).toLocaleTimeString()}.
+            {' '}
+          </span>
+
+          {this.props.posts.length === 0 &&
             <h2>Loading...</h2>
           }
-          {posts.length > 0 &&
+          {this.props.posts.length > 0 &&
             <div>
-              {posts}
+              {postNode}
             </div>
           }
         </div>
@@ -57,16 +53,21 @@ class NewsStream extends Component {
   }
 };
 
-NewsStream.propTypes = {
+AllPosts.propTypes = {
   posts: React.PropTypes.array.isRequired,
+  // isFetching: PropTypes.bool.isRequired,
+  // lastUpdated: PropTypes.number,
+  // dispatch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
-    posts: state.postReducer.toJS().posts,
+    posts: state.postReducer.get('posts').toArray(),
+    isFetching: state.postReducer.get('isFetching'),
+    lastUpdated: state.postReducer.get('lastUpdated')
   }
 };
 
 export default connect(
   mapStateToProps
-)(NewsStream);
+)(AllPosts);

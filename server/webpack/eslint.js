@@ -53,7 +53,6 @@ module.exports = {
     'dot-location': [WARNING, 'property'],
     eqeqeq: [WARNING, 'allow-null'],
     'guard-for-in': WARNING,
-    'new-cap': [WARNING, { newIsCap: true }],
     'new-parens': WARNING,
     'no-array-constructor': WARNING,
     'no-caller': WARNING,

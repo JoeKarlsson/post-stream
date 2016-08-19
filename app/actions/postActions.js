@@ -1,10 +1,3 @@
-export const setItems = (data) => {
-  dispatch({
-    type: 'set_items',
-    data: data
-  })
-};
-
 const requestPosts = () => {
   return {
     type: "REQUEST_POSTS",
@@ -28,6 +21,12 @@ const fetchPosts = () => {
   }
 }
 
+export const invalidatePosts = () => {
+  return {
+    type: "INVALIDATE_POSTS",
+  }
+}
+
 const shouldFetchPosts = (state) => {
   const posts = state.postReducer.posts
   if (!posts) {
@@ -41,7 +40,6 @@ const shouldFetchPosts = (state) => {
 
 export const fetchPostsIfNeeded = () => {
   return (dispatch, getState) => {
-    console.log('getState(): ', getState());
     if (shouldFetchPosts(getState())) {
       return dispatch(fetchPosts())
     }
