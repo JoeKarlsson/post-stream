@@ -20,9 +20,12 @@ const receiveNewPost = (json) => {
 
 export const submitNewPost = (body) => {
   return dispatch => {
-    dispatch(requestNewPost())
+    dispatch(requestNewPost());
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", 'application/x-www-form-urlencoded');
     return fetch(`/post/new`, {
       method: 'POST',
+      headers: myHeaders,
       body: `body=${body}`
     })
       .then(response => response.json())

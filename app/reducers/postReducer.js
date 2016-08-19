@@ -37,7 +37,8 @@ const postReducer = (state = initialState, action) => {
       return state.updateIn(['posts'], (list) => {
         return list.push(action.newPost);
       })
-      .update(['isFetching'], _ => false)
+      .update(['submittingPost'], _ => false)
+      .set('newPostBody', '')
 
     default:
       return state;
