@@ -16,14 +16,12 @@ class NewPostForm extends Component {
 
   handleBodyChange(e) {
     const { dispatch } = this.props;
-    console.log('e.target.value: ', e.target.value);
     dispatch(handleNewPostBodyChange(e.target.value))
   }
 
   handleSubmitPost(e) {
     e.preventDefault();
     const { dispatch } = this.props;
-    console.log('this.props.newPostBody: ', this.props.newPostBody);
     dispatch(submitNewPost(this.props.newPostBody))
   };
 

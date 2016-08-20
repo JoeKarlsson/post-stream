@@ -13,51 +13,41 @@ class AllPosts extends Component {
   };
 
   render() {
-    console.log('this.props: ', this.props);
-
     const postNode = this.props.posts.map(( post ) => {
       return (
         <Post
           {...post}
           comments={post.hasOwnProperty('comments') ? post.comments : []}
-          isParentPost={true}
           key={post.id}
-          id={post.id}
         />
       );
     });
 
     return (
-        <div className={styles.allPosts}>
-          <h2>News Feed</h2>
-          <NewPost
-            onNewPost={this.handleNewPost}
-          />
-          <h1>Feed</h1>
+      <div className={styles.allPosts}>
+        <NewPost />
+        <h1>Post Stream</h1>
 
-          <span>
-            Last updated at {new Date(this.props.lastUpdated).toLocaleTimeString()}.
-            {' '}
-          </span>
+        <span>
+          Last updated at {new Date(this.props.lastUpdated).toLocaleTimeString()}.
+          {' '}
+        </span>
 
-          {this.props.posts.length === 0 &&
-            <h2>Loading...</h2>
-          }
-          {this.props.posts.length > 0 &&
-            <div>
-              {postNode}
-            </div>
-          }
-        </div>
+        {this.props.posts.length === 0 &&
+          <h2>Loading...</h2>
+        }
+        {this.props.posts.length > 0 &&
+          <div>
+            {postNode}
+          </div>
+        }
+      </div>
     );
   }
 };
 
 AllPosts.propTypes = {
   posts: React.PropTypes.array.isRequired,
-  // isFetching: PropTypes.bool.isRequired,
-  // lastUpdated: PropTypes.number,
-  // dispatch: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {

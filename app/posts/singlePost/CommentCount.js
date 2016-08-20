@@ -13,7 +13,7 @@ const CommentCount = (props) => {
 
   return (
     <span>
-      <a href="#">{textToDisplay}</a>
+      <button>{textToDisplay}</button>
     </span>
   );
 };
