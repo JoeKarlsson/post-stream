@@ -25,15 +25,15 @@ const postReducer = (state = initialState, action) => {
       return state.updateIn(['posts'], (posts) => {
         return posts.clear().concat(
           action.posts.map((post) => {
-            post.showComments = false;
-            post.isParentPost = true;
-            post.realName = 'Joe Karlsson';
-            post.username = 'joejoebinks3';
-            post.comments = [];
-            post.childId = 0;
-            post.childContext = {};
-            post.didInvalidate = false;
-            return post;
+            return Map(post)
+            .set('showComments', false)
+            .set('isParentset', true)
+            .set('realName', 'Joe Karlsson')
+            .set('username', 'joejoebinks3')
+            .set('comments', [])
+            .set('childId', 0)
+            .set('childContext', {})
+            .set('didInvalidate', false)
           })
         )
       })

@@ -52,7 +52,7 @@ AllPosts.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    posts: state.postReducer.get('posts').toArray(),
+    posts: state.postReducer.get('posts').toJS(),
     isFetching: state.postReducer.get('isFetching'),
     lastUpdated: state.postReducer.get('lastUpdated')
   }

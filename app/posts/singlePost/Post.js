@@ -91,18 +91,20 @@ Post.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
 
+  console.log(state.postReducer.get('posts'))
+  console.log(ownProps)
   return {
     // id: ownProps.id,
     // comments: ownProps.comments,
-    showComments: state.postReducer.get('posts').get(ownProps.id - 1).showComments,
+    showComments: state.postReducer.get('posts').get(ownProps.id - 1).get('showComments'),
     // isParentPost: ownProps.isParentPost,
     // realName: ownProps.realName,
     // username: ownProps.username,
     // body: ownProps.body,
     // created_at: ownProps.created_at,
     // commentCount: ownProps.commentCount,
-    childId: state.postReducer.get('posts').get(ownProps.id - 1).childId,
-    childContext: state.postReducer.get('posts').get(ownProps.id - 1).childContext,
+    childId: state.postReducer.get('posts').get(ownProps.id - 1).get('childId'),
+    childContext: state.postReducer.get('posts').get(ownProps.id - 1).get('childContext'),
   }
 };
 
