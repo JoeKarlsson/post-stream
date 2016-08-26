@@ -28,7 +28,11 @@ export const invalidateComments = () => {
 };
 
 const shouldFetchComments = (state, postId) => {
-  const comments = state.postReducer.get('posts').get(postId).comments;
+  const comments = state.postReducer
+    .get('posts')
+    .get(postId)
+    .get('comments');
+
   if (comments.length === 0) {
     return true;
   } else if (comments.isFetching) {

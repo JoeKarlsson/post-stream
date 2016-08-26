@@ -17,7 +17,6 @@ class Post extends Component {
   };
 
   handleShowingChild() {
-    console.log('this.props: ', this.props);
     const { dispatch } = this.props;
     dispatch(fetchCommentsIfNeeded(this.props.id));
   }
@@ -91,8 +90,6 @@ Post.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
 
-  console.log(state.postReducer.get('posts'))
-  console.log(ownProps)
   return {
     // id: ownProps.id,
     // comments: ownProps.comments,

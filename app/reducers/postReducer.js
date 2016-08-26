@@ -73,13 +73,9 @@ const postReducer = (state = initialState, action) => {
     case 'RECEIVE_COMMENTS':
       return state.updateIn(['posts'], (posts) => {
         return posts.updateIn([action.postId - 1], (post) => {
-          let copy = Object.assign({}, post);
-          action.comments.forEach((comment) => {
-            copy.comments.push(comment);
-          });
-          copy.showComments = true;
-          copy.childContext = action.comments[0];
-          return copy;
+          return post.set('showComments', true)
+          .set('childContext', action.comments[0])
+          .set('comments', action.comments);
         })
       })
       .set('isFetchingPosts', false)
@@ -88,20 +84,16 @@ const postReducer = (state = initialState, action) => {
     case "HANDLE_NEXT_COMMENT":
       return state.updateIn(['posts'], (posts) => {
         return posts.updateIn([action.postId - 1], (post) => {
-          let copy = Object.assign({}, post);
-          copy.childId = action.newChildId;
-          copy.childContext = copy.comments[action.newChildId];
-          return copy;
+          return post.set('childId', action.newChildId)
+          .set('childContext', post.get('comments')[action.newChildId]);
         })
       })
 
     case "HANDLE_PREV_COMMENT":
       return state.updateIn(['posts'], (posts) => {
         return posts.updateIn([action.postId - 1], (post) => {
-          let copy = Object.assign({}, post);
-          copy.childId = action.newChildId;
-          copy.childContext = copy.comments[action.newChildId];
-          return copy;
+          return post.set('childId', action.newChildId)
+          .set('childContext', post.get('comments')[action.newChildId]);
         })
       })
 
