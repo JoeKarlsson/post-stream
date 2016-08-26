@@ -12,10 +12,6 @@ class Post extends Component {
     this.handleNext = this.handleNext.bind(this);
   };
 
-  componentDidMount() {
-
-  };
-
   handleShowingChild() {
     const { dispatch } = this.props;
     dispatch(fetchCommentsIfNeeded(this.props.id));
@@ -52,9 +48,9 @@ class Post extends Component {
       <div className={styles.post}>
 
         <header>
-          <span>{this.props.username}</span>
-          <span>{this.props.created_at}</span>
-          <span>{this.props.realName}</span>
+          <span>{this.props.username} </span>
+          <span>{this.props.created_at} </span>
+          <span>{this.props.realName} </span>
         </header>
 
         <p>{this.props.body}</p>
@@ -64,7 +60,6 @@ class Post extends Component {
             numOfComments={this.props.commentCount}
           />
         </div>
-
         {
           this.props.showComments &&
           <div className="replies">
@@ -97,22 +92,19 @@ Post.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+
   return {
-    id: ownProps.id,
-    comments: state.postReducer.get('posts')
-      .get(ownProps.id - 1).comments,
-    showComments: state.postReducer.get('posts')
-      .get(ownProps.id - 1).showComments,
-    isParentPost: ownProps.isParentPost,
-    realName: ownProps.realName,
-    username: ownProps.username,
-    body: ownProps.body,
-    created_at: ownProps.created_at,
-    commentCount: ownProps.commentCount,
-    childId: state.postReducer.get('posts')
-      .get(ownProps.id - 1).childId,
-    childContext: state.postReducer.get('posts')
-      .get(ownProps.id - 1).childContext,
+    // id: ownProps.id,
+    // comments: ownProps.comments,
+    showComments: state.postReducer.get('posts').get(ownProps.id - 1).showComments,
+    // isParentPost: ownProps.isParentPost,
+    // realName: ownProps.realName,
+    // username: ownProps.username,
+    // body: ownProps.body,
+    // created_at: ownProps.created_at,
+    // commentCount: ownProps.commentCount,
+    // childId: ownProps.childId,
+    // childContext: ownProps.childContext,
   }
 };
 

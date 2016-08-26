@@ -23,7 +23,7 @@ const postReducer = (state = initialState, action) => {
 
     case 'RECEIVE_POSTS':
       return state.updateIn(['posts'], (posts) => {
-        return posts.concat(
+        return posts.clear().concat(
           action.posts.map((post) => {
             post.showComments = false;
             post.isParentPost = true;
@@ -63,13 +63,14 @@ const postReducer = (state = initialState, action) => {
 
     case 'RECEIVE_COMMENTS':
       return state.updateIn(['posts'], (posts) => {
-        return posts.updateIn([action.postId], (post) => {
+        return posts.updateIn([action.postId - 1], (post) => {
+          let copy = Object.assign({}, post);
           action.comments.forEach((comment) => {
-            post.comments.push(comment);
-          })
-          post.showComments = true;
-          post.childContext = action.comments[0];
-          return post;
+            copy.comments.push(comment);
+          });
+          copy.showComments = true;
+          copy.childContext = action.comments[0];
+          return copy;
         })
       })
       .set('isFetchingPosts', false)

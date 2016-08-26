@@ -13,12 +13,11 @@ class AllPosts extends Component {
   };
 
   render() {
-    const postNode = this.props.posts.map(( post ) => {
+    const postNode = this.props.posts.map(( post, i ) => {
       return (
         <Post
           {...post}
-          comments={post.hasOwnProperty('comments') ? post.comments : []}
-          key={post.id}
+          key={i}
         />
       );
     });
@@ -36,7 +35,8 @@ class AllPosts extends Component {
         {this.props.posts.length === 0 &&
           <h2>Loading...</h2>
         }
-        {this.props.posts.length > 0 &&
+
+        {this.props.posts.length > 1 &&
           <div>
             {postNode}
           </div>
