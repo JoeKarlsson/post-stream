@@ -49,7 +49,16 @@ const postReducer = (state = initialState, action) => {
 
     case "RECEIVE_NEW_POST":
       return state.updateIn(['posts'], (posts) => {
-        return posts.push(action.newPost);
+        return posts.push(Map(action.newPost)
+          .set('showComments', false)
+          .set('isParentset', true)
+          .set('realName', 'Joe Karlsson')
+          .set('username', 'joejoebinks3')
+          .set('comments', [])
+          .set('childId', 0)
+          .set('childContext', {})
+          .set('didInvalidate', false)
+        );
       })
       .set('submittingPost', false)
       .set('newPostBody', '');
