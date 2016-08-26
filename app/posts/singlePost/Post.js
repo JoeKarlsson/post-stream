@@ -17,6 +17,7 @@ class Post extends Component {
   };
 
   handleShowingChild() {
+    console.log('this.props: ', this.props);
     const { dispatch } = this.props;
     dispatch(fetchCommentsIfNeeded(this.props.id));
   }
@@ -63,6 +64,7 @@ class Post extends Component {
             <span onClick={this.handleNext}> right</span>
               <Post
                 {...this.props.childContext}
+                dispatch={this.props.dispatch}
                 isParentPost={false}
                 key={this.props.childContext.id}
               />
