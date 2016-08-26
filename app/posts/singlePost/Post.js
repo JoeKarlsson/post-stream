@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import CommentCount from './CommentCount';
 import { connect } from 'react-redux';
-import { fetchCommentsIfNeeded } from '../../actions/commentActions';
+import {
+  handlePrevComment,
+  handleNextComment,
+  fetchCommentsIfNeeded,
+} from '../../actions/commentActions';
 import styles from './Post.scss';
 
 class Post extends Component {
@@ -21,25 +25,17 @@ class Post extends Component {
     let newChildId = this.props.childId - 1;
 
     if (!!~newChildId) {
-      // let newState = {
-      //   childId: newChildId,
-      //   childContext: this.props.comments[newChildId]
-      // };
-
-      // this.setState(newState);
+      const { dispatch } = this.props;
+      dispatch(handlePrevComment(this.props.id, newChildId));
     }
   };
 
   handleNext(e) {
-    let newChildId = this.props.childId + 1;
+    const newChildId = this.props.childId + 1;
 
     if (newChildId < this.props.comments.length) {
-      // let newState = {
-      //   childId: newChildId,
-      //   childContext: this.props.comments[newChildId]
-      // };
-
-      // this.setState(newState);
+      const { dispatch } = this.props;
+      dispatch(handleNextComment(this.props.id, newChildId));
     }
   };
 
@@ -103,8 +99,8 @@ const mapStateToProps = (state, ownProps) => {
     // body: ownProps.body,
     // created_at: ownProps.created_at,
     // commentCount: ownProps.commentCount,
-    // childId: ownProps.childId,
-    // childContext: ownProps.childContext,
+    childId: state.postReducer.get('posts').get(ownProps.id - 1).childId,
+    childContext: state.postReducer.get('posts').get(ownProps.id - 1).childContext,
   }
 };
 

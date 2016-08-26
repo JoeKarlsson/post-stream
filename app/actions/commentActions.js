@@ -45,3 +45,19 @@ export const fetchCommentsIfNeeded = (postId) => {
     }
   }
 };
+
+export const handleNextComment = (postId, newChildId) => {
+  return {
+    type: "HANDLE_NEXT_COMMENT",
+    postId,
+    newChildId,
+  }
+}
+
+export const handlePrevComment = (postId, newChildId) => {
+  return {
+    type: "HANDLE_PREV_COMMENT",
+    postId,
+    newChildId,
+  }
+}

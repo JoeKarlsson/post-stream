@@ -76,6 +76,26 @@ const postReducer = (state = initialState, action) => {
       .set('isFetchingPosts', false)
       .set('didInvalidate', false);
 
+    case "HANDLE_NEXT_COMMENT":
+      return state.updateIn(['posts'], (posts) => {
+        return posts.updateIn([action.postId - 1], (post) => {
+          let copy = Object.assign({}, post);
+          copy.childId = action.newChildId;
+          copy.childContext = copy.comments[action.newChildId];
+          return copy;
+        })
+      })
+
+    case "HANDLE_PREV_COMMENT":
+      return state.updateIn(['posts'], (posts) => {
+        return posts.updateIn([action.postId - 1], (post) => {
+          let copy = Object.assign({}, post);
+          copy.childId = action.newChildId;
+          copy.childContext = copy.comments[action.newChildId];
+          return copy;
+        })
+      })
+
     default:
       return state;
   }
