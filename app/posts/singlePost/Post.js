@@ -6,6 +6,7 @@ import {
   handleNextComment,
   fetchCommentsIfNeeded,
 } from '../../actions/commentActions';
+import DestroyPostButton from './DestroyPostButton.js';
 import styles from './Post.scss';
 
 class Post extends Component {
@@ -43,11 +44,10 @@ class Post extends Component {
     return (
       <div className={styles.post}>
 
-        <header>
-          <span>{this.props.username} </span>
-          <span>{this.props.created_at} </span>
-          <span>{this.props.realName} </span>
-        </header>
+        <div>{this.props.username}</div>
+        <div>{this.props.created_at}</div>
+        <div>{this.props.realName}</div>
+        <DestroyPostButton id={this.props.id} />
 
         <p>{this.props.body}</p>
 
@@ -69,6 +69,7 @@ class Post extends Component {
               />
           </div>
         }
+        <hr/>
       </div>
     );
   }
@@ -91,15 +92,7 @@ Post.propTypes = {
 const mapStateToProps = (state, ownProps) => {
 
   return {
-    // id: ownProps.id,
-    // comments: ownProps.comments,
     showComments: state.postReducer.get('posts').get(ownProps.id - 1).get('showComments'),
-    // isParentPost: ownProps.isParentPost,
-    // realName: ownProps.realName,
-    // username: ownProps.username,
-    // body: ownProps.body,
-    // created_at: ownProps.created_at,
-    // commentCount: ownProps.commentCount,
     childId: state.postReducer.get('posts').get(ownProps.id - 1).get('childId'),
     childContext: state.postReducer.get('posts').get(ownProps.id - 1).get('childContext'),
   }

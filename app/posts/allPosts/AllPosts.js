@@ -17,6 +17,7 @@ class AllPosts extends Component {
       return (
         <Post
           {...post}
+          id={i}
           key={i}
         />
       );
@@ -36,7 +37,7 @@ class AllPosts extends Component {
           <h2>Loading...</h2>
         }
 
-        {this.props.posts.length > 1 &&
+        {this.props.posts.length > 2 &&
           <div>
             {postNode}
           </div>

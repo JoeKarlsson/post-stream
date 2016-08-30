@@ -63,6 +63,20 @@ const postReducer = (state = initialState, action) => {
       .set('submittingPost', false)
       .set('newPostBody', '');
 
+    case 'DESTROY_POST':
+      // return state.updateIn(['posts'], (posts) => {
+      //   return posts.updateIn([action.postId - 1], (post) => {
+      //     console.log('action.postId: ', action.postId);
+      //     console.log('post: ', post);
+      //   })
+      // });
+      return state;
+
+    case 'CONFIRMED_POST_DESTROYED':
+      return state.updateIn(['posts'], (posts) => {
+        return posts.delete(action.postId);
+      });
+
     case 'INVALIDATE_COMMENTS':
       return state.set('didInvalidate', true);
 
@@ -87,7 +101,7 @@ const postReducer = (state = initialState, action) => {
           return post.set('childId', action.newChildId)
           .set('childContext', post.get('comments')[action.newChildId]);
         })
-      })
+      });
 
     case "HANDLE_PREV_COMMENT":
       return state.updateIn(['posts'], (posts) => {
@@ -95,7 +109,7 @@ const postReducer = (state = initialState, action) => {
           return post.set('childId', action.newChildId)
           .set('childContext', post.get('comments')[action.newChildId]);
         })
-      })
+      });
 
     default:
       return state;
