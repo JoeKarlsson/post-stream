@@ -86,26 +86,24 @@ const postReducer = (state = initialState, action) => {
 
     case 'RECEIVE_COMMENTS':
       return state.updateIn(['posts'], (posts) => {
-        return posts.updateIn([action.postId - 1], (post) => {
-          return post.set('showComments', true)
+        return posts.update(action.index, (post) => {
+          console.log('post.toJS(): ', post.toJS());
+          console.log('action.index: ', action.index);
+          const foo = post.set('showComments', true)
           .set('childContext', action.comments[0])
           .set('comments', action.comments);
+          console.log('foo: ', foo.toJS());
+          return foo;
         })
       })
       .set('isFetchingPosts', false)
       .set('didInvalidate', false);
 
-    case "HANDLE_NEXT_COMMENT":
+    case "TOGGLE_COMMENT":
       return state.updateIn(['posts'], (posts) => {
-        return posts.updateIn([action.postId - 1], (post) => {
-          return post.set('childId', action.newChildId)
-          .set('childContext', post.get('comments')[action.newChildId]);
-        })
-      });
-
-    case "HANDLE_PREV_COMMENT":
-      return state.updateIn(['posts'], (posts) => {
-        return posts.updateIn([action.postId - 1], (post) => {
+        console.log('action.index: ', action.index);
+        return posts.update(action.index, (post) => {
+          console.log('post.toJS(): ', post.toJS());
           return post.set('childId', action.newChildId)
           .set('childContext', post.get('comments')[action.newChildId]);
         })

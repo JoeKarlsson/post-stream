@@ -4,20 +4,21 @@ const requestComments = () => {
   }
 };
 
-const receiveComments = (comments, postId) => {
+const receiveComments = (comments, postId, index) => {
   return {
     type: "RECEIVE_COMMENTS",
     comments,
     postId,
+    index,
   }
 };
 
-const fetchComments = (postId) => {
+const fetchComments = (postId, index) => {
   return dispatch => {
     dispatch(requestComments());
     return fetch(`/post/${postId}/comments`)
     .then(response => response.json())
-    .then(json => dispatch(receiveComments(json, postId)));
+    .then(json => dispatch(receiveComments(json, postId, index)));
   }
 };
 
@@ -42,26 +43,18 @@ const shouldFetchComments = (state, postId) => {
   }
 };
 
-export const fetchCommentsIfNeeded = (postId) => {
+export const fetchCommentsIfNeeded = (postId, index) => {
   return (dispatch, getState) => {
     if (shouldFetchComments(getState(), postId)) {
-      return dispatch(fetchComments(postId));
+      return dispatch(fetchComments(postId, index));
     }
   }
 };
 
-export const handleNextComment = (postId, newChildId) => {
+export const toggleComment = (index, newChildId) => {
   return {
-    type: "HANDLE_NEXT_COMMENT",
-    postId,
-    newChildId,
-  }
-}
-
-export const handlePrevComment = (postId, newChildId) => {
-  return {
-    type: "HANDLE_PREV_COMMENT",
-    postId,
+    type: "TOGGLE_COMMENT",
+    index,
     newChildId,
   }
 }

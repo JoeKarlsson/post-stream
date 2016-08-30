@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import CommentCount from './CommentCount';
 import { connect } from 'react-redux';
 import {
-  handlePrevComment,
-  handleNextComment,
+  toggleComment,
   fetchCommentsIfNeeded,
 } from '../../actions/commentActions';
 import DestroyPostButton from './DestroyPostButton.js';
@@ -18,25 +17,29 @@ class Post extends Component {
   };
 
   handleShowingChild() {
-    const { dispatch, id } = this.props;
-    dispatch(fetchCommentsIfNeeded(id));
+    const { dispatch, id, index } = this.props;
+    dispatch(fetchCommentsIfNeeded(id, index));
   }
 
   handlePrev(e) {
     let newChildId = this.props.childId - 1;
 
     if (!!~newChildId) {
-      const { dispatch, id } = this.props;
-      dispatch(handlePrevComment(id, newChildId));
+      const { dispatch, index } = this.props;
+      dispatch(toggleComment(index, newChildId));
     }
   };
 
   handleNext(e) {
     const newChildId = this.props.childId + 1;
 
+    console.log('hit1: ');
+    console.log('this.props.childId: ', this.props.childId);
+    console.log('this.props.comments.length: ', this.props.comments.length);
     if (newChildId < this.props.comments.length) {
-      const { dispatch } = this.props;
-      dispatch(handleNextComment(this.props.id, newChildId));
+      console.log('hit: ');
+      const { dispatch, index } = this.props;
+      dispatch(toggleComment(index, newChildId));
     }
   };
 
@@ -62,8 +65,8 @@ class Post extends Component {
         {
           this.props.showComments &&
           <div className="replies">
-            <span onClick={this.handlePrev}>left</span>
-            <span onClick={this.handleNext}> right</span>
+            <span onClick={this.handlePrev}>[ left ] </span>
+            <span onClick={this.handleNext}>[ right ]</span>
               <Post
                 {...this.props.childContext}
                 dispatch={this.props.dispatch}
@@ -95,9 +98,9 @@ Post.propTypes = {
 const mapStateToProps = (state, ownProps) => {
 
   return {
-    showComments: state.postReducer.get('posts').get(ownProps.index - 1).get('showComments'),
-    childId: state.postReducer.get('posts').get(ownProps.index - 1).get('childId'),
-    childContext: state.postReducer.get('posts').get(ownProps.index - 1).get('childContext'),
+    showComments: state.postReducer.get('posts').get(ownProps.index).get('showComments'),
+    childId: state.postReducer.get('posts').get(ownProps.index).get('childId'),
+    childContext: state.postReducer.get('posts').get(ownProps.index).get('childContext'),
   }
 };
 
