@@ -33,11 +33,7 @@ class Post extends Component {
   handleNext(e) {
     const newChildId = this.props.childId + 1;
 
-    console.log('hit1: ');
-    console.log('this.props.childId: ', this.props.childId);
-    console.log('this.props.comments.length: ', this.props.comments.length);
     if (newChildId < this.props.comments.length) {
-      console.log('hit: ');
       const { dispatch, index } = this.props;
       dispatch(toggleComment(index, newChildId));
     }

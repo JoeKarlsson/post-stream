@@ -87,13 +87,9 @@ const postReducer = (state = initialState, action) => {
     case 'RECEIVE_COMMENTS':
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
-          console.log('post.toJS(): ', post.toJS());
-          console.log('action.index: ', action.index);
-          const foo = post.set('showComments', true)
+          return post.set('showComments', true)
           .set('childContext', action.comments[0])
           .set('comments', action.comments);
-          console.log('foo: ', foo.toJS());
-          return foo;
         })
       })
       .set('isFetchingPosts', false)
@@ -101,9 +97,7 @@ const postReducer = (state = initialState, action) => {
 
     case "TOGGLE_COMMENT":
       return state.updateIn(['posts'], (posts) => {
-        console.log('action.index: ', action.index);
         return posts.update(action.index, (post) => {
-          console.log('post.toJS(): ', post.toJS());
           return post.set('childId', action.newChildId)
           .set('childContext', post.get('comments')[action.newChildId]);
         })
