@@ -17,7 +17,7 @@ class AllPosts extends Component {
       return (
         <Post
           {...post}
-          id={i}
+          index={i}
           key={i}
         />
       );

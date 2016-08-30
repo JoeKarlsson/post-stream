@@ -74,7 +74,7 @@ const postReducer = (state = initialState, action) => {
 
     case 'CONFIRMED_POST_DESTROYED':
       return state.updateIn(['posts'], (posts) => {
-        return posts.delete(action.postId);
+        return posts.delete(action.index);
       });
 
     case 'INVALIDATE_COMMENTS':

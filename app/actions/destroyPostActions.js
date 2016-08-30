@@ -1,31 +1,34 @@
 const destroyPost = (postId) => {
   return {
     type: "DESTROY_POST",
-    postId: postId,
+    postId,
   }
 };
 
-const confirmPostDestroyed = (json, postId) => {
+const confirmPostDestroyed = (json, postId, index) => {
   return {
     type: "CONFIRMED_POST_DESTROYED",
     confirmation: json,
-    postId: postId,
+    postId,
+    index,
   }
 };
 
-const fetchDestroyPost = (postId) => {
+const fetchDestroyPost = (postId, index) => {
   return dispatch => {
     dispatch(destroyPost(postId));
-    return fetch(`/post/${postId+1}`, {
+    return fetch(`/post/${postId}`, {
       method: 'DELETE'
     })
     .then(response => response.json())
-    .then(json => dispatch(confirmPostDestroyed(json, postId)));
+    .then(json => dispatch(confirmPostDestroyed(json, postId, index)));
   }
 };
 
-const shouldDestroyPosts = (state, postId) => {
-  const post = state.postReducer.get('posts').get(postId);
+const shouldDestroyPosts = (state, postId, index) => {
+  const post = state.postReducer.get('posts').get(index);
+  console.log('index: ', index);
+  console.log('post: ', post);
   if (post) {
     return true;
   } else if (post.isDestroyingPost) {
@@ -35,10 +38,10 @@ const shouldDestroyPosts = (state, postId) => {
   }
 };
 
-export const destroyPostsIfNeeded = (postId) => {
+export const destroyPostsIfNeeded = (postId, index) => {
   return (dispatch, getState) => {
-    if (shouldDestroyPosts(getState(), postId)) {
-      return dispatch(fetchDestroyPost(postId));
+    if (shouldDestroyPosts(getState(), postId, index)) {
+      return dispatch(fetchDestroyPost(postId, index));
     }
   }
 };

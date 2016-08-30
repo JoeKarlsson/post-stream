@@ -10,8 +10,8 @@ class DestroyPostButton extends Component {
   }
 
   handleDeletingPost() {
-    const { dispatch, id } = this.props;
-    dispatch(destroyPostsIfNeeded(id));
+    const { dispatch, id, index } = this.props;
+    dispatch(destroyPostsIfNeeded(id, index));
   }
 
   render() {

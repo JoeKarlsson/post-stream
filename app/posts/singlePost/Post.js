@@ -18,16 +18,16 @@ class Post extends Component {
   };
 
   handleShowingChild() {
-    const { dispatch } = this.props;
-    dispatch(fetchCommentsIfNeeded(this.props.id));
+    const { dispatch, id } = this.props;
+    dispatch(fetchCommentsIfNeeded(id));
   }
 
   handlePrev(e) {
     let newChildId = this.props.childId - 1;
 
     if (!!~newChildId) {
-      const { dispatch } = this.props;
-      dispatch(handlePrevComment(this.props.id, newChildId));
+      const { dispatch, id } = this.props;
+      dispatch(handlePrevComment(id, newChildId));
     }
   };
 
@@ -47,7 +47,10 @@ class Post extends Component {
         <div>{this.props.username}</div>
         <div>{this.props.created_at}</div>
         <div>{this.props.realName}</div>
-        <DestroyPostButton id={this.props.id} />
+        <DestroyPostButton
+          id={this.props.id}
+          index={this.props.index}
+        />
 
         <p>{this.props.body}</p>
 
@@ -92,9 +95,9 @@ Post.propTypes = {
 const mapStateToProps = (state, ownProps) => {
 
   return {
-    showComments: state.postReducer.get('posts').get(ownProps.id - 1).get('showComments'),
-    childId: state.postReducer.get('posts').get(ownProps.id - 1).get('childId'),
-    childContext: state.postReducer.get('posts').get(ownProps.id - 1).get('childContext'),
+    showComments: state.postReducer.get('posts').get(ownProps.index - 1).get('showComments'),
+    childId: state.postReducer.get('posts').get(ownProps.index - 1).get('childId'),
+    childContext: state.postReducer.get('posts').get(ownProps.index - 1).get('childContext'),
   }
 };
 
