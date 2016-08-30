@@ -25,13 +25,16 @@ class AllPosts extends Component {
 
     return (
       <div className={styles.allPosts}>
+        <h1>post stream</h1>
+
         <NewPost />
-        <h1>Post Stream</h1>
 
         <span>
           Last updated at {new Date(this.props.lastUpdated).toLocaleTimeString()}.
           {' '}
         </span>
+
+        <hr />
 
         {this.props.posts.length === 0 &&
           <h2>Loading...</h2>

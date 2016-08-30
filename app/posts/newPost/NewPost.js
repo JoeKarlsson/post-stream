@@ -29,17 +29,17 @@ class NewPostForm extends Component {
     return (
       <div className={styles.newPost}>
         <form>
-          <label htmlFor="body">Body</label>
+          <label htmlFor="body">create a new post</label>
           <input
             ref="body"
             type='text'
             id='body'
-            placeholder='Share it with the world'
+            placeholder='share it with the world'
             value={this.props.newPostBody}
             onChange={this.handleBodyChange}
           />
           <div className="create-public-private-btns">
-            <button onClick={this.handleSubmitPost}>Post</button>
+            <button onClick={this.handleSubmitPost}>post</button>
           </div>
         </form>
       </div>
