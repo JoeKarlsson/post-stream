@@ -5,7 +5,8 @@ import {
   toggleComment,
   fetchCommentsIfNeeded,
 } from '../../actions/commentActions';
-import DestroyPostButton from './DestroyPostButton.js';
+import DestroyPostButton from './DestroyPostButton';
+import EditPost from './../editPost/EditPost';
 import styles from './Post.scss';
 
 class Post extends Component {
@@ -53,14 +54,18 @@ class Post extends Component {
 
         <p>{this.props.body}</p>
 
-        <div className="comment-count" onClick={this.handleShowingChild}>
+        <div className='comment-count' onClick={this.handleShowingChild}>
           <CommentCount
             numOfComments={this.props.commentCount}
           />
         </div>
+        <EditPost
+          id={this.props.id}
+          index={this.props.index}
+        />
         {
           this.props.showComments &&
-          <div className="replies">
+          <div className='replies'>
             <span onClick={this.handlePrev}>[ left ] </span>
             <span onClick={this.handleNext}>[ right ]</span>
               <Post

@@ -34,6 +34,7 @@ const postReducer = (state = initialState, action) => {
             .set('childId', 0)
             .set('childContext', {})
             .set('didInvalidate', false)
+            .set('updatedPostBody', post.body)
           })
         )
       })
@@ -44,10 +45,10 @@ const postReducer = (state = initialState, action) => {
     case 'HANDLE_NEW_POST_BODY_CHANGE':
       return state.set('newPostBody', action.body);
 
-    case "REQUEST_NEW_POSTS":
+    case 'REQUEST_NEW_POSTS':
       return state.set('submittingPost', true);
 
-    case "RECEIVE_NEW_POST":
+    case 'RECEIVE_NEW_POST':
       return state.updateIn(['posts'], (posts) => {
         return posts.push(Map(action.newPost)
           .set('showComments', false)
@@ -58,10 +59,24 @@ const postReducer = (state = initialState, action) => {
           .set('childId', 0)
           .set('childContext', {})
           .set('didInvalidate', false)
+          .set('updatedPostBody', action.newPost.body)
         );
       })
       .set('submittingPost', false)
       .set('newPostBody', '');
+
+    case 'HANDLE_UPDATED_POST_BODY_CHANGE':
+      return state.updateIn(['posts'], (posts) => {
+        return posts.update(action.index, (post) => {
+          return post.set('updatedPostBody', action.body)
+        })
+      })
+
+    case 'REQUEST_UPDATED_POST':
+      return state;
+
+    case 'RECEIVE_UPDATED_POST':
+      return state;
 
     case 'DESTROY_POST':
       // return state.updateIn(['posts'], (posts) => {
@@ -95,7 +110,7 @@ const postReducer = (state = initialState, action) => {
       .set('isFetchingPosts', false)
       .set('didInvalidate', false);
 
-    case "TOGGLE_COMMENT":
+    case 'TOGGLE_COMMENT':
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
           return post.set('childId', action.newChildId)

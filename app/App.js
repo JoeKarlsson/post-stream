@@ -1,3 +1,7 @@
+/*
+  eslint no-unused-vars: 0
+*/
+
 import React, { Component } from 'react';
 import Header from './shared/header/Header';
 import Footer from './shared/footer/Footer';
