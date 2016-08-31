@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import CommentCount from './CommentCount';
 import { connect } from 'react-redux';
-// import { render, Remarkable } from 'remarkable';
 const Remarkable = require('remarkable');
 import {
   toggleComment,

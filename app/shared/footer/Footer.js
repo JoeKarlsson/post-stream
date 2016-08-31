@@ -5,7 +5,7 @@ const Footer = () => (
   <div>
     <footer className={styles.footer}>
       <div className={styles.footer_content}>
-        <a href='http://www.callmejoe.net/'><p>site by ray and joe</p></a>
+        <a href='http://www.callmejoe.net/'><p>site by ray, jacoby and joe</p></a>
       </div>
     </footer>
   </div>

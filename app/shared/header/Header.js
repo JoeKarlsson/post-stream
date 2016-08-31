@@ -5,7 +5,7 @@ import styles from './Header.scss';
 const Header = () => (
   <div>
     <header className={styles.header_bar}>
-      <NavLink to='/' onlyActiveOnIndex={true} className={styles.header_logo}>post stream</NavLink>
+      <NavLink to='/' onlyActiveOnIndex={true} className={styles.header_logo}>PostStream</NavLink>
       <ul className={styles.header_nav}>
         <li><NavLink to='/about'>about</NavLink></li>
       </ul>

@@ -1,4 +1,6 @@
-# Post Stream
+# PostStream
+
+PostStream is an undesigned social network. It is a text-based response to the majority of modern social media platforms. This is certainly not for everyone as you will be interacting with others exclusively through text posts. You will notice several features intentionally left out in order to promote meaningful engagement. We hope you enjoy something a little different!
 
 ## Text-Based Social Network
 Tentative example post:
@@ -15,7 +17,7 @@ Tentative example post:
 
 ## Setup Your Project
 
-Download and unpack [Post Stream](https://github.com/JoeKarlsson1/post-stream). Or alternatively checkout from source:
+Download and unpack [PostStream](https://github.com/JoeKarlsson1/post-stream). Or alternatively checkout from source:
 
     git clone git@github.com:JoeKarlsson1/post-stream.git
     cd post-stream
