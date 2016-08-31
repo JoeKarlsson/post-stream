@@ -5,6 +5,9 @@ import {
   toggleComment,
   fetchCommentsIfNeeded,
 } from '../../actions/commentActions';
+import {
+  toggleEditMode,
+} from '../../actions/editPostActions';
 import DestroyPostButton from './DestroyPostButton';
 import EditPost from './../editPost/EditPost';
 import styles from './Post.scss';
@@ -12,10 +15,16 @@ import styles from './Post.scss';
 class Post extends Component {
   constructor() {
     super();
+    this.handleEdit = this.handleEdit.bind(this);
     this.handleShowingChild = this.handleShowingChild.bind(this);
     this.handlePrev = this.handlePrev.bind(this);
     this.handleNext = this.handleNext.bind(this);
   };
+
+  handleEdit() {
+    const { dispatch, index, editMode } = this.props;
+    dispatch(toggleEditMode(index, !editMode));
+  }
 
   handleShowingChild() {
     const { dispatch, id, index } = this.props;
@@ -44,25 +53,31 @@ class Post extends Component {
     return (
       <div className={styles.post}>
 
-        <div>{this.props.username}</div>
-        <div>{this.props.created_at}</div>
-        <div>{this.props.realName}</div>
-        <DestroyPostButton
-          id={this.props.id}
-          index={this.props.index}
-        />
+        {this.props.editMode === false &&
+          <div>
+            <div>{this.props.username}</div>
+            <div>{this.props.created_at}</div>
+            <div>{this.props.realName}</div>
+            <DestroyPostButton
+              id={this.props.id}
+              index={this.props.index}
+            />
+            <span onClick={this.handleEdit}>[ edit ]</span>
+            <p>{this.props.body}</p>
 
-        <p>{this.props.body}</p>
-
-        <div className='comment-count' onClick={this.handleShowingChild}>
-          <CommentCount
-            numOfComments={this.props.commentCount}
+            <div className='comment-count' onClick={this.handleShowingChild}>
+              <CommentCount
+                numOfComments={this.props.commentCount}
+              />
+            </div>
+          </div>
+        }
+        {this.props.editMode === true &&
+          <EditPost
+            id={this.props.id}
+            index={this.props.index}
           />
-        </div>
-        <EditPost
-          id={this.props.id}
-          index={this.props.index}
-        />
+        }
         {
           this.props.showComments &&
           <div className='replies'>
@@ -99,6 +114,7 @@ Post.propTypes = {
 const mapStateToProps = (state, ownProps) => {
 
   return {
+    editMode: state.postReducer.get('posts').get(ownProps.index).get('editMode'),
     showComments: state.postReducer.get('posts').get(ownProps.index).get('showComments'),
     childId: state.postReducer.get('posts').get(ownProps.index).get('childId'),
     childContext: state.postReducer.get('posts').get(ownProps.index).get('childContext'),

@@ -13,6 +13,14 @@ export const requestUpdatedPost = (index) => {
   }
 };
 
+export const toggleEditMode = (index, editState) => {
+  return {
+    type: 'TOGGLE_EDIT_MODE',
+    index,
+    editState,
+  }
+};
+
 const receiveUpdatedPost = (json, index) => {
   console.log('index: ', index);
   return {

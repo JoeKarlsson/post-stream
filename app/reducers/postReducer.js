@@ -35,6 +35,7 @@ const postReducer = (state = initialState, action) => {
             .set('childContext', {})
             .set('didInvalidate', false)
             .set('updatedPostBody', post.body)
+            .set('editMode', false)
           })
         )
       })
@@ -60,10 +61,18 @@ const postReducer = (state = initialState, action) => {
           .set('childContext', {})
           .set('didInvalidate', false)
           .set('updatedPostBody', action.newPost.body)
+          .set('editMode', false)
         );
       })
       .set('submittingPost', false)
       .set('newPostBody', '');
+
+    case 'TOGGLE_EDIT_MODE':
+      return state.updateIn(['posts'], (posts) => {
+        return posts.update(action.index, (post) => {
+          return post.set('editMode', action.editState)
+        })
+      })
 
     case 'HANDLE_UPDATED_POST_BODY_CHANGE':
       return state.updateIn(['posts'], (posts) => {
@@ -77,12 +86,10 @@ const postReducer = (state = initialState, action) => {
       return state;
 
     case 'RECEIVE_UPDATED_POST':
-      console.log('action.updatedPost: ', action.updatedPost);
-      console.log('action.index: ', action.index);
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
-          console.log('post: ', post.toJS());
           return post.set('body', action.updatedPost.body)
+            .set('editMode', false);
         })
       })
 
