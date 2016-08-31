@@ -20,8 +20,9 @@ class EditPost extends Component {
 
   handleSubmitUpdatedPost(e) {
     e.preventDefault();
-    const { dispatch, postId, index } = this.props;
-    dispatch(submitUpdatedPost(this.props.newPostBody, postId, index))
+    const { dispatch, id, index, updatedPostBody } = this.props;
+    console.log('updatedPostBody: ', updatedPostBody);
+    dispatch(submitUpdatedPost(this.props.updatedPostBody, id, index))
   };
 
   render() {

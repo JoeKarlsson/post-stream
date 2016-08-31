@@ -73,9 +73,11 @@ const postReducer = (state = initialState, action) => {
       })
 
     case 'REQUEST_UPDATED_POST':
+
       return state;
 
     case 'RECEIVE_UPDATED_POST':
+      console.log('action.updatedPost: ', action.updatedPost);
       return state;
 
     case 'DESTROY_POST':
