@@ -25,7 +25,7 @@ class AllPosts extends Component {
 
     return (
       <div className={styles.allPosts}>
-        <h1>post stream</h1>
+        <h1>stream</h1>
 
         <NewPost />
 

@@ -26,17 +26,18 @@ class EditPost extends Component {
 
   render() {
     return (
-      <div className={styles.editPost}>
+      <div className='{styles.editPost}' >
         <form>
           <input
             ref='body'
             type='text'
             id='body'
+            className="u-full-width"
             placeholder='edit your post'
             value={this.props.updatedPostBody}
             onChange={this.handleBodyChange}
           />
-          <div className='create-public-private-btns'>
+          <div>
             <button onClick={this.handleSubmitUpdatedPost}>save</button>
           </div>
         </form>

@@ -62,14 +62,17 @@ class Post extends Component {
 
         {this.props.editMode === false &&
           <div>
-            <div>{this.props.username}</div>
-            <div>{this.props.created_at}</div>
-            <div>{this.props.realName}</div>
-            <DestroyPostButton
-              id={this.props.id}
-              index={this.props.index}
-            />
-            <span onClick={this.handleEdit}>[ edit ]</span>
+            <div>
+              {this.props.username} | {this.props.realName} | {this.props.createdAt}
+
+            </div>
+            <div>
+              <DestroyPostButton
+                id={this.props.id}
+                index={this.props.index}
+              />
+              <span onClick={this.handleEdit}>[ edit ]</span>
+            </div>
 
             <span dangerouslySetInnerHTML={this.rawMarkup()} />
 

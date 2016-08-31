@@ -27,13 +27,14 @@ class NewPostForm extends Component {
 
   render() {
     return (
-      <div className={styles.newPost}>
+      <div className={styles.u_full_width}>
         <form>
           <label htmlFor="body">create a new post</label>
           <input
             ref="body"
             type='text'
             id='body'
+            className="u-full-width"
             placeholder='share it with the world'
             value={this.props.newPostBody}
             onChange={this.handleBodyChange}

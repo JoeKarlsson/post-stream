@@ -5,8 +5,8 @@
 import React, { Component } from 'react';
 import Header from './shared/header/Header';
 import Footer from './shared/footer/Footer';
-import normalize from './normalizer.scss';
-import skeleton from './skeleton.scss';
+import normalize from './shared/styles/normalizer.scss';
+import skeleton from './shared/styles/skeleton.scss';
 import styles from './App.scss';
 
 class App extends Component {
