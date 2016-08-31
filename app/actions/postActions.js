@@ -28,7 +28,7 @@ export const invalidatePosts = () => {
 };
 
 const shouldFetchPosts = (state) => {
-  const posts = state.postReducer.posts;
+  const posts = state.rootReducer.postReducer.posts;
   if (!posts) {
     return true;
   } else if (posts.isFetching) {

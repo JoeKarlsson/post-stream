@@ -125,10 +125,10 @@ Post.propTypes = {
 const mapStateToProps = (state, ownProps) => {
 
   return {
-    editMode: state.postReducer.get('posts').get(ownProps.index).get('editMode'),
-    showComments: state.postReducer.get('posts').get(ownProps.index).get('showComments'),
-    childId: state.postReducer.get('posts').get(ownProps.index).get('childId'),
-    childContext: state.postReducer.get('posts').get(ownProps.index).get('childContext'),
+    editMode: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('editMode'),
+    showComments: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('showComments'),
+    childId: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('childId'),
+    childContext: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('childContext'),
   }
 };
 

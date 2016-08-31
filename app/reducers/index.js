@@ -1,1 +1,1 @@
-export { default as postReducer } from './postReducer';
+export { default as rootReducer } from './postReducer';

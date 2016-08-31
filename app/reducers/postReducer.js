@@ -1,4 +1,6 @@
 import { Map, List } from 'immutable';
+import { combineReducers } from 'redux';
+import { authReducer } from './authReducer';
 
 const initialState = Map({
   isFetchingPosts: false,
@@ -138,4 +140,10 @@ const postReducer = (state = initialState, action) => {
   }
 };
 
-export default postReducer;
+
+const rootReducer = combineReducers({
+  postReducer,
+  authReducer
+})
+
+export default rootReducer;

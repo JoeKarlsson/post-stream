@@ -54,7 +54,7 @@ NewPostForm.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    newPostBody: state.postReducer.get('newPostBody'),
+    newPostBody: state.rootReducer.postReducer.get('newPostBody'),
   }
 };
 
