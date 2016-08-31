@@ -35,7 +35,7 @@ class NewPostForm extends Component {
             type='text'
             id='body'
             className="u-full-width"
-            placeholder='share it with the world'
+            placeholder='share it with the world...'
             value={this.props.newPostBody}
             onChange={this.handleBodyChange}
           />

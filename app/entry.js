@@ -18,7 +18,7 @@ import NoMatch from './static/noMatch/NoMatch';
 const store = configureStore();
 
 ReactDOM.render(
-  <Provider store={store}>
+  <Provider store={ store }>
     <Router history={ browserHistory }>
       <Route path='/' component={ App }>
         <IndexRoute component={ AllPosts } />
