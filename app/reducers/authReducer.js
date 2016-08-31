@@ -1,13 +1,26 @@
 import { Map } from 'immutable';
 
-const authReducer = (state = Map(), action) => {
+const initialState = Map({
+  username: '',
+  password: '',
+  isFetchingLogin: false,
+  didInvalidateLogin: false,
+  lastUpdated: null,
+  receivedAt: null,
+});
+
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'HANDLE_LOGIN_USERNAME_CHANGE':
-      console.log('hot: ');
+    case 'HANDLE_USERNAME_CHANGE':
+      return state.set('username', action.username);
+
+    case 'HANDLE_PASSWORD_CHANGE':
+      return state.set('password', action.password);
+
+    case 'REQUEST_LOGIN':
       return state;
 
-    case 'HANDLE_LOGIN':
-      console.log('hot: ');
+    case 'RECEIVE_LOGIN':
       return state;
 
     default:
