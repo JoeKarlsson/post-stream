@@ -21,8 +21,8 @@ class NewPostForm extends Component {
 
   handleSubmitPost(e) {
     e.preventDefault();
-    const { dispatch } = this.props;
-    dispatch(submitNewPost(this.props.newPostBody))
+    const { dispatch, newPostBody } = this.props;
+    dispatch(submitNewPost(newPostBody))
   };
 
   render() {

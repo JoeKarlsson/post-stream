@@ -1,7 +1,22 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import {
+  handleLogin,
+} from '../../../actions/loginActions';
 import styles from './Login.scss';
 
 class Login extends React.Component {
+  constructor() {
+    super();
+    this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  handleLogin(e) {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    dispatch(handleLogin(e.target.value))
+  }
+
   render() {
     return (
       <div className={styles.Login}>
@@ -38,4 +53,13 @@ class Login extends React.Component {
   }
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+  console.log('state: ', state);
+  return {
+
+  }
+};
+
+export default connect(
+  mapStateToProps
+)(Login);
