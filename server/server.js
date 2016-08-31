@@ -84,7 +84,7 @@ Promise.onPossiblyUnhandledRejection((err) => {
 
 app.use('/user', user);
 app.use('/post', post);
-app.use('/', root);
+app.use('/api', root);
 
 if (isDeveloping) {
   app.set('host', 'http://localhost');

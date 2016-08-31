@@ -26,7 +26,7 @@ class EditPost extends Component {
 
   render() {
     return (
-      <div className='{styles.editPost}' >
+      <div className={styles.editPost} >
         <form>
           <input
             ref='body'

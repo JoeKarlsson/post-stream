@@ -8,10 +8,12 @@ import {
 } from 'react-router';
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
-import NoMatch from './static/noMatch/NoMatch.js';
-import About from './static/about/About.js';
-import AllPosts from './posts/allPosts/AllPosts.js';
 import App from './App';
+import AllPosts from './posts/allPosts/AllPosts';
+import Login from './shared/auth/login/Login';
+import Logout from './shared/auth/logout/Logout';
+import About from './static/about/About';
+import NoMatch from './static/noMatch/NoMatch';
 
 const store = configureStore();
 
@@ -21,6 +23,8 @@ ReactDOM.render(
       <Route path='/' component={ App }>
         <IndexRoute component={ AllPosts } />
         <Route path='/about' component={ About } />
+        <Route path='/login' component={ Login } />
+        <Route path='/logout' component={ Logout } />
         <Route path='*' component={ NoMatch } />
       </Route>
     </Router>
