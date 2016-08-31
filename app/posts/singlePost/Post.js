@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import CommentCount from './CommentCount';
 import { connect } from 'react-redux';
+// import { render, Remarkable } from 'remarkable';
+const Remarkable = require('remarkable');
 import {
   toggleComment,
   fetchCommentsIfNeeded,
@@ -21,15 +23,21 @@ class Post extends Component {
     this.handleNext = this.handleNext.bind(this);
   };
 
+  rawMarkup() {
+    var md = new Remarkable();
+    var rawMarkup = md.render(this.props.body.toString());
+    return { __html: rawMarkup };
+  };
+
   handleEdit() {
     const { dispatch, index, editMode } = this.props;
     dispatch(toggleEditMode(index, !editMode));
-  }
+  };
 
   handleShowingChild() {
     const { dispatch, id, index } = this.props;
     dispatch(fetchCommentsIfNeeded(id, index));
-  }
+  };
 
   handlePrev(e) {
     let newChildId = this.props.childId - 1;
@@ -63,7 +71,8 @@ class Post extends Component {
               index={this.props.index}
             />
             <span onClick={this.handleEdit}>[ edit ]</span>
-            <p>{this.props.body}</p>
+
+            <span dangerouslySetInnerHTML={this.rawMarkup()} />
 
             <div className='comment-count' onClick={this.handleShowingChild}>
               <CommentCount
