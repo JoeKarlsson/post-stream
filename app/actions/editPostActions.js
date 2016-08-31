@@ -14,6 +14,7 @@ export const requestUpdatedPost = (index) => {
 };
 
 const receiveUpdatedPost = (json, index) => {
+  console.log('index: ', index);
   return {
     type: 'RECEIVE_UPDATED_POST',
     updatedPost: json,
@@ -34,6 +35,6 @@ export const submitUpdatedPost = (body, postId, index) => {
       body: `body=${body}`
     })
     .then(response => response.json())
-    .then(json => dispatch(receiveUpdatedPost(json), index));
+    .then(json => dispatch(receiveUpdatedPost(json, index)));
   }
 };

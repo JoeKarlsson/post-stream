@@ -78,7 +78,13 @@ const postReducer = (state = initialState, action) => {
 
     case 'RECEIVE_UPDATED_POST':
       console.log('action.updatedPost: ', action.updatedPost);
-      return state;
+      console.log('action.index: ', action.index);
+      return state.updateIn(['posts'], (posts) => {
+        return posts.update(action.index, (post) => {
+          console.log('post: ', post.toJS());
+          return post.set('body', action.updatedPost.body)
+        })
+      })
 
     case 'DESTROY_POST':
       // return state.updateIn(['posts'], (posts) => {
