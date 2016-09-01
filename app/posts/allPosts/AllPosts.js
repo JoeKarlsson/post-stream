@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Post from '../singlePost/Post';
 import NewPost from '../newPost/NewPost';
 import styles from './AllPosts.scss';
-import { fetchPostsIfNeeded } from '../../actions/postActions';
+import { fetchPostsIfNeeded } from '../../actions/posts/postActions';
 
 class AllPosts extends Component {
 
@@ -13,7 +13,14 @@ class AllPosts extends Component {
   };
 
   render() {
-    const postNode = this.props.posts.map(( post, i ) => {
+    const {
+      posts,
+      lastUpdated,
+      isLoggedIn,
+      username
+    } = this.props;
+
+    const postNode = posts.map(( post, i ) => {
       return (
         <Post
           {...post}
@@ -28,19 +35,22 @@ class AllPosts extends Component {
         <h1>stream</h1>
 
         <NewPost />
+        { isLoggedIn === true &&
+          <p>welcome back {username}</p>
+        }
 
         <span>
-          Last updated at {new Date(this.props.lastUpdated).toLocaleTimeString()}.
+          stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.
           {' '}
         </span>
 
         <hr />
 
-        {this.props.posts.length === 0 &&
+        { posts.length === 0 &&
           <h2>Loading...</h2>
         }
 
-        {this.props.posts.length > 2 &&
+        { posts.length > 2 &&
           <div>
             {postNode}
           </div>
@@ -58,7 +68,9 @@ const mapStateToProps = (state) => {
   return {
     posts: state.rootReducer.postReducer.get('posts').toJS(),
     isFetching: state.rootReducer.postReducer.get('isFetching'),
-    lastUpdated: state.rootReducer.postReducer.get('lastUpdated')
+    lastUpdated: state.rootReducer.postReducer.get('lastUpdated'),
+    isLoggedIn: state.rootReducer.authReducer.get('isLoggedIn'),
+    username: state.rootReducer.authReducer.get('username'),
   }
 };
 

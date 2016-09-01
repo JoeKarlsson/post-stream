@@ -5,10 +5,10 @@ const Remarkable = require('remarkable');
 import {
   toggleComment,
   fetchCommentsIfNeeded,
-} from '../../actions/commentActions';
+} from '../../actions/posts/commentActions';
 import {
   toggleEditMode,
-} from '../../actions/editPostActions';
+} from '../../actions/posts/editPostActions';
 import DestroyPostButton from './DestroyPostButton';
 import EditPost from './../editPost/EditPost';
 import styles from './Post.scss';
@@ -57,19 +57,32 @@ class Post extends Component {
   };
 
   render() {
+    const {
+      username,
+      realName,
+      commentCount,
+      showComments,
+      childContext,
+      id,
+      index,
+      editMode,
+      createdAt,
+      dispatch,
+    } = this.props;
+
     return (
       <div className={styles.post}>
 
-        {this.props.editMode === false &&
+        { editMode === false &&
           <div>
             <div>
-              {this.props.username} | {this.props.realName} | {this.props.createdAt}
+              {username} | {realName} | {new Date(createdAt).toLocaleTimeString()}
 
             </div>
             <div>
               <DestroyPostButton
-                id={this.props.id}
-                index={this.props.index}
+                id={id}
+                index={index}
               />
               <span onClick={this.handleEdit}>[ edit ]</span>
             </div>
@@ -78,27 +91,26 @@ class Post extends Component {
 
             <div className='comment-count' onClick={this.handleShowingChild}>
               <CommentCount
-                numOfComments={this.props.commentCount}
+                numOfComments={commentCount}
               />
             </div>
           </div>
         }
-        {this.props.editMode === true &&
+        { editMode === true &&
           <EditPost
-            id={this.props.id}
-            index={this.props.index}
+            id={id}
+            index={index}
           />
         }
-        {
-          this.props.showComments &&
+        { showComments &&
           <div className='replies'>
             <span onClick={this.handlePrev}>[ left ] </span>
             <span onClick={this.handleNext}>[ right ]</span>
               <Post
-                {...this.props.childContext}
-                dispatch={this.props.dispatch}
+                {...childContext}
+                dispatch={dispatch}
                 isParentPost={false}
-                key={this.props.childContext.id}
+                key={childContext.id}
               />
           </div>
         }
@@ -123,7 +135,6 @@ Post.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-
   return {
     editMode: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('editMode'),
     showComments: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('showComments'),

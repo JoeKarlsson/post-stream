@@ -19,7 +19,7 @@ class App extends Component {
         <div className={styles.content}>
           <div className={skeleton.container}>
             {
-                this.props.children
+              this.props.children
             }
           </div>
         </div>

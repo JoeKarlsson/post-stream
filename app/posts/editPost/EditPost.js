@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   submitUpdatedPost,
   handleUpdatedPostBodyChange
-} from '../../actions/editPostActions';
+} from '../../actions/posts/editPostActions';
 import styles from './EditPost.scss';
 
 class EditPost extends Component {
