@@ -1,8 +1,14 @@
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 
 const initialState = Map({
   username: '',
   password: '',
+  id: 0,
+  first_name: '',
+  last_name: '',
+  bio: '',
+  following: List(),
+  createdAt: null,
   isFetchingLogin: false,
   didInvalidateLogin: false,
   lastUpdated: null,
@@ -23,9 +29,26 @@ const authReducer = (state = initialState, action) => {
 
     case 'RECEIVE_LOGIN':
       return state.set('isLoggedIn', action.success)
+        .set('id', action.user.id)
+        .set('first_name', action.user.first_name)
+        .set('last_name', action.user.last_name)
+        .set('bio', action.user.bio)
+        .set('following', state.get('following').concat(action.user.following))
+        .set('createdAt', action.user.createdAt)
+        .set('bio', action.user.bio)
+        .set('id', action.user.id)
         .set('receivedAt', action.receivedAt)
         .set('password', '')
-        .set('isFetchingLogin', false)
+        .set('isFetchingLogin', false);
+
+    case 'HANDLE_REGISTRATION_FORM_CHANGE':
+      return state.set(action.fieldName, action.content);
+
+    case 'REQUEST_REGISTER_USER':
+      return state;
+
+    case 'RECEIVE_REGISTER_USER':
+      return state;
 
     case 'REQUEST_LOGOUT':
       return state;

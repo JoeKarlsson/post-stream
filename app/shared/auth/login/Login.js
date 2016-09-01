@@ -4,7 +4,7 @@ import {
   onUsernameChange,
   onPasswordChange,
   fetchLogin,
-} from '../../../actions/loginActions';
+} from '../../../actions/auth/loginActions';
 import { browserHistory } from 'react-router'
 import styles from './Login.scss';
 

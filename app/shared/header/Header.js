@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import NavLink from '../navigation/NavLink';
 import styles from './Header.scss';
-import { fetchLogout } from './../../actions/logoutActions';
+import { fetchLogout } from './../../actions/auth/logoutActions';
 
 class Header extends Component {
 
