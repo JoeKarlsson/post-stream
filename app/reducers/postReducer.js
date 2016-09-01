@@ -144,6 +144,12 @@ const postReducer = (state = initialState, action) => {
         })
       });
 
+    case 'REQUEST_NEW_REPLY':
+      return state;
+
+    case 'RECEIVE_NEW_REPLY':
+      return state;
+
     default:
       return state;
   }

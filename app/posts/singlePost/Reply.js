@@ -33,9 +33,9 @@ class Reply extends Component {
   render() {
     const { replyMode } = this.props;
     return (
-      <div className={styles.destroyPost}>
+      <div className={ styles.destroyPost }>
         { replyMode &&
-          <div className={styles.u_full_width}>
+          <div className={ styles.u_full_width }>
             <form>
               <label htmlFor="reply">reply</label>
               <input
@@ -48,10 +48,10 @@ class Reply extends Component {
                 onChange={ this.handleBodyChange }
               />
               <div>
-                <button onClick={this.handleSubmitReply}>reply</button>
+                <button onClick={ this.handleSubmitReply }>reply</button>
               </div>
               <div>
-                <button onClick={this.handleToggleReplyMode}>cancel</button>
+                <button onClick={ this.handleToggleReplyMode }>cancel</button>
               </div>
             </form>
           </div>
@@ -59,7 +59,7 @@ class Reply extends Component {
         { !replyMode &&
           <div
             className="reply"
-            onClick={this.handleToggleReplyMode}
+            onClick={ this.handleToggleReplyMode }
           >
             [ reply ]
           </div>
