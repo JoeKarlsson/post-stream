@@ -27,8 +27,6 @@ const fetchDestroyPost = (postId, index) => {
 
 const shouldDestroyPosts = (state, postId, index) => {
   const post = state.postReducer.get('posts').get(index);
-  console.log('index: ', index);
-  console.log('post: ', post);
   if (post) {
     return true;
   } else if (post.isDestroyingPost) {

@@ -22,7 +22,6 @@ export const toggleEditMode = (index, editState) => {
 };
 
 const receiveUpdatedPost = (json, index) => {
-  console.log('index: ', index);
   return {
     type: 'RECEIVE_UPDATED_POST',
     updatedPost: json,

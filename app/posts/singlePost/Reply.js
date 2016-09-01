@@ -10,9 +10,15 @@ class Reply extends Component {
   constructor() {
     super();
     this.handleToggleReplyMode = this.handleToggleReplyMode.bind(this);
+    this.handleSubmitReply = this.handleSubmitReply.bind(this);
   }
 
   handleToggleReplyMode(e) {
+    const { dispatch, index } = this.props;
+    dispatch(onToggleReplyMode(index));
+  }
+
+  handleSubmitReply(e){
     const { dispatch, index } = this.props;
     dispatch(onToggleReplyMode(index));
   }
@@ -34,8 +40,11 @@ class Reply extends Component {
                 value={this.props.newPostBody}
                 onChange={this.handleBodyChange}
               />
-              <div className="create-public-private-btns">
-                <button onClick={this.handleSubmitPost}>post</button>
+              <div>
+                <button onClick={this.handleSubmitReply}>reply</button>
+              </div>
+              <div>
+                <button onClick={this.handleToggleReplyMode}>cancel</button>
               </div>
             </form>
           </div>
