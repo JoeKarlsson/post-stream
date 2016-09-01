@@ -23,8 +23,9 @@ class Post extends Component {
   };
 
   rawMarkup() {
+    const { body } = this.props;
     var md = new Remarkable();
-    var rawMarkup = md.render(this.props.body.toString());
+    var rawMarkup = md.render(body.toString());
     return { __html: rawMarkup };
   };
 
@@ -45,7 +46,7 @@ class Post extends Component {
       childId,
     } = this.props;
 
-    let newChildId = childId - 1;
+    const newChildId = childId - 1;
 
     if (!!~newChildId) {
       dispatch(toggleComment(index, newChildId));
@@ -77,6 +78,7 @@ class Post extends Component {
       id,
       index,
       editMode,
+      isParentPost,
       createdAt,
       dispatch,
     } = this.props;
@@ -88,7 +90,6 @@ class Post extends Component {
           <div>
             <div>
               {username} | {realName} | {new Date(createdAt).toLocaleTimeString()}
-
             </div>
             <div>
               <DestroyPostButton
@@ -107,6 +108,11 @@ class Post extends Component {
             </div>
           </div>
         }
+
+        { !isParentPost &&
+          <span dangerouslySetInnerHTML={this.rawMarkup()} />
+        }
+
         { editMode === true &&
           <EditPost
             id={id}
@@ -125,7 +131,9 @@ class Post extends Component {
               />
           </div>
         }
-        <hr/>
+        { isParentPost &&
+          <hr/>
+        }
       </div>
     );
   }
@@ -146,6 +154,7 @@ Post.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  console.log('state: ',state.rootReducer.postReducer.get('posts').get(ownProps.index).get('childContext'));
   return {
     editMode: state.rootReducer.postReducer
       .get('posts').get(ownProps.index).get('editMode'),

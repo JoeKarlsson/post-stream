@@ -27,7 +27,7 @@ const postReducer = (state = initialState, action) => {
           action.posts.map((post) => {
             return Map(post)
             .set('showComments', false)
-            .set('isParentset', true)
+            .set('isParentPost', true)
             .set('realName', 'Joe Karlsson')
             .set('username', 'joejoebinks3')
             .set('comments', [])
@@ -53,7 +53,7 @@ const postReducer = (state = initialState, action) => {
       return state.updateIn(['posts'], (posts) => {
         return posts.unshift(Map(action.newPost)
           .set('showComments', false)
-          .set('isParentset', true)
+          .set('isParentPost', true)
           .set('realName', 'Joe Karlsson')
           .set('username', 'joejoebinks3')
           .set('comments', [])
