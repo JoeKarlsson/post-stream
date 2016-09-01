@@ -14,13 +14,13 @@ export const onPasswordChange = (password) => {
 
 const requestLogin = () => {
   return {
-    type: "REQUEST_LOGIN",
+    type: 'REQUEST_LOGIN',
   }
 };
 
 const receiveLogin = (json) => {
   return {
-    type: "RECEIVE_LOGIN",
+    type: 'RECEIVE_LOGIN',
     success: json.success,
     user: json,
     receivedAt: Date.now()
@@ -36,7 +36,7 @@ export const fetchLogin = () => {
     dispatch(requestLogin());
     let myHeaders = new Headers();
     myHeaders.append(
-      "Content-Type", 'application/x-www-form-urlencoded'
+      'Content-Type', 'application/x-www-form-urlencoded'
     );
     return fetch(`/api/login`, {
       method: 'POST',

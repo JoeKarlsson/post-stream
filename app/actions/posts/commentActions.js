@@ -1,12 +1,12 @@
 const requestComments = () => {
   return {
-    type: "REQUEST_COMMENTS",
+    type: 'REQUEST_COMMENTS',
   }
 };
 
 const receiveComments = (comments, postId, index) => {
   return {
-    type: "RECEIVE_COMMENTS",
+    type: 'RECEIVE_COMMENTS',
     comments,
     postId,
     index,
@@ -24,7 +24,7 @@ const fetchComments = (postId, index) => {
 
 export const invalidateComments = () => {
   return {
-    type: "INVALIDATE_COMMENTS",
+    type: 'INVALIDATE_COMMENTS',
   }
 };
 
@@ -53,7 +53,7 @@ export const fetchCommentsIfNeeded = (postId, index) => {
 
 export const toggleComment = (index, newChildId) => {
   return {
-    type: "TOGGLE_COMMENT",
+    type: 'TOGGLE_COMMENT',
     index,
     newChildId,
   }

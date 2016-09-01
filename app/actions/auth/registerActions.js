@@ -8,13 +8,13 @@ export const onRegistrationFormChange = (fieldName, content) => {
 
 const requestRegisterUser = () => {
   return {
-    type: "REQUEST_REGISTER_USER",
+    type: 'REQUEST_REGISTER_USER',
   }
 };
 
 const receiveRegisterUser = (json) => {
   return {
-    type: "RECEIVE_REGISTER_USER",
+    type: 'RECEIVE_REGISTER_USER',
     user: json,
     receivedAt: Date.now()
   }
@@ -32,7 +32,7 @@ export const fetchRegisterUser = () => {
     dispatch(requestRegisterUser());
     let myHeaders = new Headers();
     myHeaders.append(
-      "Content-Type", 'application/x-www-form-urlencoded'
+      'Content-Type', 'application/x-www-form-urlencoded'
     );
     return fetch(`/api/register`, {
       method: 'POST',

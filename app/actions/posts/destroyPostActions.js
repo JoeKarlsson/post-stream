@@ -1,13 +1,13 @@
 const destroyPost = (postId) => {
   return {
-    type: "DESTROY_POST",
+    type: 'DESTROY_POST',
     postId,
   }
 };
 
 const confirmPostDestroyed = (json, postId, index) => {
   return {
-    type: "CONFIRMED_POST_DESTROYED",
+    type: 'CONFIRMED_POST_DESTROYED',
     confirmation: json,
     postId,
     index,

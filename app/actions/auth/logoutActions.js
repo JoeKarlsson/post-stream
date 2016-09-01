@@ -1,13 +1,13 @@
 const requestLogout = () => {
   return {
-    type: "REQUEST_LOGOUT",
+    type: 'REQUEST_LOGOUT',
   }
 };
 
 const receiveLogout = (json) => {
 
   return {
-    type: "RECEIVE_LOGOUT",
+    type: 'RECEIVE_LOGOUT',
     success: json.success,
   }
 };

@@ -1,12 +1,12 @@
 const requestPosts = () => {
   return {
-    type: "REQUEST_POSTS",
+    type: 'REQUEST_POSTS',
   }
 };
 
 const receivePosts = (json) => {
   return {
-    type: "RECEIVE_POSTS",
+    type: 'RECEIVE_POSTS',
     posts: json,
     receivedAt: Date.now()
   }
@@ -23,7 +23,7 @@ const fetchPosts = () => {
 
 export const invalidatePosts = () => {
   return {
-    type: "INVALIDATE_POSTS",
+    type: 'INVALIDATE_POSTS',
   }
 };
 

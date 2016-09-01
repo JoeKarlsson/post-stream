@@ -39,7 +39,7 @@ class EditPost extends Component {
             ref='body'
             type='text'
             id='body'
-            className="u-full-width"
+            className='u-full-width'
             placeholder='edit your post'
             value={this.props.updatedPostBody}
             onChange={this.handleBodyChange}
