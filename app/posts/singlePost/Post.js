@@ -10,6 +10,7 @@ import {
   toggleEditMode,
 } from '../../actions/posts/editPostActions';
 import DestroyPostButton from './DestroyPostButton';
+import Reply from './Reply';
 import EditPost from './../editPost/EditPost';
 import styles from './Post.scss';
 
@@ -39,7 +40,7 @@ class Post extends Component {
     dispatch(fetchCommentsIfNeeded(id, index));
   };
 
-  handlePrev(e) {
+  handlePrev() {
     const {
       dispatch,
       index,
@@ -53,7 +54,7 @@ class Post extends Component {
     }
   };
 
-  handleNext(e) {
+  handleNext() {
     const {
       dispatch,
       index,
@@ -86,7 +87,7 @@ class Post extends Component {
     return (
       <div className={styles.post}>
 
-        { editMode === false &&
+        { editMode === false && isParentPost &&
           <div>
             <div>
               {username} | {realName} | {new Date(createdAt).toLocaleTimeString()}
@@ -101,6 +102,11 @@ class Post extends Component {
 
             <span dangerouslySetInnerHTML={this.rawMarkup()} />
 
+            <Reply
+              id={id}
+              index={index}
+            />
+
             <div className='comment-count' onClick={this.handleShowingChild}>
               <CommentCount
                 numOfComments={commentCount}
@@ -110,7 +116,15 @@ class Post extends Component {
         }
 
         { !isParentPost &&
-          <span dangerouslySetInnerHTML={this.rawMarkup()} />
+          <div>
+            <span dangerouslySetInnerHTML={this.rawMarkup()} />
+
+            <div className='comment-count' onClick={this.handleShowingChild}>
+              <CommentCount
+                numOfComments={commentCount}
+              />
+            </div>
+          </div>
         }
 
         { editMode === true &&
@@ -119,6 +133,7 @@ class Post extends Component {
             index={index}
           />
         }
+
         { showComments &&
           <div className='replies'>
             <span onClick={this.handlePrev}>[ left ] </span>
@@ -131,6 +146,7 @@ class Post extends Component {
               />
           </div>
         }
+
         { isParentPost &&
           <hr/>
         }
@@ -154,7 +170,6 @@ Post.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('state: ',state.rootReducer.postReducer.get('posts').get(ownProps.index).get('childContext'));
   return {
     editMode: state.rootReducer.postReducer
       .get('posts').get(ownProps.index).get('editMode'),

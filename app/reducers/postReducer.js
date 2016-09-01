@@ -36,6 +36,7 @@ const postReducer = (state = initialState, action) => {
             .set('didInvalidate', false)
             .set('updatedPostBody', post.body)
             .set('editMode', false)
+            .set('replyMode', false)
           })
         )
       })
@@ -62,6 +63,7 @@ const postReducer = (state = initialState, action) => {
           .set('didInvalidate', false)
           .set('updatedPostBody', action.newPost.body)
           .set('editMode', false)
+          .set('replyMode', false)
         );
       })
       .set('submittingPost', false)
@@ -82,7 +84,6 @@ const postReducer = (state = initialState, action) => {
       })
 
     case 'REQUEST_UPDATED_POST':
-
       return state;
 
     case 'RECEIVE_UPDATED_POST':
@@ -94,12 +95,6 @@ const postReducer = (state = initialState, action) => {
       })
 
     case 'DESTROY_POST':
-      // return state.updateIn(['posts'], (posts) => {
-      //   return posts.updateIn([action.postId - 1], (post) => {
-      //     console.log('action.postId: ', action.postId);
-      //     console.log('post: ', post);
-      //   })
-      // });
       return state;
 
     case 'CONFIRMED_POST_DESTROYED':
@@ -130,6 +125,13 @@ const postReducer = (state = initialState, action) => {
         return posts.update(action.index, (post) => {
           return post.set('childId', action.newChildId)
           .set('childContext', post.get('comments')[action.newChildId]);
+        })
+      });
+
+    case 'TOGGLE_REPLY_MODE':
+      return state.updateIn(['posts'], (posts) => {
+        return posts.update(action.index, (post) => {
+          return post.set('replyMode', !post.get('replyMode'));
         })
       });
 
