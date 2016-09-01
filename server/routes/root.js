@@ -36,12 +36,21 @@ router.route('/register')
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
-    console.log('user: ', user);
     if (!user) {
       return res.json({ success: false })
     }
-    req.logIn(user, function() {
-      return res.json({ success: true })
+    req.logIn(user, () => {
+      const userSuccess = {
+        id: user.id,
+        username: user.username,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        bio: user.bio,
+        following: user.following,
+        createdAt: user.createdAt,
+        success: true,
+      };
+      return res.json(userSuccess)
     });
   })(req, res, next);
 });

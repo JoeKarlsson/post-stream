@@ -19,20 +19,19 @@ const requestLogin = () => {
 };
 
 const receiveLogin = (json) => {
+
   return {
     type: "RECEIVE_LOGIN",
-    login: json,
+    success: json.success,
     receivedAt: Date.now()
   }
 };
 
 export const fetchLogin = () => {
-
   return (dispatch, getState) => {
     const state = getState();
     const username = state.rootReducer.authReducer.get('username');
     const password = state.rootReducer.authReducer.get('password');
-    console.log('password, username: ', password, username);
     dispatch(requestLogin());
     let myHeaders = new Headers();
     myHeaders.append(

@@ -7,6 +7,7 @@ const initialState = Map({
   didInvalidateLogin: false,
   lastUpdated: null,
   receivedAt: null,
+  isLoggedIn: false,
 });
 
 const authReducer = (state = initialState, action) => {
@@ -18,10 +19,19 @@ const authReducer = (state = initialState, action) => {
       return state.set('password', action.password);
 
     case 'REQUEST_LOGIN':
-      return state;
+      return state.set('isFetchingLogin', true);
 
     case 'RECEIVE_LOGIN':
+      return state.set('isLoggedIn', action.success)
+        .set('receivedAt', action.receivedAt)
+        .set('password', '')
+        .set('isFetchingLogin', false)
+
+    case 'REQUEST_LOGOUT':
       return state;
+
+    case 'RECEIVE_LOGOUT':
+      return state.set('isLoggedIn', !action.success);
 
     default:
       return state

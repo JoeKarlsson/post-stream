@@ -5,6 +5,7 @@ import {
   onPasswordChange,
   fetchLogin,
 } from '../../../actions/loginActions';
+import { browserHistory } from 'react-router'
 import styles from './Login.scss';
 
 class Login extends React.Component {
@@ -32,7 +33,10 @@ class Login extends React.Component {
   }
 
   render() {
-    const { username, password } = this.props;
+    const { username, password, isLoggedIn } = this.props;
+    if (isLoggedIn) {
+      browserHistory.push('/');
+    }
     return (
       <div className={styles.Login}>
         <h2 className='section-heading'>login to PostStream</h2>
@@ -69,10 +73,10 @@ class Login extends React.Component {
 };
 
 const mapStateToProps = (state) => {
-  console.log('state: ', state);
   return {
     username: state.rootReducer.authReducer.get('username'),
     password: state.rootReducer.authReducer.get('password'),
+    isLoggedIn: state.rootReducer.authReducer.get('isLoggedIn'),
   }
 };
 
