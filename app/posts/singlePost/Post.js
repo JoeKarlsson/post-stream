@@ -39,19 +39,30 @@ class Post extends Component {
   };
 
   handlePrev(e) {
-    let newChildId = this.props.childId - 1;
+    const {
+      dispatch,
+      index,
+      childId,
+    } = this.props;
+
+    let newChildId = childId - 1;
 
     if (!!~newChildId) {
-      const { dispatch, index } = this.props;
       dispatch(toggleComment(index, newChildId));
     }
   };
 
   handleNext(e) {
-    const newChildId = this.props.childId + 1;
+    const {
+      dispatch,
+      index,
+      childId,
+      comments
+    } = this.props;
 
-    if (newChildId < this.props.comments.length) {
-      const { dispatch, index } = this.props;
+    const newChildId = childId + 1;
+
+    if (newChildId < comments.length) {
       dispatch(toggleComment(index, newChildId));
     }
   };
@@ -136,10 +147,14 @@ Post.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    editMode: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('editMode'),
-    showComments: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('showComments'),
-    childId: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('childId'),
-    childContext: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('childContext'),
+    editMode: state.rootReducer.postReducer
+      .get('posts').get(ownProps.index).get('editMode'),
+    showComments: state.rootReducer.postReducer
+      .get('posts').get(ownProps.index).get('showComments'),
+    childId: state.rootReducer.postReducer
+      .get('posts').get(ownProps.index).get('childId'),
+    childContext: state.rootReducer.postReducer
+      .get('posts').get(ownProps.index).get('childContext'),
   }
 };
 

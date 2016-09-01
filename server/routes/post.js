@@ -27,7 +27,12 @@ const exists = (req) => {
 router.route('/')
   // GET all of the posts
   .get((req, res) => {
-    Post.findAll()
+    Post.findAll({
+      limit: 20,
+      order: [
+        ['createdAt', 'DESC']
+      ]
+    })
     .then((posts) => {
       res.json(posts);
     })

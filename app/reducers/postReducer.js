@@ -51,7 +51,7 @@ const postReducer = (state = initialState, action) => {
 
     case 'RECEIVE_NEW_POST':
       return state.updateIn(['posts'], (posts) => {
-        return posts.push(Map(action.newPost)
+        return posts.unshift(Map(action.newPost)
           .set('showComments', false)
           .set('isParentset', true)
           .set('realName', 'Joe Karlsson')
