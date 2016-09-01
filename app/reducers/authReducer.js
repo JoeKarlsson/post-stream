@@ -48,7 +48,18 @@ const authReducer = (state = initialState, action) => {
       return state;
 
     case 'RECEIVE_REGISTER_USER':
-      return state;
+      return state.set('isLoggedIn', true)
+        .set('id', action.user.id)
+        .set('first_name', action.user.first_name)
+        .set('last_name', action.user.last_name)
+        .set('bio', action.user.bio)
+        .set('following', state.get('following').concat(action.user.following))
+        .set('createdAt', action.user.createdAt)
+        .set('bio', action.user.bio)
+        .set('id', action.user.id)
+        .set('receivedAt', action.receivedAt)
+        .set('password', '')
+        .set('isFetchingLogin', false);
 
     case 'REQUEST_LOGOUT':
       return state;
