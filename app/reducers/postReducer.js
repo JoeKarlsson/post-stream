@@ -37,6 +37,7 @@ const postReducer = (state = initialState, action) => {
             .set('updatedPostBody', post.body)
             .set('editMode', false)
             .set('replyMode', false)
+            .set('replyBody', '')
           })
         )
       })
@@ -64,6 +65,7 @@ const postReducer = (state = initialState, action) => {
           .set('updatedPostBody', action.newPost.body)
           .set('editMode', false)
           .set('replyMode', false)
+          .set('replyBody', '')
         );
       })
       .set('submittingPost', false)
@@ -132,6 +134,13 @@ const postReducer = (state = initialState, action) => {
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
           return post.set('replyMode', !post.get('replyMode'));
+        })
+      });
+
+    case 'HANDLE_REPLY_BODY_CHANGE':
+      return state.updateIn(['posts'], (posts) => {
+        return posts.update(action.index, (post) => {
+          return post.set('replyBody', action.body);
         })
       });
 

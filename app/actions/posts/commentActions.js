@@ -57,4 +57,4 @@ export const toggleComment = (index, newChildId) => {
     index,
     newChildId,
   }
-}
+};

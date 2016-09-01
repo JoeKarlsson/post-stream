@@ -4,3 +4,11 @@ export const onToggleReplyMode = (index) => {
     index,
   }
 };
+
+export const handleReplyBodyChange = (body, index) => {
+  return {
+    type: 'HANDLE_REPLY_BODY_CHANGE',
+    index,
+    body,
+  }
+};

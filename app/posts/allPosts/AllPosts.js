@@ -34,15 +34,16 @@ class AllPosts extends Component {
       <div className={styles.allPosts}>
         <h1>stream</h1>
 
+        <div>
+          stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.
+          {' '}
+        </div>
+
         <NewPost />
+
         { isLoggedIn === true &&
           <p>welcome back {username}</p>
         }
-
-        <span>
-          stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.
-          {' '}
-        </span>
 
         <hr />
 
