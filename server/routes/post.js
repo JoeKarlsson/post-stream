@@ -28,7 +28,7 @@ router.route('/')
   // GET all of the posts
   .get((req, res) => {
     Post.findAll({
-      limit: 20,
+      limit: 10,
       order: [
         ['createdAt', 'DESC']
       ]
@@ -106,7 +106,6 @@ router.route('/new')
   // create a new post
   // TODO - updated user when AUTH is working
   .post((req, res) => {
-    console.log('req.body: ', req.body);
     Post.create({
       body: req.body.body,
       UserId: req.user
@@ -150,7 +149,6 @@ router.route('/:PostId/comments/:CommentId/new')
       Post.findById(req.params.PostId)
       .then((foundPost) => {
         // then update
-        console.log('foundPost: ', foundPost);
         foundPost.update({
           commentCount : ++foundPost.commentCount,
         })

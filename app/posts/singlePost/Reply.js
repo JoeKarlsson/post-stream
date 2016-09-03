@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
   onToggleReplyMode,
   handleReplyBodyChange,
+  submitNewReply,
 
 } from '../../actions/posts/replyActions';
 import styles from './Reply.scss';
@@ -26,12 +27,13 @@ class Reply extends Component {
   }
 
   handleSubmitReply(e){
-    const { dispatch, index } = this.props;
-    dispatch(onToggleReplyMode(index));
+    e.preventDefault();
+    const { dispatch, index, id } = this.props;
+    dispatch(submitNewReply(e.target.value, index, id, 0));
   }
 
   render() {
-    const { replyMode } = this.props;
+    const { replyMode, replyBody } = this.props;
     return (
       <div className={ styles.destroyPost }>
         { replyMode &&
@@ -44,7 +46,7 @@ class Reply extends Component {
                 id='reply'
                 className="u-full-width"
                 placeholder='say something nice...'
-                value={ this.props.replyBody }
+                value={ replyBody }
                 onChange={ this.handleBodyChange }
               />
               <div>

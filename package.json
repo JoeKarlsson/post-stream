@@ -1,8 +1,8 @@
 {
-  "name": "post-stream",
-  "author": "Ray Farias and Joe Carlson",
+  "name": "postStream",
+  "author": "Jacoby Young, Ray Farias and Joe Karlsson",
   "version": "1.0.0",
-  "description": "",
+  "description": "PostStream is an undesigned social network. It is a text-based response to the majority of modern social media platforms. This is certainly not for everyone as you will be interacting with others exclusively through text posts. You will notice several features intentionally left out in order to promote meaningful engagement. We hope you enjoy something a little different!",
   "private": true,
   "keywords": [
     "social network",

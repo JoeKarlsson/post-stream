@@ -25,6 +25,7 @@ class Post extends Component {
 
   rawMarkup() {
     const { body } = this.props;
+    console.log('body: ', body);
     var md = new Remarkable();
     var rawMarkup = md.render(body.toString());
     return { __html: rawMarkup };
@@ -92,15 +93,13 @@ class Post extends Component {
             <div>
               {username} | {realName} | {new Date(createdAt).toLocaleTimeString()}
             </div>
-            <div>
-              <DestroyPostButton
-                id={id}
-                index={index}
-              />
-              <span onClick={this.handleEdit}>[ edit ]</span>
-            </div>
 
             <span dangerouslySetInnerHTML={this.rawMarkup()} />
+            <span onClick={this.handleEdit}>[ edit ]</span>
+            <DestroyPostButton
+              id={id}
+              index={index}
+            />
 
             <Reply
               id={id}
@@ -170,6 +169,8 @@ Post.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(state.rootReducer.postReducer
+      .get('posts').get(ownProps.index).get('comments').toJS());
   return {
     editMode: state.rootReducer.postReducer
       .get('posts').get(ownProps.index).get('editMode'),

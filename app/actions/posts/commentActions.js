@@ -32,7 +32,8 @@ const shouldFetchComments = (state, postId) => {
   const comments = state.rootReducer.postReducer
     .get('posts')
     .get(postId)
-    .get('comments');
+    .get('comments').toJS();
+    console.log('comments: ', comments);
 
   if (comments.length === 0) {
     return true;

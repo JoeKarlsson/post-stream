@@ -21,7 +21,7 @@ class DestroyPostButton extends Component {
           className="removePost"
           onClick={this.handleDeletingPost}
         >
-          [ Destroy Post ]
+          [ destroy ]
         </div>
       </div>
     );

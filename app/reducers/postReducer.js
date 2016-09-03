@@ -30,7 +30,7 @@ const postReducer = (state = initialState, action) => {
             .set('isParentPost', true)
             .set('realName', 'Joe Karlsson')
             .set('username', 'joejoebinks3')
-            .set('comments', [])
+            .set('comments', List())
             .set('childId', 0)
             .set('childContext', {})
             .set('didInvalidate', false)
@@ -58,7 +58,7 @@ const postReducer = (state = initialState, action) => {
           .set('isParentPost', true)
           .set('realName', 'Joe Karlsson')
           .set('username', 'joejoebinks3')
-          .set('comments', [])
+          .set('comments', List())
           .set('childId', 0)
           .set('childContext', {})
           .set('didInvalidate', false)
@@ -114,9 +114,18 @@ const postReducer = (state = initialState, action) => {
     case 'RECEIVE_COMMENTS':
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
-          return post.set('showComments', true)
+          return post.updateIn(['comments'], (comments) => {
+            return comments.clear().concat(
+              action.comments.map((comment) => {
+                return Map(comment)
+                  .set('childId', 0)
+                  .set('showComments', false)
+                  .set('isParentPost', false)
+              })
+            );
+          })
+          .set('showComments', true)
           .set('childContext', action.comments[0])
-          .set('comments', action.comments);
         })
       })
       .set('isFetchingPosts', false)
@@ -126,7 +135,7 @@ const postReducer = (state = initialState, action) => {
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
           return post.set('childId', action.newChildId)
-          .set('childContext', post.get('comments')[action.newChildId]);
+          .set('childContext', post.get('comments').get(action.newChildId));
         })
       });
 
@@ -148,7 +157,16 @@ const postReducer = (state = initialState, action) => {
       return state;
 
     case 'RECEIVE_NEW_REPLY':
-      return state;
+      return state.updateIn(['posts'], (posts) => {
+        return posts.update(action.index, (post) => {
+          console.log('post: ', post);
+          // return state;
+          // const foo = post.get('comments').unshift(action.reply);
+          // console.log('foo: ', foo);
+          return post.set('commentCount', post.get('commentCount') + 1)
+            .set('replyBody', '')
+        })
+      });
 
     default:
       return state;
