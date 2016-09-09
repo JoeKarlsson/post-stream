@@ -1,0 +1,75 @@
+const data = [
+  {
+    "id": 1,
+    "body": "JohnDoe131 comment 1 post 1",
+    "commentId": null,
+    "commentCount": 2,
+    "createdAt": "2016-09-03T01:33:25.043Z",
+    "updatedAt": "2016-09-03T01:33:25.043Z",
+    "UserId": 1,
+    "PostId": 1
+  },
+  {
+    "id": 2,
+    "body": "JohnDoe131 comment 1 on comment 1 on post 1",
+    "commentId": 1,
+    "commentCount": 0,
+    "createdAt": "2016-09-03T01:33:25.043Z",
+    "updatedAt": "2016-09-03T01:33:25.043Z",
+    "UserId": 1,
+    "PostId": 1
+  },
+  {
+    "id": 3,
+    "body": "JohnDoe131 comment 2 on comment 1 on post 1",
+    "commentId": 1,
+    "commentCount": 0,
+    "createdAt": "2016-09-03T01:33:25.043Z",
+    "updatedAt": "2016-09-03T01:33:25.043Z",
+    "UserId": 1,
+    "PostId": 1
+  },
+  {
+    "id": 6,
+    "body": "JaneDoe343 comment 2 post 1",
+    "commentId": 2,
+    "commentCount": 0,
+    "createdAt": "2016-09-03T01:33:25.043Z",
+    "updatedAt": "2016-09-03T01:33:25.043Z",
+    "UserId": 2,
+    "PostId": 1
+  },
+  {
+    "id": 10,
+    "body": "JoeJoeBinks131 comment 2 post 1",
+    "commentId": 3,
+    "commentCount": 0,
+    "createdAt": "2016-09-03T01:33:25.043Z",
+    "updatedAt": "2016-09-03T01:33:25.043Z",
+    "UserId": 3,
+    "PostId": 1
+  },
+  {
+    "id": 13,
+    "body": "NEW COMMENT",
+    "commentId": 1,
+    "commentCount": 0,
+    "createdAt": "2016-09-03T04:18:13.066Z",
+    "updatedAt": "2016-09-03T04:18:13.066Z",
+    "UserId": null,
+    "PostId": 1
+  }
+]
+
+const convertToNestedComment = (json) => {
+  let newJSON = [];
+  notEmpty = treu;
+  while(notEmpty){
+    json.map((comment) => {
+      console.log('comment: ', comment);
+    })
+    notEmpty = true
+  }
+}
+
+convertToNestedComment(data)

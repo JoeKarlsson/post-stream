@@ -13,11 +13,16 @@ const receiveComments = (comments, postId, index) => {
   }
 };
 
+const convertToNestedComment = (json) => {
+  console.log('json: ', json);
+}
+
 const fetchComments = (postId, index) => {
   return dispatch => {
     dispatch(requestComments());
     return fetch(`/post/${postId}/comments`)
     .then(response => response.json())
+    .then(json => convertToNestedComment(json))
     .then(json => dispatch(receiveComments(json, postId, index)));
   }
 };
@@ -33,7 +38,6 @@ const shouldFetchComments = (state, postId) => {
     .get('posts')
     .get(postId)
     .get('comments').toJS();
-    console.log('comments: ', comments);
 
   if (comments.length === 0) {
     return true;

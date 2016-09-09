@@ -6,11 +6,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull : false,
       required : true
     },
-    commentId: {
-      type : DataTypes.INTEGER,
-      defaultValue: null,
-      required : true
-    },
     commentCount: {
       type : DataTypes.INTEGER,
       defaultValue: 0,
@@ -24,6 +19,8 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+
+  Comment.isHierarchy();
 
   return Comment;
 };

@@ -31,7 +31,10 @@ router.route('/')
       limit: 10,
       order: [
         ['createdAt', 'DESC']
-      ]
+      ],
+      include: [{
+        model: User
+      }]
     })
     .then((posts) => {
       res.json(posts);
@@ -118,48 +121,70 @@ router.route('/new')
     })
   })
 
-//// Commments on a Post
-
+// Commments on a Post
 router.route('/:id/comments')
   // GETs the comments on a post
   .get((req, res) => {
-    Comment.findAll({
-      where: {
-        PostId : req.params.id
-      }
+      Comment.findAll({
+        hierarchy: true
+        // where: { PostId : req.params.id },
+        // include: {
+        //   model: Comment,
+        //   as: 'descendents',
+        //   hierarchy: true
+        // }
+      })
+      .then((comments) => {
+        res.json(comments);
+      })
     })
-    .then((comments) => {
-      res.json(comments);
-    })
-    .catch((err) => {
-      res.json({ error: err });
-    })
-  })
 
 router.route('/:PostId/comments/:CommentId/new')
   // create a new comment on a post
+  // https://github.com/sequelize/sequelize/issues/5278
+  // https://github.com/overlookmotel/sequelize-hierarchy
   .post((req, res) => {
     Comment.create({
       body: req.body.body,
       PostId: req.params.PostId,
-      UserId: req.user,
-      commentId: req.params.CommentId
+      UserId: 1,
+      // UserId: req.user,
+      parentId: 2
     })
-    .then((comment) => {
-      Post.findById(req.params.PostId)
-      .then((foundPost) => {
-        // then update
-        foundPost.update({
-          commentCount : ++foundPost.commentCount,
-        })
-        .then((newPost) => {
-          res.json(comment);
-        })
-        .catch((err) => {
-          res.json({ error: err });
-        })
-      })
+    .then((newPost) => {
+      res.json(comment);
     })
+    .catch((err) => {
+      res.json({ error: err });
+    })
+    // .then((comment) => {
+    //   Post.findById(req.params.PostId)
+    //   .then((foundPost) => {
+    //     foundPost.setComments([comment])
+    //     .then(() => {
+    //       console.log('saved comment:');
+    //     })
+    //   })
+    // })
+    // .then((comment) => {
+    //   Comment.findById(req.params.CommentId)
+    //   .then((parentComment) => {
+    //     parentComment.setComments([comment])
+    //   })
+    //   Post.findById(req.params.PostId)
+    //   .then((foundPost) => {
+    //     // then update
+    //     foundPost.update({
+    //       commentCount : ++foundPost.commentCount,
+    //     })
+    //     .then((newPost) => {
+    //       res.json(comment);
+    //     })
+    //     .catch((err) => {
+    //       res.json({ error: err });
+    //     })
+    //   })
+    // })
     .catch((err) => {
       res.json({ error: err });
     })
