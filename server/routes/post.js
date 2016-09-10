@@ -125,61 +125,45 @@ router.route('/new')
 router.route('/:id/comments')
   // GETs the comments on a post
   .get((req, res) => {
-      Comment.findAll({
-        hierarchy: true,
-        where: {
-          PostId : req.params.id
-        }
-      })
-      .then((comments) => {
-        res.json(comments);
-      })
+    Comment.findAll({
+      hierarchy: true,
+      where: {
+        PostId : req.params.id
+      }
     })
+    .then((comments) => {
+      res.json(comments);
+    })
+  })
 
 router.route('/:PostId/comments/:CommentId/new')
   // create a new comment on a post
   .post((req, res) => {
+    let parentId = null;
+    if(req.params.CommentId != 0){
+      parentId = req.params.CommentId;
+    }
+    console.log('parentId: ', parentId);
     Comment.create({
       body: req.body.body,
       PostId: req.params.PostId,
-      UserId: 1,
       UserId: req.user,
-      parentId: 1
+      parentId
     })
-    .then((newPost) => {
+    .then((comment) => {
       res.json(comment);
+
+      Post.findById(req.params.PostId)
+      .then((foundPost) => {
+        // then update
+        foundPost.update({
+          commentCount : ++foundPost.commentCount,
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+      })
     })
-    .catch((err) => {
-      res.json({ error: err });
-    })
-    // .then((comment) => {
-    //   Post.findById(req.params.PostId)
-    //   .then((foundPost) => {
-    //     foundPost.setComments([comment])
-    //     .then(() => {
-    //       console.log('saved comment:');
-    //     })
-    //   })
-    // })
-    // .then((comment) => {
-    //   Comment.findById(req.params.CommentId)
-    //   .then((parentComment) => {
-    //     parentComment.setComments([comment])
-    //   })
-    //   Post.findById(req.params.PostId)
-    //   .then((foundPost) => {
-    //     // then update
-    //     foundPost.update({
-    //       commentCount : ++foundPost.commentCount,
-    //     })
-    //     .then((newPost) => {
-    //       res.json(comment);
-    //     })
-    //     .catch((err) => {
-    //       res.json({ error: err });
-    //     })
-    //   })
-    // })
     .catch((err) => {
       res.json({ error: err });
     })

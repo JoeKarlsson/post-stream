@@ -25,6 +25,7 @@ class Post extends Component {
 
   rawMarkup() {
     const { body } = this.props;
+    // console.log('body: ', body);
     var md = new Remarkable();
     var rawMarkup = md.render(body.toString());
     return { __html: rawMarkup };
@@ -168,8 +169,7 @@ Post.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  // console.log(state.rootReducer.postReducer
-  //     .get('posts').get(ownProps.index).get('comments').toJS());
+  // console.log('ownProps.body: ', ownProps.body);
   return {
     editMode: state.rootReducer.postReducer
       .get('posts').get(ownProps.index).get('editMode'),

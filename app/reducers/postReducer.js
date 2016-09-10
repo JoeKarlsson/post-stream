@@ -60,7 +60,7 @@ const postReducer = (state = initialState, action) => {
           .set('username', 'joejoebinks3')
           .set('comments', List())
           .set('childId', 0)
-          .set('childContext', {})
+          .set('childContext', Map())
           .set('didInvalidate', false)
           .set('updatedPostBody', action.newPost.body)
           .set('editMode', false)
@@ -134,8 +134,9 @@ const postReducer = (state = initialState, action) => {
     case 'TOGGLE_COMMENT':
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
+          console.log(' post.get(comments): ',  post.get('comments').get(action.newChildId).toJS());
           return post.set('childId', action.newChildId)
-          .set('childContext', post.get('comments').get(action.newChildId));
+          .set('childContext', post.get('comments').get(action.newChildId).toJS());
         })
       });
 
