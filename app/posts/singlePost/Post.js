@@ -169,7 +169,6 @@ Post.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  // console.log('ownProps.body: ', ownProps.body);
   return {
     editMode: state.rootReducer.postReducer
       .get('posts').get(ownProps.index).get('editMode'),
