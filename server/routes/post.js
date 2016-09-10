@@ -126,13 +126,10 @@ router.route('/:id/comments')
   // GETs the comments on a post
   .get((req, res) => {
       Comment.findAll({
-        hierarchy: true
-        // where: { PostId : req.params.id },
-        // include: {
-        //   model: Comment,
-        //   as: 'descendents',
-        //   hierarchy: true
-        // }
+        hierarchy: true,
+        where: {
+          PostId : req.params.id
+        }
       })
       .then((comments) => {
         res.json(comments);
@@ -141,15 +138,13 @@ router.route('/:id/comments')
 
 router.route('/:PostId/comments/:CommentId/new')
   // create a new comment on a post
-  // https://github.com/sequelize/sequelize/issues/5278
-  // https://github.com/overlookmotel/sequelize-hierarchy
   .post((req, res) => {
     Comment.create({
       body: req.body.body,
       PostId: req.params.PostId,
       UserId: 1,
-      // UserId: req.user,
-      parentId: 2
+      UserId: req.user,
+      parentId: 1
     })
     .then((newPost) => {
       res.json(comment);
