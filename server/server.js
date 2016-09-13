@@ -82,7 +82,7 @@ Promise.onPossiblyUnhandledRejection((err) => {
   throw new Error(err);
 });
 
-app.use('/user', user);
+app.use('/api/user', user);
 app.use('/post', post);
 app.use('/api', root);
 
