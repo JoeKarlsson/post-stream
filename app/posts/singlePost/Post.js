@@ -78,6 +78,7 @@ class Post extends Component {
       commentCount,
       showComments,
       childContext,
+      childId,
       id,
       index,
       editMode,
@@ -136,8 +137,12 @@ class Post extends Component {
 
         { showComments &&
           <div className='replies'>
-            <span onClick={this.handlePrev}>[ left ] </span>
-            <span onClick={this.handleNext}>[ right ]</span>
+            { childId !== 0 &&
+              <span onClick={this.handlePrev}>[ left ] </span>
+            }
+            { childId+1 !== commentCount &&
+              <span onClick={this.handleNext}>[ right ]</span>
+            }
               <Post
                 {...childContext}
                 dispatch={dispatch}
