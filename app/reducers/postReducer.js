@@ -165,6 +165,7 @@ const postReducer = (state = initialState, action) => {
           // console.log('foo: ', foo);
           return post.set('commentCount', post.get('commentCount') + 1)
             .set('replyBody', '')
+            .set('comments', post.get('comments').unshift(action.reply))
         })
       });
 

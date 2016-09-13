@@ -28,8 +28,8 @@ class Reply extends Component {
 
   handleSubmitReply(e){
     e.preventDefault();
-    const { dispatch, index, id } = this.props;
-    dispatch(submitNewReply(e.target.value, index, id, 0));
+    const { dispatch, index, id, replyBody } = this.props;
+    dispatch(submitNewReply(replyBody, index, id, 0));
   }
 
   render() {
