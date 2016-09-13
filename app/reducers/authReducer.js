@@ -8,6 +8,7 @@ const initialState = Map({
   last_name: '',
   bio: '',
   following: List(),
+  posts: List(),
   createdAt: null,
   isFetchingLogin: false,
   didInvalidateLogin: false,

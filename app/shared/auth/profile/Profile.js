@@ -8,6 +8,13 @@ class Profile extends React.Component {
   //   // this.props.params.userName
   // }
 
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    // Get user's posts
+    // dispatch(fetchPostsIfNeeded());
+  };
+
   render() {
     return (
       <div className={styles.Profile}>

@@ -25,7 +25,6 @@ class Post extends Component {
 
   rawMarkup() {
     const { body } = this.props;
-    // console.log('body: ', body);
     var md = new Remarkable();
     var rawMarkup = md.render(body.toString());
     return { __html: rawMarkup };
