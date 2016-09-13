@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CommentCount from './CommentCount';
 import { connect } from 'react-redux';
 const Remarkable = require('remarkable');
+const emojione = require('emojione');
 import {
   toggleComment,
   fetchCommentsIfNeeded,
@@ -27,7 +28,8 @@ class Post extends Component {
     const { body } = this.props;
     var md = new Remarkable();
     var rawMarkup = md.render(body.toString());
-    return { __html: rawMarkup };
+    let output = emojione.shortnameToImage(rawMarkup);
+    return { __html: output };
   };
 
   handleEdit() {
