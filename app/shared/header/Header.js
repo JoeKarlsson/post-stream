@@ -23,16 +23,16 @@ class Header extends Component {
         <header className={styles.header_bar}>
           <NavLink to='/' onlyActiveOnIndex={true} className={styles.header_logo}>PostStream</NavLink>
           <ul className={styles.header_nav}>
-            <li><NavLink to='/about'>about</NavLink></li>
+            <li><NavLink to='/about'>[about]</NavLink></li>
             { isLoggedIn === false &&
               <span>
-                <li><NavLink to='/register'>register</NavLink></li>
-                <li><NavLink to='/login'>login</NavLink></li>
+                <li><NavLink to='/register'>[register]</NavLink></li>
+                <li><NavLink to='/login'>[login]</NavLink></li>
               </span>
             }
             { isLoggedIn === true &&
               <span>
-                <li><NavLink to='/logout' onClick={ this.handleLogout }>logout</NavLink></li>
+                <li><NavLink to='/logout' onClick={ this.handleLogout }>[logout]</NavLink></li>
               </span>
             }
           </ul>
