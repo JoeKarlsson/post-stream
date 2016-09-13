@@ -35,20 +35,21 @@ class EditPost extends Component {
     return (
       <div className={styles.editPost} >
         <form>
-          <input
+          <textarea
             ref='body'
             type='text'
             id='body'
+            rows='3'
             className='u-full-width'
             placeholder='edit your post'
             value={this.props.updatedPostBody}
             onChange={this.handleBodyChange}
-          />
+          ></textarea>
           <div>
-            <button onClick={this.handleSubmitUpdatedPost}>save</button>
+            <span onClick={this.handleSubmitUpdatedPost}>[ save ] </span>
           </div>
           <div>
-            <button onClick={this.handleCancel}>cancel</button>
+            <span onClick={this.handleCancel}>[ cancel ] </span>
           </div>
         </form>
       </div>

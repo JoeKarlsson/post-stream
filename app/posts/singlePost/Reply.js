@@ -40,20 +40,22 @@ class Reply extends Component {
           <div className={ styles.u_full_width }>
             <form>
               <label htmlFor="reply">reply</label>
-              <input
+              <textarea
                 ref="reply"
                 type='text'
                 id='reply'
+                rows='3'
                 className="u-full-width"
                 placeholder='say something nice...'
                 value={ replyBody }
                 onChange={ this.handleBodyChange }
-              />
+              ></textarea>
               <div>
-                <button onClick={ this.handleSubmitReply }>reply</button>
+                <span onClick={this.handleSubmitReply}>[ reply ] </span>
               </div>
               <div>
-                <button onClick={ this.handleToggleReplyMode }>cancel</button>
+                <span onClick={this.handleToggleReplyMode}>[ cancel ] </span>
+
               </div>
             </form>
           </div>

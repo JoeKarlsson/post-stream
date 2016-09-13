@@ -30,17 +30,18 @@ class NewPostForm extends Component {
       <div className={styles.u_full_width}>
         <form>
           <label htmlFor="body">create a new post</label>
-          <input
+          <textarea
             ref="body"
-            type='text'
+            type='textarea'
             id='body'
+            rows='5'
             className="u-full-width"
             placeholder='share it with the world...'
             value={this.props.newPostBody}
             onChange={this.handleBodyChange}
-          />
+          ></textarea>
           <div className="create-public-private-btns">
-            <button onClick={this.handleSubmitPost}>post</button>
+            <span onClick={this.handleSubmitPost}>[ post ] </span>
           </div>
         </form>
       </div>
