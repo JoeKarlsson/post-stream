@@ -28,7 +28,7 @@ const postReducer = (state = initialState, action) => {
             return Map(post)
             .set('showComments', false)
             .set('isParentPost', true)
-            .set('realName', 'Joe Karlsson')
+            .set('realName', post.user.username)
             .set('username', 'joejoebinks3')
             .set('comments', List())
             .set('childId', 0)

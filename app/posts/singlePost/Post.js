@@ -100,11 +100,11 @@ class Post extends Component {
         { editMode === false && isParentPost &&
           <div>
             <div>
-              {username} | {realName} | {new Date(createdAt).toLocaleTimeString()}
+              { username} | {realName } | { new Date(createdAt).toLocaleTimeString() }
             </div>
 
-            <span dangerouslySetInnerHTML={this.rawMarkup()} />
-            <span onClick={this.handleEdit}>[ edit ]</span>
+            <span dangerouslySetInnerHTML={ this.rawMarkup() } />
+            <span onClick={ this.handleEdit }>[ edit ]</span>
             <DestroyPostButton
               id={id}
               index={index}
@@ -125,12 +125,13 @@ class Post extends Component {
 
         { !isParentPost &&
           <div>
-            <span dangerouslySetInnerHTML={this.rawMarkup()} />
+            <span dangerouslySetInnerHTML={ this.rawMarkup() } />
 
             { !showComments &&
-              <div className='comment-count' onClick={this.handleShowingChild}>
+              <div className='comment-count' onClick={ this.handleShowingChild }>
               </div>
             }
+
             { showComments &&
               <div className='comment-count' onClick={this.handleToggleComments}>
                 <CommentCount
@@ -150,18 +151,22 @@ class Post extends Component {
 
         { showComments &&
           <div className='replies'>
+
             { childId !== 0 &&
               <span onClick={this.handlePrev}>[ left ] </span>
             }
+
             { childId !== commentCount-1 &&
               <span onClick={this.handleNext}>[ right ]</span>
             }
+
               <Post
                 {...childContext}
                 dispatch={dispatch}
                 isParentPost={false}
                 key={childContext.id}
               />
+
           </div>
         }
 

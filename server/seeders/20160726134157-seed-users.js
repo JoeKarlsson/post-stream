@@ -11,8 +11,8 @@ module.exports = {
       last_name: 'Doe',
       bio: 'I am a new user to this site.',
       following: [2, 3],
-      createdAt : date,
-      updatedAt : date
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString()
     },
     {
       username: 'JaneDoe343',
@@ -21,8 +21,8 @@ module.exports = {
       last_name: 'Doe',
       bio: 'I am a new user to this site.',
       following: [1, 3],
-      createdAt : date,
-      updatedAt : date
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString()
     },
     {
       username: 'JoeJoeBinks131',
@@ -31,72 +31,72 @@ module.exports = {
       last_name: 'Carlson',
       bio: 'I am a new user to this site.',
       following: [1, 2],
-      createdAt : date,
-      updatedAt : date
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString()
     }
     ]),
     queryInterface.bulkInsert('Posts', [
     {
       body: 'JohnDoe131 post 1',
       commentCount: 0,
-      createdAt : date,
-      updatedAt : date,
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString(),
       UserId: 1
     },
     {
       body: 'JohnDoe131 post 2',
       commentCount: 0,
-      createdAt : date,
-      updatedAt : date,
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString(),
       UserId: 1
     },
     {
       body: 'JohnDoe131 post 3',
       commentCount: 0,
-      createdAt : date,
-      updatedAt : date,
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString(),
       UserId: 1
     },
     {
       body: 'JaneDoe343 post 1',
       commentCount: 0,
-      createdAt : date,
-      updatedAt : date,
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString(),
       UserId: 2
     },
     {
       body: 'JaneDoe343 post 2',
       commentCount: 0,
-      createdAt : date,
-      updatedAt : date,
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString(),
       UserId: 2
     },
     {
       body: 'JaneDoe343 post 3',
       commentCount: 0,
-      createdAt : date,
-      updatedAt : date,
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString(),
       UserId: 2
     },
     {
       body: 'JoeJoeBinks131 post 1',
       commentCount: 0,
-      createdAt : date,
-      updatedAt : date,
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString(),
       UserId: 3
     },
     {
       body: 'JoeJoeBinks131 post 2',
       commentCount: 0,
-      createdAt : date,
-      updatedAt : date,
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString(),
       UserId: 3
     },
     {
       body: 'JoeJoeBinks131 post 3',
       commentCount: 0,
-      createdAt : date,
-      updatedAt : date,
+      createdAt : new Date().toISOString(),
+      updatedAt : new Date().toISOString(),
       UserId: 3
     }
     ])

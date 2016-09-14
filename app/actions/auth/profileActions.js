@@ -4,17 +4,17 @@ const requestUser = () => {
   }
 };
 
-const receiveUser= (userData, postId, index) => {
+const receiveUser= (userData) => {
   return {
     type: 'RECEIVE_USER',
     userData
   }
 };
 
-const fetchUser= (userName) => {
+export const fetchUserData = (userName) => {
   return dispatch => {
-    dispatch(requestComments());
-    return fetch(`/api/user/${userName}`)
+    dispatch(requestUser());
+    return fetch(`/api/user/${userName}/posts`)
     .then(response => response.json())
     .then(userData => dispatch(receiveUser(userData)));
   }

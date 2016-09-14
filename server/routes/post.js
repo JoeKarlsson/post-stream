@@ -33,7 +33,16 @@ router.route('/')
         ['createdAt', 'DESC']
       ],
       include: [{
-        model: User
+        model: User,
+        attributes: [
+          'id',
+          'username',
+          'first_name',
+          'last_name',
+          'bio',
+          'following',
+          'createdAt'
+        ]
       }]
     })
     .then((posts) => {

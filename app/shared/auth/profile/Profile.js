@@ -1,24 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { fetchUserData } from '../../../actions/auth/profileActions';
+import PostList from './postList/PostList';
 import styles from './Profile.scss';
 
 class Profile extends React.Component {
-  // constructor() {
-  //   super();
-  //   // this.props.params.userName
-  // }
-
 
   componentDidMount() {
     const { dispatch } = this.props;
-    // Get user's posts
-    // dispatch(fetchPostsIfNeeded());
+    const { userName} = this.props.params;
+    dispatch(fetchUserData(userName));
   };
 
   render() {
+    const {
+      posts,
+    } = this.props;
+
     return (
       <div className={styles.Profile}>
-        <h1>Profile</h1>
+
+        <PostList
+          posts={posts}
+        />
+
       </div>
     );
   }
@@ -26,7 +31,7 @@ class Profile extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-
+    posts: state.rootReducer.authReducer.get('posts').toJS(),
   }
 };
 

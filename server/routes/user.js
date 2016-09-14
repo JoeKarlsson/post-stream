@@ -100,16 +100,41 @@ router.route('/:id/edit')
     }
   })
 
-router.route('/:id/posts')
+router.route('/:username/posts')
   // get an array of all the users posts
   .get((req, res) => {
-    Post.findAll({
-      where : {
-        UserId : req.params.id
-      }
+    User.findOne({
+      username: req.params.username
     })
-    .then((userPosts) => {
-      res.json(userPosts);
+    .then((user) => {
+      console.log('user.dataValues.id: ', user.dataValues.id);
+      Post.findAll({
+        limit: 10,
+        order: [
+          ['createdAt', 'DESC']
+        ],
+        where : {
+          UserId : user.dataValues.id
+        },
+        include: [{
+          model: User,
+          attributes: [
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'bio',
+            'following',
+            'createdAt'
+          ]
+        }]
+      })
+      .then((userPosts) => {
+        res.json(userPosts);
+      })
+      .catch((err) => {
+        res.json({ error: err });
+      })
     })
     .catch((err) => {
       res.json({ error: err });

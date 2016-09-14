@@ -68,6 +68,30 @@ const authReducer = (state = initialState, action) => {
     case 'RECEIVE_LOGOUT':
       return state.set('isLoggedIn', !action.success);
 
+    case 'REQUEST_USER':
+      return state;
+
+    case 'RECEIVE_USER':
+      return state.updateIn(['posts'], (posts) => {
+        return posts.clear().concat(
+          action.userData.map((post) => {
+            return Map(post)
+            .set('showComments', false)
+            .set('isParentPost', true)
+            .set('realName', 'Joe Karlsson')
+            .set('username', 'joejoebinks3')
+            .set('comments', List())
+            .set('childId', 0)
+            .set('childContext', {})
+            .set('didInvalidate', false)
+            .set('updatedPostBody', post.body)
+            .set('editMode', false)
+            .set('replyMode', false)
+            .set('replyBody', '')
+          })
+        )
+      });
+
     default:
       return state
   }

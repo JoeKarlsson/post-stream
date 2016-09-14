@@ -37,15 +37,9 @@ class AllPosts extends Component {
 
         <hr />
 
-        { posts.length === 0 &&
-          <h2>Loading...</h2>
-        }
-
-        { posts.length > 2 &&
-          <PostList
-            posts = {posts}
-          />
-        }
+        <PostList
+          posts={posts}
+        />
 
       </div>
     );
