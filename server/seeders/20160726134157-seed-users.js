@@ -38,14 +38,14 @@ module.exports = {
     queryInterface.bulkInsert('Posts', [
     {
       body: 'JohnDoe131 post 1',
-      commentCount: 3,
+      commentCount: 0,
       createdAt : date,
       updatedAt : date,
       UserId: 1
     },
     {
       body: 'JohnDoe131 post 2',
-      commentCount: 3,
+      commentCount: 0,
       createdAt : date,
       updatedAt : date,
       UserId: 1

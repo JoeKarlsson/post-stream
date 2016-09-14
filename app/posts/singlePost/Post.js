@@ -6,6 +6,7 @@ const emojione = require('emojione');
 import {
   toggleComment,
   fetchCommentsIfNeeded,
+  toggleShowComment,
 } from '../../actions/posts/commentActions';
 import {
   toggleEditMode,
@@ -19,6 +20,7 @@ class Post extends Component {
   constructor() {
     super();
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleToggleComments = this.handleToggleComments.bind(this);
     this.handleShowingChild = this.handleShowingChild.bind(this);
     this.handlePrev = this.handlePrev.bind(this);
     this.handleNext = this.handleNext.bind(this);
@@ -31,6 +33,11 @@ class Post extends Component {
     let output = emojione.shortnameToImage(rawMarkup);
     return { __html: output };
   };
+
+  handleToggleComments() {
+    const {dispatch, index, showComments } = this.props;
+    dispatch(toggleShowComment(index, !showComments));
+  }
 
   handleEdit() {
     const { dispatch, index, editMode } = this.props;
@@ -120,11 +127,17 @@ class Post extends Component {
           <div>
             <span dangerouslySetInnerHTML={this.rawMarkup()} />
 
-            <div className='comment-count' onClick={this.handleShowingChild}>
-              <CommentCount
-                numOfComments={commentCount}
-              />
-            </div>
+            { !showComments &&
+              <div className='comment-count' onClick={this.handleShowingChild}>
+              </div>
+            }
+            { showComments &&
+              <div className='comment-count' onClick={this.handleToggleComments}>
+                <CommentCount
+                  numOfComments={commentCount}
+                />
+              </div>
+            }
           </div>
         }
 
@@ -140,7 +153,7 @@ class Post extends Component {
             { childId !== 0 &&
               <span onClick={this.handlePrev}>[ left ] </span>
             }
-            { childId+1 !== commentCount &&
+            { childId !== commentCount-1 &&
               <span onClick={this.handleNext}>[ right ]</span>
             }
               <Post

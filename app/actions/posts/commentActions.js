@@ -58,3 +58,11 @@ export const toggleComment = (index, newChildId) => {
     newChildId,
   }
 };
+
+export const toggleShowComment = (index, showCommentState) => {
+  return {
+    type: 'TOGGLE_SHOW_COMMENT',
+    index,
+    showCommentState,
+  }
+};

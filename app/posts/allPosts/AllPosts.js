@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Post from '../singlePost/Post';
 import NewPost from '../newPost/NewPost';
+import PostList from '../postList/PostList';
 import styles from './AllPosts.scss';
 import { fetchPostsIfNeeded } from '../../actions/posts/postActions';
 
@@ -19,16 +19,6 @@ class AllPosts extends Component {
       isLoggedIn,
       username
     } = this.props;
-
-    const postNode = posts.map(( post, i ) => {
-      return (
-        <Post
-          {...post}
-          index={i}
-          key={i}
-        />
-      );
-    });
 
     return (
       <div className={styles.allPosts}>
@@ -52,10 +42,11 @@ class AllPosts extends Component {
         }
 
         { posts.length > 2 &&
-          <div>
-            {postNode}
-          </div>
+          <PostList
+            posts = {posts}
+          />
         }
+
       </div>
     );
   }

@@ -139,6 +139,13 @@ const postReducer = (state = initialState, action) => {
         })
       });
 
+    case 'TOGGLE_SHOW_COMMENT':
+      return state.updateIn(['posts'], (posts) => {
+        return posts.update(action.index, (post) => {
+          return post.set('showComments', action.showCommentState)
+        })
+      })
+
     case 'TOGGLE_REPLY_MODE':
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
