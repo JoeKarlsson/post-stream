@@ -16,10 +16,12 @@ class Profile extends React.Component {
     const {
       posts,
     } = this.props;
+    const { userName} = this.props.params;
 
     return (
       <div className={styles.Profile}>
 
+        <h1>{userName}'s PostStream</h1>
         <PostList
           posts={posts}
         />

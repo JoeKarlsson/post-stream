@@ -22,7 +22,7 @@ class AllPosts extends Component {
 
     return (
       <div className={styles.allPosts}>
-        <h1>stream</h1>
+        <h1>PostStream</h1>
 
         <div>
           stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.

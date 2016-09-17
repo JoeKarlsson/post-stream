@@ -40,8 +40,8 @@ class NewPostForm extends Component {
             value={this.props.newPostBody}
             onChange={this.handleBodyChange}
           ></textarea>
-          <div className="create-public-private-btns">
-            <span onClick={this.handleSubmitPost}>[ post ] </span>
+          <div>
+            [<span className={styles.clickable} onClick={this.handleSubmitPost}> post </span>]
           </div>
         </form>
       </div>

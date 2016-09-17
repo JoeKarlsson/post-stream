@@ -28,8 +28,8 @@ const postReducer = (state = initialState, action) => {
             return Map(post)
             .set('showComments', false)
             .set('isParentPost', true)
-            .set('realName', post.user.username)
-            .set('username', 'joejoebinks3')
+            .set('realName', `${post.User.first_name} ${post.User.last_name}`)
+            .set('username', post.User.username)
             .set('comments', List())
             .set('childId', 0)
             .set('childContext', {})
@@ -166,13 +166,10 @@ const postReducer = (state = initialState, action) => {
     case 'RECEIVE_NEW_REPLY':
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
-          console.log('post: ', post);
-          // return state;
-          // const foo = post.get('comments').unshift(action.reply);
-          // console.log('foo: ', foo);
           return post.set('commentCount', post.get('commentCount') + 1)
             .set('replyBody', '')
             .set('comments', post.get('comments').unshift(action.reply))
+            .set('replyMode', false)
         })
       });
 

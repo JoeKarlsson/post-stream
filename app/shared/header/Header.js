@@ -25,10 +25,10 @@ class Header extends Component {
           <ul className={styles.header_nav}>
             <li>[ <NavLink to='/about'>?</NavLink> ]</li>
             { isLoggedIn === false &&
-              <span>
-                <li>[ <NavLink to='/register'>register</NavLink> ]</li>
-                <li>[ <NavLink to='/login'>login</NavLink> ]</li>
-              </span>
+              <li>[ <NavLink to='/register'>register</NavLink> ]</li>
+            }
+            { isLoggedIn === false &&
+              <li>[ <NavLink to='/login'>login</NavLink> ]</li>
             }
             { isLoggedIn === true &&
               <span>
@@ -37,6 +37,7 @@ class Header extends Component {
             }
           </ul>
         </header>
+        <hr/>
       </div>
     )
   }

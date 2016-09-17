@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CommentCount from './CommentCount';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 const Remarkable = require('remarkable');
 const emojione = require('emojione');
@@ -11,6 +11,7 @@ import {
 import {
   toggleEditMode,
 } from '../../actions/posts/editPostActions';
+import CommentCount from './CommentCount';
 import DestroyPostButton from './DestroyPostButton';
 import Reply from './Reply';
 import EditPost from './../editPost/EditPost';
@@ -100,7 +101,7 @@ class Post extends Component {
         { editMode === false && isParentPost &&
           <div>
             <div>
-              { username} | {realName } | { new Date(createdAt).toLocaleTimeString() }
+              <Link to={`/user/${username}`}>{ username}</Link> | <Link to={`/user/${username}`}>{ realName }</Link> | { new Date(createdAt).toLocaleTimeString() }
             </div>
 
             <span dangerouslySetInnerHTML={ this.rawMarkup() } />

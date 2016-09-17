@@ -3,9 +3,10 @@ import styles from './Footer.scss';
 
 const Footer = () => (
   <div>
+    <hr/>
     <footer className={styles.footer}>
       <div className={styles.footer_content}>
-        <a href='http://www.callmejoe.net/'><p>site by ray, jacoby and joe</p></a>
+        <p>site by <a href='http://www.rayfarias.com'>ray</a>, <a href='http://jacobyyoung.com/'>jacoby</a> and <a href='http://www.callmejoe.net/'>joe</a></p>
       </div>
     </footer>
   </div>

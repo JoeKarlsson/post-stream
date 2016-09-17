@@ -1,4 +1,5 @@
-
+$blue: #1EAEDB;
+$darkerBlue: #11657F;
 
 .newPost {
 
@@ -7,4 +8,11 @@
 .u_full_width {
   width: 100%;
   box-sizing: border-box;
+}
+
+.clickable {
+  color: $blue;
+}
+.clickable:hover {
+  color: $darkerBlue;
 }

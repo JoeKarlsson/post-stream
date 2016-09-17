@@ -1,13 +1,8 @@
-$red: red;
 $white: white;
 
 .footer {
-  background-color: $red;
+  background-color: $white;
   .footer_content {
-    padding: 30px;
     text-align: center;
-  }
-  a {
-    color: $white;
   }
 }

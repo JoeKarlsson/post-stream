@@ -1,11 +1,9 @@
-$purple: purple;
 $white: white;
 
 header {
   width: 100%;
-  background-color: $purple;
+  background-color: $white;
   padding-top: 2%;
-  padding-bottom: 2%;
   font-size: 1.25rem;
   display: flex;
   flex-direction: row;
@@ -13,7 +11,7 @@ header {
 
 .header_bar {
   a {
-    color: $white;
+
   }
 }
 
@@ -21,7 +19,7 @@ a {
   text-decoration: none;
 }
 
-ul {
+header > ul {
   margin: 0;
   margin-bottom: 0;
   padding: 0;

@@ -1,13 +1,11 @@
 $purple: purple;
 
 .app {
-
   display: flex;
   min-height: 100vh;
   flex-direction: column;
 }
 
 .content {
-  padding-top: 2%;
   flex: 1;
 }
