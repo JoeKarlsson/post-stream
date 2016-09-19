@@ -4,6 +4,28 @@ const path = require('path');
 const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const dotenv = require('dotenv');
+const NODE_ENV = process.env.NODE_ENV;
+const fs = require('fs');
+const join = path.join;
+const resolve = path.resolve;
+
+
+// ENV variables
+const dotEnvVars = dotenv.config();
+
+const envVariables =
+    Object.assign({}, dotEnvVars);
+
+const defines =
+  Object.keys(envVariables)
+  .reduce((memo, key) => {
+    const val = JSON.stringify(envVariables[key]);
+    memo[`__${key.toUpperCase()}__`] = val;
+    return memo;
+  }, {
+    __NODE_ENV__: JSON.stringify(NODE_ENV)
+  });
 
 module.exports = {
   devtool: 'eval-source-map',
@@ -28,9 +50,7 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development'),
-    }),
+    new webpack.DefinePlugin(defines),
   ],
   module: {
     preLoaders: [

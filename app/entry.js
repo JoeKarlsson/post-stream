@@ -8,6 +8,7 @@ import {
 } from 'react-router';
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
+import AuthService from './shared/auth/AuthService';
 import App from './App';
 import AllPosts from './posts/allPosts/AllPosts';
 import Profile from './shared/auth/profile/Profile';
@@ -16,6 +17,9 @@ import Login from './shared/auth/login/Login';
 import Logout from './shared/auth/logout/Logout';
 import About from './static/about/About';
 import NoMatch from './static/noMatch/NoMatch';
+
+console.log('__AUTH0_CLIENT_ID__: ', __AUTH0_CLIENT_ID__);
+const auth = new AuthService(__AUTH0_CLIENT_ID__, __AUTH0_DOMAIN__);
 
 const store = configureStore();
 
