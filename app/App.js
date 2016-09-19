@@ -20,7 +20,7 @@ class App extends Component {
     }
     return (
       <div className={styles.app}>
-        <Header />
+        <Header auth={this.props.route.auth}/>
 
         <div className={styles.content}>
           <div className={skeleton.container}>

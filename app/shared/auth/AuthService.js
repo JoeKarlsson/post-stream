@@ -13,6 +13,8 @@ export default class AuthService extends EventEmitter {
     this.lock.on('authorization_error', this._authorizationError.bind(this))
     // binds login functions to keep this context
     this.login = this.login.bind(this)
+    this.loggedIn = this.loggedIn.bind(this)
+    this.getToken = this.getToken.bind(this)
   }
 
   _doAuthentication(authResult){
@@ -40,6 +42,7 @@ export default class AuthService extends EventEmitter {
 
   loggedIn(){
     // Checks if there is a saved token and it's still valid
+    console.log('this: ', this);
     const token = this.getToken()
     return !!token && !isTokenExpired(token)
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import NavLink from '../navigation/NavLink';
+import AuthService from '../auth/AuthService'
 import styles from './Header.scss';
 import { fetchLogout } from './../../actions/auth/logoutActions';
 
@@ -11,13 +12,16 @@ class Header extends Component {
     this.handleLogout = this.handleLogout.bind(this);
   }
 
-  handleLogout() {
-    const { dispatch } = this.props;
-    dispatch(fetchLogout())
+  handleLogout(){
+    this.props.auth.logout()
+    this.context.router.push('/login');
   }
 
   render() {
-    const { isLoggedIn } = this.props;
+    const { loggedIn } = this.props.auth;
+    const isLoggedIn = loggedIn();
+    console.log('isLoggedIn: ', isLoggedIn);
+
     return (
       <div>
         <header className={styles.header_bar}>
