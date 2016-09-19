@@ -6,10 +6,15 @@ const logo = require('../img/PS_58.png')
 export default class AuthService extends EventEmitter {
   constructor(clientId, domain) {
     super()
-
-    this.domain = domain // setting domain parameter as an instance attribute
-
     // Configure Auth0
+    const options = {
+      allowedConnections: [
+      'twitter',
+      'google',
+      'github'
+      ]
+    };
+
     this.lock = new Auth0Lock(clientId, domain, {
       theme: {
         logo: logo,
@@ -105,22 +110,6 @@ export default class AuthService extends EventEmitter {
     // Retrieves the profile data from localStorage
     const profile = localStorage.getItem('profile')
     return profile ? JSON.parse(localStorage.profile) : {}
-  }
-
-  updateProfile(userId, data){
-    const headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + this.getToken() //setting authorization header
-    }
-    // making the PATCH http request to auth0 api
-    return fetch(`https://${this.domain}/api/v2/users/${userId}`, {
-      method: 'PATCH',
-      headers: headers,
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(newProfile => this.setProfile(newProfile)) //updating current profile
   }
 
   setToken(idToken){

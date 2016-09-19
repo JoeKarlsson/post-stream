@@ -1,7 +1,6 @@
 import React, { PropTypes as T } from 'react'
 import ReactDOM from 'react-dom'
 import AuthService from '../AuthService'
-import s from './ProfileEdit.scss'
 
 export class ProfileEdit extends React.Component {
   // receiving AuthService instance and profile data as props

@@ -4,9 +4,19 @@ import { fetchUserData } from '../../../actions/auth/profileActions';
 import PostList from './postList/PostList';
 import ProfileEdit from './ProfileEdit';
 import ProfileDetails from './ProfileDetails';
+import LinkedAccountsList from './LinkedAccountsList';
 import styles from './Profile.scss';
 
 class Profile extends React.Component {
+  constructor(props, context) {
+    super();
+    this.state = {
+      profile: props.auth.getProfile()
+    }
+    props.auth.on('profile_updated', (newProfile) => {
+      this.setState({profile: newProfile})
+    })
+  }
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -25,8 +35,12 @@ class Profile extends React.Component {
       <div className={styles.Profile}>
 
         <h1>{userName}'s PostStream</h1>
+
         <ProfileDetails profile={profile}></ProfileDetails>
+
         <ProfileEdit profile={profile} auth={this.props.auth}></ProfileEdit>
+
+
         <PostList
           posts={posts}
         />

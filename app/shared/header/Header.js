@@ -18,7 +18,8 @@ class Header extends Component {
   render() {
     const { loggedIn, getProfile, login, getToken } = this.props.auth;
     const isLoggedIn = loggedIn();
-    const profileName = getProfile();
+    const profile = getProfile();
+    console.log('profileName: ', profile.nickname);
     console.log('isLoggedIn: ', isLoggedIn);
     console.log('getToken: ', getToken());
 
@@ -41,7 +42,7 @@ class Header extends Component {
             }
             { isLoggedIn === true &&
               <span>
-                <li>[ <NavLink to='/user/{profileName}'>profile</NavLink> ]</li>
+                <li>[ <NavLink to={`/user/${ profile.nickname }`}>profile</NavLink> ]</li>
               </span>
             }
           </ul>
