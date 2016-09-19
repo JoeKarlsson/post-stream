@@ -20,7 +20,7 @@ export class Login extends React.Component {
       <div className={styles.root}>
         <h2>Login</h2>
         <div>
-          <button bsStyle="primary" onClick={auth.login.bind(this)}>Login</button>
+          <button onClick={auth.login.bind(this)}>Login</button>
         </div>
       </div>
     )

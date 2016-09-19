@@ -12,15 +12,19 @@ import styles from './App.scss';
 class App extends Component {
 
   render() {
+    let children = null;
+    if (this.props.children) {
+      children = React.cloneElement(this.props.children, {
+        auth: this.props.route.auth //sends auth instance to children
+      })
+    }
     return (
       <div className={styles.app}>
         <Header />
 
         <div className={styles.content}>
           <div className={skeleton.container}>
-            {
-              this.props.children
-            }
+            { children }
           </div>
         </div>
 

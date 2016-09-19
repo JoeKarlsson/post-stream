@@ -18,7 +18,6 @@ import Logout from './shared/auth/logout/Logout';
 import About from './static/about/About';
 import NoMatch from './static/noMatch/NoMatch';
 
-console.log('__AUTH0_CLIENT_ID__: ', __AUTH0_CLIENT_ID__);
 const auth = new AuthService(__AUTH0_CLIENT_ID__, __AUTH0_DOMAIN__);
 
 const store = configureStore();
@@ -26,12 +25,13 @@ const store = configureStore();
 ReactDOM.render(
   <Provider store={ store }>
     <Router history={ browserHistory }>
-      <Route path='/' component={ App }>
+      <Route path='/' component={ App } auth={ auth} >
         <IndexRoute component={ AllPosts } />
         <Route path='/about' component={ About } />
         <Route path='/user/:userName' component={ Profile } />
         <Route path='/Register' component={ Register } />
         <Route path='/login' component={ Login } />
+        <Route path="access_token=:token" component={Login} /> //to prevent router errors
         <Route path='/logout' component={ Logout } />
         <Route path='*' component={ NoMatch } />
       </Route>
