@@ -1,6 +1,5 @@
 import React, { PropTypes as T } from 'react'
 import AuthService from '../AuthService';
-import { browserHistory } from 'react-router';
 import styles from './Login.scss';
 
 export class Login extends React.Component {

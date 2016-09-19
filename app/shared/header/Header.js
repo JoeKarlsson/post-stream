@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import NavLink from '../navigation/NavLink';
-import AuthService from '../auth/AuthService'
 import styles from './Header.scss';
-import { fetchLogout } from './../../actions/auth/logoutActions';
 
 class Header extends Component {
 
@@ -18,9 +16,11 @@ class Header extends Component {
   }
 
   render() {
-    const { loggedIn } = this.props.auth;
+    const { loggedIn, getProfile, login, getToken } = this.props.auth;
     const isLoggedIn = loggedIn();
+    const profileName = getProfile();
     console.log('isLoggedIn: ', isLoggedIn);
+    console.log('getToken: ', getToken());
 
     return (
       <div>
@@ -32,11 +32,16 @@ class Header extends Component {
               <li>[ <NavLink to='/register'>register</NavLink> ]</li>
             }
             { isLoggedIn === false &&
-              <li>[ <NavLink to='/login'>login</NavLink> ]</li>
+              <li>[ <span onClick={ login.bind(this) }>login</span> ]</li>
             }
             { isLoggedIn === true &&
               <span>
                 <li>[ <NavLink to='/logout' onClick={ this.handleLogout }>logout</NavLink> ]</li>
+              </span>
+            }
+            { isLoggedIn === true &&
+              <span>
+                <li>[ <NavLink to='/user/{profileName}'>profile</NavLink> ]</li>
               </span>
             }
           </ul>

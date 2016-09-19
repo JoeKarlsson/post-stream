@@ -1,12 +1,60 @@
-import { EventEmitter } from 'events'
-import { isTokenExpired } from './jwtHelper'
-import Auth0Lock from 'auth0-lock'
+import { EventEmitter } from 'events';
+import { isTokenExpired } from './jwtHelper';
+import Auth0Lock from 'auth0-lock';
+const logo = require('../img/PS_58.png')
 
 export default class AuthService extends EventEmitter {
   constructor(clientId, domain) {
     super()
+
+    this.domain = domain // setting domain parameter as an instance attribute
+
     // Configure Auth0
-    this.lock = new Auth0Lock(clientId, domain, {})
+    this.lock = new Auth0Lock(clientId, domain, {
+      theme: {
+        logo: logo,
+        primaryColor: '#1EAEDB'
+      },
+      languageDictionary: {
+        emailInputPlaceholder: "something@youremail.com",
+        title: "PostStream"
+      },
+      // auth: {
+      //   params: {param1: "value1"},
+      //   redirect: true,
+      //   redirectUrl: "http://localhost:3000/",
+      //   responseType: "token",
+      //   sso: true
+      // },
+        // allowedConnections: [
+        //   'twitter',
+        //   'google',
+        //   'github'
+        // ],
+        additionalSignUpFields: [{
+          name: "address",
+          placeholder: "enter your address",
+          // The following properties are optional
+          icon: "https://example.com/assests/address_icon.png",
+          prefill: "street 123",
+          validator: function(address) {
+            return {
+               valid: address.length >= 10,
+               hint: "Must have 10 or more chars" // optional
+            };
+          }
+        },
+        {
+          name: "full_name",
+          placeholder: "Enter your full name"
+        }],
+        // allowForgotPassword: true,
+        // allowSignUp: true,
+        // loginAfterSignup: true,
+        // usernameStyle: 'username',
+        // rememberLastLogin: true,
+    })
+
     // Add callback for lock `authenticated` event
     this.lock.on('authenticated', this._doAuthentication.bind(this))
     // Add callback for lock `authorization_error` event
@@ -42,7 +90,6 @@ export default class AuthService extends EventEmitter {
 
   loggedIn(){
     // Checks if there is a saved token and it's still valid
-    console.log('this: ', this);
     const token = this.getToken()
     return !!token && !isTokenExpired(token)
   }
@@ -58,6 +105,22 @@ export default class AuthService extends EventEmitter {
     // Retrieves the profile data from localStorage
     const profile = localStorage.getItem('profile')
     return profile ? JSON.parse(localStorage.profile) : {}
+  }
+
+  updateProfile(userId, data){
+    const headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.getToken() //setting authorization header
+    }
+    // making the PATCH http request to auth0 api
+    return fetch(`https://${this.domain}/api/v2/users/${userId}`, {
+      method: 'PATCH',
+      headers: headers,
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(newProfile => this.setProfile(newProfile)) //updating current profile
   }
 
   setToken(idToken){

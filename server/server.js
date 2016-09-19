@@ -9,14 +9,16 @@ const webpack = require('webpack');
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const webpackConfig = require('./webpack/webpack.config.dev.js');
-const passport = require('passport');
-const session = require('express-session');
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const favicon = require('express-favicon');
 const Promise = require('bluebird');
+var jwt = require('express-jwt');
+
+const authenticate = jwt({
+  secret: new Buffer(process.env.AUTH0_CLIENT_SECRET,  'base64'),
+  audience: process.env.AUTH0_CLIENT_ID
+});
 
 const db = require('./models');
 const User = db.User;
@@ -28,55 +30,10 @@ const root = require('./routes/root');
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
 
-app.use(session(
-  {
-    secret : CONFIG.SESSION.secret,
-    resave : false,
-    saveUninitialized : true
-  }
-));
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(favicon(`${__dirname}/favicon.ico`));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function (user, done) {
-  return done(null, user);
-});
-
-// local strategy checks our local DB to authenticate users
-passport.use(new LocalStrategy(
-  (username, password, done) => {
-    User.findOne({
-      where : {
-        username : username
-      }
-    })
-    .then((user) => {
-      if (!user) {
-        return done(null, false);
-      }
-      bcrypt.compare(password, user.password, (err, res) => {
-        if (err) {
-          return done(null, false);
-        }
-        if (res) {
-          console.log('success')
-          return done(null, user);
-        }
-        return done(null, false);
-      });
-    });
-  }
-));
 
 Promise.onPossiblyUnhandledRejection((err) => {
   throw new Error(err);
@@ -85,6 +42,11 @@ Promise.onPossiblyUnhandledRejection((err) => {
 app.use('/api/user', user);
 app.use('/post', post);
 app.use('/api', root);
+app.use('/api/auth', authenticate);
+
+app.get('/api/auth/ping', function(req, res) {
+  res.status(200).send("All good. You only get this message if you're authenticated");
+});
 
 if (isDeveloping) {
   app.set('host', 'http://localhost');
