@@ -22,6 +22,7 @@ export class ProfileEdit extends React.Component {
 
   render(){
     const { profile } = this.props
+    console.log('profile: ', profile);
     const { address } = profile.user_metadata || {}
     return (
       <div>

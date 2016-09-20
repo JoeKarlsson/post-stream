@@ -19,6 +19,7 @@ class AllPosts extends Component {
       isLoggedIn,
       username
     } = this.props;
+    const profile = this.props.auth.getProfile()
 
     return (
       <div className={styles.allPosts}>
@@ -32,7 +33,7 @@ class AllPosts extends Component {
         <NewPost />
 
         { isLoggedIn === true &&
-          <p>welcome back {username}</p>
+          <p>welcome back { profile.nickname }</p>
         }
 
         <hr />

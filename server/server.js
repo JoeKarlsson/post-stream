@@ -45,6 +45,7 @@ app.use('/api', root);
 app.use('/api/auth', authenticate);
 
 app.get('/api/auth/ping', function(req, res) {
+  console.log('req.user: ', req.user);
   res.status(200).send("All good. You only get this message if you're authenticated");
 });
 

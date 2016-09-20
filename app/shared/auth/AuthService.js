@@ -24,32 +24,27 @@ export default class AuthService extends EventEmitter {
         responseType: "token",
         sso: true
       },
-        // allowedConnections: [
-        //   'twitter',
-        //   'google',
-        //   'github'
-        // ],
-        additionalSignUpFields: [{
-          name: "address",
-          placeholder: "enter your address",
-          // The following properties are optional
-          prefill: "street 123",
-          validator: function(address) {
-            return {
-               valid: address.length >= 10,
-               hint: "Must have 10 or more chars" // optional
-            };
-          }
-        },
-        {
-          name: "full_name",
-          placeholder: "Enter your full name"
-        }],
-        allowForgotPassword: true,
-        allowSignUp: true,
-        loginAfterSignup: true,
+      additionalSignUpFields: [{
+        name: "address",
+        placeholder: "enter your address",
+        // The following properties are optional
+        prefill: "street 123",
+        validator: function(address) {
+          return {
+             valid: address.length >= 10,
+             hint: "Must have 10 or more chars" // optional
+          };
+        }
+      },
+      {
+        name: "full_name",
+        placeholder: "Enter your full name"
+      }],
+      allowForgotPassword: true,
+      allowSignUp: true,
+      loginAfterSignup: true,
 
-        rememberLastLogin: true,
+      rememberLastLogin: true,
     })
 
     // Add callback for lock `authenticated` event
