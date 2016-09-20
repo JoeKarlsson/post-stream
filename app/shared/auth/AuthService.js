@@ -7,30 +7,23 @@ export default class AuthService extends EventEmitter {
   constructor(clientId, domain) {
     super()
     // Configure Auth0
-    const options = {
-      allowedConnections: [
-      'twitter',
-      'google',
-      'github'
-      ]
-    };
-
     this.lock = new Auth0Lock(clientId, domain, {
       theme: {
-        logo: logo,
+        logo,
         primaryColor: '#1EAEDB'
       },
       languageDictionary: {
         emailInputPlaceholder: "something@youremail.com",
         title: "PostStream"
       },
-      // auth: {
-      //   params: {param1: "value1"},
-      //   redirect: true,
-      //   redirectUrl: "http://localhost:3000/",
-      //   responseType: "token",
-      //   sso: true
-      // },
+
+      auth: {
+        params: {param1: "value1"},
+        redirect: true,
+        redirectUrl: "http://localhost:3000/",
+        responseType: "token",
+        sso: true
+      },
         // allowedConnections: [
         //   'twitter',
         //   'google',
@@ -40,7 +33,6 @@ export default class AuthService extends EventEmitter {
           name: "address",
           placeholder: "enter your address",
           // The following properties are optional
-          icon: "https://example.com/assests/address_icon.png",
           prefill: "street 123",
           validator: function(address) {
             return {
@@ -53,11 +45,11 @@ export default class AuthService extends EventEmitter {
           name: "full_name",
           placeholder: "Enter your full name"
         }],
-        // allowForgotPassword: true,
-        // allowSignUp: true,
-        // loginAfterSignup: true,
-        // usernameStyle: 'username',
-        // rememberLastLogin: true,
+        allowForgotPassword: true,
+        allowSignUp: true,
+        loginAfterSignup: true,
+
+        rememberLastLogin: true,
     })
 
     // Add callback for lock `authenticated` event
