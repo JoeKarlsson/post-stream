@@ -161,10 +161,11 @@ router.route('/:PostId/comments/:CommentId/new')
     if(req.params.CommentId != 0){
       parentId = req.params.CommentId;
     }
+    console.log(parentId, req.body.body, req.body.userID,req.params.PostId );
     Comment.create({
       body: req.body.body,
+      userID: req.body.userID,
       PostId: req.params.PostId,
-      UserId: req.user,
       parentId
     })
     .then((comment) => {

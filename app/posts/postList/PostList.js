@@ -14,6 +14,7 @@ class PostList extends Component {
           {...post}
           index={i}
           key={i}
+          auth={this.props.auth}
         />
       );
     });

@@ -40,6 +40,7 @@ class AllPosts extends Component {
 
         <PostList
           posts={posts}
+          auth={this.props.auth}
         />
 
       </div>

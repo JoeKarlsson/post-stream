@@ -28,21 +28,20 @@ const receiveNewReply = (json, index) => {
   }
 };
 
-// TODO - TEST THIS
-export const submitNewReply = (body, index, postId, commentId) => {
-  console.log('index: ', index);
+export const submitNewReply = (data) => {
   return dispatch => {
     dispatch(requestNewReply());
     let myHeaders = new Headers();
     myHeaders.append(
       'Content-Type', 'application/x-www-form-urlencoded'
     );
-    return fetch(`/post/${postId}/comments/${commentId}/new`, {
+    console.log('data: ', data);
+    return fetch(`/post/${data.id}/comments/${data.commentId}/new`, {
       method: 'POST',
       headers: myHeaders,
-      body: `body=${body}`
+      body: `body=${data.replyBody}&userID=${data.userID}`
     })
     .then(response => response.json())
-    .then(json => dispatch(receiveNewReply(json, index)));
+    .then(json => dispatch(receiveNewReply(json, data.index)));
   }
 };

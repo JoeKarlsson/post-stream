@@ -114,6 +114,7 @@ class Post extends Component {
             <Reply
               id={id}
               index={index}
+              auth={this.props.auth}
             />
 
             <div className='comment-count' onClick={this.handleShowingChild}>

@@ -28,8 +28,22 @@ class Reply extends Component {
 
   handleSubmitReply(e){
     e.preventDefault();
-    const { dispatch, index, id, replyBody } = this.props;
-    dispatch(submitNewReply(replyBody, index, id, 0));
+    const {
+      dispatch,
+      index,
+      id,
+      replyBody
+    } = this.props;
+    const profile = this.props.auth.getProfile();
+    console.log(profile)
+    const actionData = {
+      replyBody,
+      index,
+      id,
+      commentId: 0,
+      userID: profile.user_id
+    }
+    dispatch(submitNewReply(actionData));
   }
 
   render() {
