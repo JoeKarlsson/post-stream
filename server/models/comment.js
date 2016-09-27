@@ -11,10 +11,14 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 0,
       allowNull: false
     },
+    userID: {
+      type : DataTypes.STRING,
+      allowNull: false,
+      required : true
+    },
   }, {
     classMethods: {
       associate: function(models) {
-        Comment.belongsTo(models.User);
         Comment.belongsTo(models.Post);
       }
     }

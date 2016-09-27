@@ -30,7 +30,7 @@ class AllPosts extends Component {
           {' '}
         </div>
 
-        <NewPost />
+        <NewPost auth={this.props.auth}/>
 
         { isLoggedIn === true &&
           <p>welcome back { profile.nickname }</p>

@@ -12,11 +12,15 @@ module.exports = function(sequelize, DataTypes) {
       type : DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: false
-    }
+    },
+    userID: {
+      type : DataTypes.STRING,
+      allowNull: false,
+      required : true
+    },
   }, {
     classMethods: {
       associate : function(models) {
-        Post.belongsTo(models.User);
         Post.hasMany(models.Comment, {
           onDelete : 'cascade'
         })

@@ -14,7 +14,7 @@ const receiveUser= (userData) => {
 export const fetchUserData = (userName) => {
   return dispatch => {
     dispatch(requestUser());
-    return fetch(`/api/user/${userName}/posts`)
+    return fetch(`/post/user/${userName}`)
     .then(response => response.json())
     .then(userData => dispatch(receiveUser(userData)));
   }

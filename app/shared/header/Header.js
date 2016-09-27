@@ -19,7 +19,7 @@ class Header extends Component {
     const { loggedIn, getProfile, login, getToken } = this.props.auth;
     const isLoggedIn = loggedIn();
     const profile = getProfile();
-    console.log('profileName: ', profile.nickname);
+    console.log('profile: ', profile);
     console.log('isLoggedIn: ', isLoggedIn);
     console.log('getToken: ', getToken());
 

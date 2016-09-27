@@ -8,6 +8,7 @@ export class ProfileDetails extends React.Component {
   render(){
     const { profile } = this.props;
     const { address } = profile.user_metadata || {} // new address field
+    const { bio } = profile.user_metadata || {} // new bio field
 
     return (
       <div>
@@ -18,6 +19,7 @@ export class ProfileDetails extends React.Component {
           <p><strong>Email: </strong> {profile.email}</p>
           <p><strong>Nickname: </strong> {profile.nickname}</p>
           <p><strong>Address: </strong> {address}</p>
+          <p><strong>Bio: </strong> {bio}</p>
           <p><strong>Created At: </strong> {profile.created_at}</p>
           <p><strong>Updated At: </strong> {profile.updated_at}</p>
         </div>

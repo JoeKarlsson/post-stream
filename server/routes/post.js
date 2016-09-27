@@ -31,19 +31,7 @@ router.route('/')
       limit: 10,
       order: [
         ['createdAt', 'DESC']
-      ],
-      include: [{
-        model: User,
-        attributes: [
-          'id',
-          'username',
-          'first_name',
-          'last_name',
-          'bio',
-          'following',
-          'createdAt'
-        ]
-      }]
+      ]
     })
     .then((posts) => {
       res.json(posts);
@@ -114,13 +102,34 @@ router.route('/:id/edit')
     }
   })
 
+router.route('/user/:username')
+  // get an array of all the users posts
+  .get((req, res) => {
+    console.log('req.params.username: ', req.params.username);
+    Post.findAll({
+      limit: 10,
+      order: [
+        ['createdAt', 'DESC']
+      ],
+      where : {
+        userID : req.params.username
+      }
+    })
+    .then((userPosts) => {
+      res.json(userPosts);
+    })
+    .catch((err) => {
+      res.json({ error: err });
+    })
+  })
+
 router.route('/new')
   // create a new post
   // TODO - updated user when AUTH is working
   .post((req, res) => {
     Post.create({
       body: req.body.body,
-      UserId: req.user
+      userID: req.body.userID
     })
     .then((post) => {
       res.json(post);

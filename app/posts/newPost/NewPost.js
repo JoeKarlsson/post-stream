@@ -22,7 +22,10 @@ class NewPostForm extends Component {
   handleSubmitPost(e) {
     e.preventDefault();
     const { dispatch, newPostBody } = this.props;
-    dispatch(submitNewPost(newPostBody))
+    console.log(this.props)
+    const { getProfile } = this.props.auth;
+    const profile = getProfile();
+    dispatch(submitNewPost(newPostBody, profile.user_id))
   };
 
   render() {

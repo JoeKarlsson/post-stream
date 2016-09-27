@@ -23,9 +23,7 @@ const authenticate = jwt({
 const db = require('./models');
 const User = db.User;
 
-const user = require('./routes/user');
 const post = require('./routes/post');
-const root = require('./routes/root');
 
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
@@ -39,9 +37,7 @@ Promise.onPossiblyUnhandledRejection((err) => {
   throw new Error(err);
 });
 
-app.use('/api/user', user);
 app.use('/post', post);
-app.use('/api', root);
 app.use('/api/auth', authenticate);
 
 app.get('/api/auth/ping', function(req, res) {

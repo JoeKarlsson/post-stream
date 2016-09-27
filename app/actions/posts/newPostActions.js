@@ -18,7 +18,7 @@ const receiveNewPost = (json) => {
   }
 };
 
-export const submitNewPost = (body) => {
+export const submitNewPost = (body, userID) => {
   return dispatch => {
     dispatch(requestNewPost());
     let myHeaders = new Headers();
@@ -28,7 +28,7 @@ export const submitNewPost = (body) => {
     return fetch(`/post/new`, {
       method: 'POST',
       headers: myHeaders,
-      body: `body=${body}`
+      body: `body=${body}&userID=${userID}`
     })
     .then(response => response.json())
     .then(json => dispatch(receiveNewPost(json)));

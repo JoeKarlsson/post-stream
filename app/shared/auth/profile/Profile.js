@@ -21,7 +21,9 @@ class Profile extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
     const { userName} = this.props.params;
-    dispatch(fetchUserData(userName));
+    const { getProfile } = this.props.auth;
+    const profile = getProfile();
+    dispatch(fetchUserData(profile.user_id));
   };
 
   render() {
@@ -39,7 +41,6 @@ class Profile extends React.Component {
         <ProfileDetails profile={profile}></ProfileDetails>
 
         <ProfileEdit profile={profile} auth={this.props.auth}></ProfileEdit>
-
 
         <PostList
           posts={posts}
