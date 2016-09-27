@@ -35,7 +35,6 @@ export const submitNewReply = (data) => {
     myHeaders.append(
       'Content-Type', 'application/x-www-form-urlencoded'
     );
-    console.log('data: ', data);
     return fetch(`/post/${data.id}/comments/${data.commentId}/new`, {
       method: 'POST',
       headers: myHeaders,
