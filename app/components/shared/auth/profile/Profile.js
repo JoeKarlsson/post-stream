@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchUserData } from '../../../actions/auth/profileActions';
+import { fetchUserData } from '../../../../actions/auth/profileActions';
 import PostList from './postList/PostList';
 import ProfileEdit from './ProfileEdit';
 import ProfileDetails from './ProfileDetails';
-import LinkedAccountsList from './LinkedAccountsList';
 import styles from './Profile.scss';
 
 class Profile extends React.Component {
@@ -20,7 +19,6 @@ class Profile extends React.Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const { userName} = this.props.params;
     const { getProfile } = this.props.auth;
     const profile = getProfile();
     dispatch(fetchUserData(profile.user_id));

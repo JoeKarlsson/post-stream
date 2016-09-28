@@ -4,7 +4,7 @@ import {
   submitUpdatedPost,
   handleUpdatedPostBodyChange,
   toggleEditMode,
-} from '../../actions/posts/editPostActions';
+} from '../../../actions/posts/editPostActions';
 import styles from './EditPost.scss';
 
 class EditPost extends Component {

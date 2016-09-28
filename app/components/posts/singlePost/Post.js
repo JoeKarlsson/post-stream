@@ -7,10 +7,10 @@ import {
   toggleComment,
   fetchCommentsIfNeeded,
   toggleShowComment,
-} from '../../actions/posts/commentActions';
+} from '../../../actions/posts/commentActions';
 import {
   toggleEditMode,
-} from '../../actions/posts/editPostActions';
+} from '../../../actions/posts/editPostActions';
 import CommentCount from './CommentCount';
 import DestroyPostButton from './DestroyPostButton';
 import Reply from './Reply';

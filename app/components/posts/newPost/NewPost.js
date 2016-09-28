@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   submitNewPost,
   handleNewPostBodyChange
-} from '../../actions/posts/newPostActions';
+} from '../../../actions/posts/newPostActions';
 import styles from './NewPost.scss';
 
 class NewPostForm extends Component {

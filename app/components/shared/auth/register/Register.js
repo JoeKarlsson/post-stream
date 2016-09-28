@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   onRegistrationFormChange,
   fetchRegisterUser,
-} from '../../../actions/auth/registerActions';
+} from '../../../../actions/auth/registerActions';
 import { browserHistory } from 'react-router'
 import styles from './Register.scss';
 

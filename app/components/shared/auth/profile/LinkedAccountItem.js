@@ -19,7 +19,7 @@ export class LinkedAccountItem extends React.Component {
     // renders the unlink button, excluding the main identify row, which cannot be removed
     console.log('hit: ');
     const { profile, identity } = this.props
-    if (profile.user_id != identity.provider + '|' + identity.user_id){
+    if (profile.user_id !== identity.provider + '|' + identity.user_id){
       return (
         <button
           onClick={this.unlink.bind(this, identity)}

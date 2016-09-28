@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { destroyPostsIfNeeded } from '../../actions/posts/destroyPostActions';
+import { destroyPostsIfNeeded } from '../../../actions/posts/destroyPostActions';
 import styles from './DestroyPostButton.scss';
 
 class DestroyPostButton extends Component {

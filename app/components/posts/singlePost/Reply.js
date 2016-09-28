@@ -5,7 +5,7 @@ import {
   handleReplyBodyChange,
   submitNewReply,
 
-} from '../../actions/posts/replyActions';
+} from '../../../actions/posts/replyActions';
 import styles from './Reply.scss';
 
 class Reply extends Component {

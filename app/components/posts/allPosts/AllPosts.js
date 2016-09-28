@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import NewPost from '../newPost/NewPost';
 import PostList from '../postList/PostList';
 import styles from './AllPosts.scss';
-import { fetchPostsIfNeeded } from '../../actions/posts/postActions';
+import { fetchPostsIfNeeded } from '../../../actions/posts/postActions';
 
 class AllPosts extends Component {
 
@@ -17,7 +17,6 @@ class AllPosts extends Component {
       posts,
       lastUpdated,
       isLoggedIn,
-      username
     } = this.props;
     const profile = this.props.auth.getProfile()
 
