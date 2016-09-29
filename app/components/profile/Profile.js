@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchUserData } from '../../../../actions/auth/profileActions';
+import { fetchUserData } from '../../actions/auth/profileActions';
 import PostList from './postList/PostList';
 import ProfileEdit from './ProfileEdit';
 import ProfileDetails from './ProfileDetails';
@@ -13,7 +13,7 @@ class Profile extends React.Component {
       profile: props.auth.getProfile()
     }
     props.auth.on('profile_updated', (newProfile) => {
-      this.setState({profile: newProfile})
+      this.setState({ profile: newProfile })
     })
   }
 
@@ -32,16 +32,16 @@ class Profile extends React.Component {
     const profile = this.props.auth.getProfile();
 
     return (
-      <div className={styles.Profile}>
+      <div className={ styles.Profile }>
 
-        <h1>{userName}'s PostStream</h1>
+        <h1>{ userName }'s PostStream</h1>
 
-        <ProfileDetails profile={profile}></ProfileDetails>
+        <ProfileDetails profile={ profile }></ProfileDetails>
 
-        <ProfileEdit profile={profile} auth={this.props.auth}></ProfileEdit>
+        <ProfileEdit profile={ profile } auth={ this.props.auth }></ProfileEdit>
 
         <PostList
-          posts={posts}
+          posts={ posts }
         />
 
       </div>

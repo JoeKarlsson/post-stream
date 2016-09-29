@@ -1,6 +1,6 @@
 import React, { PropTypes as T } from 'react'
 import ReactDOM from 'react-dom'
-import AuthService from '../AuthService'
+import AuthService from '../shared/auth/AuthService'
 
 export class ProfileEdit extends React.Component {
   // receiving AuthService instance and profile data as props
@@ -16,8 +16,11 @@ export class ProfileEdit extends React.Component {
   // method trigged when edit form is submitted
   handleSubmit(e){
     e.preventDefault()
-    const { profile, auth } = this.props
-    console.log('profile.user_metadata: ', profile.user_metadata);
+    const {
+      profile,
+      auth
+    } = this.props
+
     auth.updateProfile(profile.user_id, {
       user_metadata: {
         address: ReactDOM.findDOMNode(this.refs.address).value

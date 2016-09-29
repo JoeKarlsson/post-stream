@@ -10,21 +10,20 @@ import skeleton from './shared/styles/skeleton.scss';
 import styles from './App.scss';
 
 class App extends Component {
-
   render() {
+    console.log('this.props: ', this.props);
     let children = null;
-    const item = 'something'
     if (this.props.children) {
       children = React.cloneElement(this.props.children, {
         auth: this.props.route.auth //sends auth instance to children
       })
     }
     return (
-      <div className={styles.app}>
-        <Header auth={this.props.route.auth}/>
+      <div className={ styles.app }>
+        <Header auth={ this.props.route.auth }/>
 
-        <div className={styles.content}>
-          <div className={skeleton.container}>
+        <div className={ styles.content }>
+          <div className={ skeleton.container }>
             { children }
           </div>
         </div>
