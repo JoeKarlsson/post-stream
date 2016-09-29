@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import NavLink from '../navigation/NavLink';
 import styles from './Header.scss';
 
@@ -57,14 +56,5 @@ Header.propTypes = {
 
 };
 
-const mapStateToProps = (state) => {
-  return {
-    isLoggedIn: state.rootReducer.authReducer.get('isLoggedIn'),
-  }
-};
-
-export default connect(
-  mapStateToProps
-)(Header);
 
 
