@@ -22,7 +22,6 @@ class NewPostForm extends Component {
   handleSubmitPost(e) {
     e.preventDefault();
     const { dispatch, newPostBody } = this.props;
-    console.log(this.props)
     const { getProfile } = this.props.auth;
     const profile = getProfile();
     dispatch(submitNewPost(newPostBody, profile.user_id))
@@ -58,7 +57,7 @@ NewPostForm.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    newPostBody: state.rootReducer.postReducer.get('newPostBody'),
+    newPostBody: state.root.post.get('newPostBody'),
   }
 };
 

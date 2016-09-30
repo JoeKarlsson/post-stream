@@ -52,7 +52,7 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { auth } = state.rootReducer
+  const { auth } = state.root
   const { isAuthenticated, errorMessage } = auth
 
   return {

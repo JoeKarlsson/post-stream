@@ -29,7 +29,7 @@ export const invalidateComments = () => {
 };
 
 const shouldFetchComments = (state, postId) => {
-  const comments = state.rootReducer.postReducer
+  const comments = state.root.post
     .get('posts')
     .get(postId)
     .get('comments').toJS();

@@ -93,6 +93,7 @@ class Post extends Component {
       isParentPost,
       createdAt,
       dispatch,
+      isAuthenticated,
     } = this.props;
 
     return (
@@ -105,17 +106,22 @@ class Post extends Component {
             </div>
 
             <span dangerouslySetInnerHTML={ this.rawMarkup() } />
-            <span onClick={ this.handleEdit }>[ edit ]</span>
-            <DestroyPostButton
-              id={id}
-              index={index}
-            />
 
-            <Reply
-              id={id}
-              index={index}
-              auth={this.props.auth}
-            />
+            { isAuthenticated &&
+              <div>
+                <span onClick={ this.handleEdit }>[ edit ]</span>
+                <DestroyPostButton
+                  id={id}
+                  index={index}
+                />
+
+                <Reply
+                  id={id}
+                  index={index}
+                  auth={this.props.auth}
+                />
+              </div>
+            }
 
             <div className='comment-count' onClick={this.handleShowingChild}>
               <CommentCount
@@ -191,19 +197,21 @@ Post.propTypes = {
   created_at: React.PropTypes.number,
   commentCount: React.PropTypes.number,
   childId: React.PropTypes.number,
-  childContext: React.PropTypes.object
+  childContext: React.PropTypes.object,
+  isAuthenticated: React.PropTypes.bool,
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    editMode: state.rootReducer.postReducer
+    editMode: state.root.post
       .get('posts').get(ownProps.index).get('editMode'),
-    showComments: state.rootReducer.postReducer
+    showComments: state.root.post
       .get('posts').get(ownProps.index).get('showComments'),
-    childId: state.rootReducer.postReducer
+    childId: state.root.post
       .get('posts').get(ownProps.index).get('childId'),
-    childContext: state.rootReducer.postReducer
+    childContext: state.root.post
       .get('posts').get(ownProps.index).get('childContext'),
+    isAuthenticated: state.root.auth.isAuthenticated,
   }
 };
 

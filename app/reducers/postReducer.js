@@ -11,7 +11,7 @@ const initialState = Map({
   posts: List()
 });
 
-const postReducer = (state = initialState, action) => {
+const post = (state = initialState, action) => {
 
   switch(action.type) {
     case 'INVALIDATE_POSTS':
@@ -178,4 +178,4 @@ const postReducer = (state = initialState, action) => {
   }
 };
 
-export default postReducer;
+export default post;

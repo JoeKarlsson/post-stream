@@ -93,10 +93,14 @@ Reply.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    replyMode: state.rootReducer.postReducer
-      .get('posts').get(ownProps.index).get('replyMode'),
-    replyBody: state.rootReducer.postReducer
-      .get('posts').get(ownProps.index).get('replyBody'),
+    replyMode: state.root.post
+      .get('posts')
+      .get(ownProps.index)
+      .get('replyMode'),
+    replyBody: state.root.post
+      .get('posts')
+      .get(ownProps.index)
+      .get('replyBody'),
   }
 };
 

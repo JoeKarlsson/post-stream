@@ -63,7 +63,7 @@ EditPost.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    updatedPostBody: state.rootReducer.postReducer.get('posts').get(ownProps.index).get('updatedPostBody'),
+    updatedPostBody: state.root.post.get('posts').get(ownProps.index).get('updatedPostBody'),
   }
 };
 
