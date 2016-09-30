@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { isTokenExpired } from './jwtHelper';
 import Auth0Lock from 'auth0-lock';
-import { lockSuccess, lockError  } from '../../../actions/auth/loginActions';
 const logo = require('../img/PS_58.png')
 
 export default class AuthService extends EventEmitter {
@@ -59,29 +58,16 @@ export default class AuthService extends EventEmitter {
   }
 
   _doAuthentication(authResult){
-    this.lock.on("authenticated", function(authResult) {
-          this.lock.getProfile(authResult.idToken, function(error, profile) {
-
-            if (error) {
-              // handle error
-              return dispatch(lockError(error))
-            }
-
-            localStorage.setItem('profile', JSON.stringify(profile))
-            localStorage.setItem('id_token', authResult.idToken)
-            return dispatch(lockSuccess(profile))
-          });
-    });
-    // // Saves the user token
-    // this.setToken(authResult.idToken)
-    // // Async loads the user profile data
-    // this.lock.getProfile(authResult.idToken, (error, profile) => {
-    //   if (error) {
-    //     console.log('Error loading the Profile', error)
-    //   } else {
-    //     this.setProfile(profile)
-    //   }
-    // })
+    // Saves the user token
+    this.setToken(authResult.idToken)
+    // Async loads the user profile data
+    this.lock.getProfile(authResult.idToken, (error, profile) => {
+      if (error) {
+        console.log('Error loading the Profile', error)
+      } else {
+        this.setProfile(profile)
+      }
+    })
   }
 
   _authorizationError(error){

@@ -12,7 +12,7 @@ import {
 } from 'react-router';
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
-import AuthService from './shared/auth/AuthService';
+// import AuthService from './shared/auth/AuthService';
 import App from './App';
 import AllPosts from './posts/allPosts/AllPosts';
 import Profile from './profile/Profile';
