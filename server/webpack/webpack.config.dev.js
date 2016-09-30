@@ -10,7 +10,6 @@ const fs = require('fs');
 const join = path.join;
 const resolve = path.resolve;
 
-
 // ENV variables
 const dotEnvVars = dotenv.config();
 
@@ -28,7 +27,7 @@ const defines =
   });
 
 module.exports = {
-  devtool: 'eval',
+  devtool: 'eval-source-map',
   entry: [
     'webpack-hot-middleware/client?reload=true',
     path.join(__dirname, '../../app/components/entry.js'),

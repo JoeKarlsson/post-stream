@@ -31,7 +31,7 @@ const store = configureStore();
 ReactDOM.render(
   <Provider store={ store }>
     <Router history={ browserHistory }>
-      <Route path='/' component={ App } >
+      <Route path='/' component={ App }>
         <IndexRoute component={ AllPosts } />
         <Route path='/about' component={ About } />
         <Route path='/user/:userName' component={ Profile } />

@@ -41,9 +41,9 @@ class App extends Component {
 };
 
 App.propTypes = {
-  // dispatch: PropTypes.func.isRequired,
-  // isAuthenticated: PropTypes.bool.isRequired,
-  // errorMessage: PropTypes.string,
+  dispatch: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  errorMessage: PropTypes.string,
 }
 
 function mapStateToProps(state) {

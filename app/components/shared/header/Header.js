@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import NavLink from '../navigation/NavLink';
 import Login from '../auth/login/Login';
 import LogoutButton from '../auth/logout/LogoutButton';
-import { loginUser } from '../../../actions/auth/loginActions';
+import { login } from '../../../actions/auth/loginActions';
 import { logoutUser } from '../../../actions/auth/logoutActions';
 import styles from './Header.scss';
 
@@ -24,7 +24,7 @@ class Header extends Component {
               {!isAuthenticated &&
                 <Login
                  errorMessage={errorMessage}
-                 onLoginClick={ creds => dispatch(loginUser(creds)) }
+                 onLoginClick={ creds => dispatch(login(creds, this.props.auth)) }
                 />
               }
               {isAuthenticated &&
