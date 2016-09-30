@@ -4,3 +4,4 @@ build/
 npm-debug.log
 .DS_Store
 server/config/config.json
+.env
