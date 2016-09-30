@@ -16,9 +16,7 @@ class AllPosts extends Component {
     const {
       posts,
       lastUpdated,
-      isLoggedIn,
     } = this.props;
-    const profile = this.props.auth.getProfile()
 
     return (
       <div className={styles.allPosts}>
@@ -30,10 +28,6 @@ class AllPosts extends Component {
         </div>
 
         <NewPost auth={this.props.auth}/>
-
-        { isLoggedIn === true &&
-          <p>welcome back { profile.nickname }</p>
-        }
 
         <hr />
 
@@ -56,8 +50,6 @@ const mapStateToProps = (state) => {
     posts: state.rootReducer.postReducer.get('posts').toJS(),
     isFetching: state.rootReducer.postReducer.get('isFetching'),
     lastUpdated: state.rootReducer.postReducer.get('lastUpdated'),
-    isLoggedIn: state.rootReducer.authReducer.get('isLoggedIn'),
-    username: state.rootReducer.authReducer.get('username'),
   }
 };
 

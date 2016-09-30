@@ -1,52 +1,44 @@
-import { Map, List } from 'immutable';
+import {
+  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE
+} from '../actions/auth/loginActions'
+import {
+  LOGOUT_SUCCESS
+} from '../actions/auth/logoutActions'
 
-const initialState = Map({
-  username: '',
-  password: '',
-  id: 0,
-  first_name: '',
-  last_name: '',
-  bio: '',
-  following: List(),
-  posts: List(),
-  createdAt: null,
-  isFetchingLogin: false,
-  didInvalidateLogin: false,
-  lastUpdated: null,
-  receivedAt: null,
-  isLoggedIn: false,
-});
-
-const authReducer = (state = initialState, action) => {
+// The auth reducer. The starting state sets authentication
+// based on a token being in local storage. In a real app,
+// we would also want a util to check if the token is expired.
+function auth(state = {
+    isFetching: false,
+    isAuthenticated: localStorage.getItem('id_token') ? true : false
+  }, action) {
   switch (action.type) {
-
-    case 'REQUEST_USER':
-      return state;
-
-    case 'RECEIVE_USER':
-      return state.updateIn(['posts'], (posts) => {
-        return posts.clear().concat(
-          action.userData.map((post) => {
-            return Map(post)
-            .set('showComments', false)
-            .set('isParentPost', true)
-            .set('realName', 'Joe Karlsson')
-            .set('username', 'joejoebinks3')
-            .set('comments', List())
-            .set('childId', 0)
-            .set('childContext', {})
-            .set('didInvalidate', false)
-            .set('updatedPostBody', post.body)
-            .set('editMode', false)
-            .set('replyMode', false)
-            .set('replyBody', '')
-          })
-        )
-      });
-
+    case LOGIN_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        isAuthenticated: false,
+        user: action.creds
+      })
+    case LOGIN_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: true,
+        errorMessage: ''
+      })
+    case LOGIN_FAILURE:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: false,
+        errorMessage: action.message
+      })
+    case LOGOUT_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: true,
+        isAuthenticated: false
+      })
     default:
       return state
   }
 }
 
-export default authReducer;
+export default auth;

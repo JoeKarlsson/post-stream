@@ -1,29 +1,35 @@
-import React, { PropTypes as T } from 'react'
-import AuthService from '../AuthService';
+import React, { Component, PropTypes } from 'react';
 import styles from './Login.scss';
 
-export class Login extends React.Component {
-  static contextTypes = {
-    router: T.object
-  }
-
-  static propTypes = {
-    location: T.object,
-    auth: T.instanceOf(AuthService)
-  }
+export default class Login extends Component {
 
   render() {
-    const { auth } = this.props
+    const { errorMessage } = this.props
+
     return (
-      <div className={styles.root}>
-        <h2>Login</h2>
-        <div>
-          <button onClick={auth.login.bind(this)}>Login</button>
-        </div>
+      <div>
+        <input type='text' ref='username' className="form-control" placeholder='Username'/>
+        <input type='password' ref='password' className="form-control" placeholder='Password'/>
+        <button onClick={(event) => this.handleClick(event)} className="btn btn-primary">
+          Login
+        </button>
+
+        {errorMessage &&
+          <p>{errorMessage}</p>
+        }
       </div>
     )
   }
+
+  handleClick(event) {
+    const username = this.refs.username
+    const password = this.refs.password
+    const creds = { username: username.value.trim(), password: password.value.trim() }
+    this.props.onLoginClick(creds)
+  }
 }
 
-export default Login;
-
+Login.propTypes = {
+  onLoginClick: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string
+}

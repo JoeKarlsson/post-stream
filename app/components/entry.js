@@ -21,17 +21,17 @@ import Logout from './shared/auth/logout/Logout';
 import About from './static/about/About';
 import NoMatch from './static/noMatch/NoMatch';
 
-const auth = new AuthService(
-  __AUTH0_CLIENT_ID__,
-  __AUTH0_DOMAIN__
-);
+// const auth = new AuthService(
+//   __AUTH0_CLIENT_ID__,
+//   __AUTH0_DOMAIN__
+// );
 
 const store = configureStore();
 
 ReactDOM.render(
   <Provider store={ store }>
     <Router history={ browserHistory }>
-      <Route path='/' component={ App } auth={ auth} >
+      <Route path='/' component={ App } >
         <IndexRoute component={ AllPosts } />
         <Route path='/about' component={ About } />
         <Route path='/user/:userName' component={ Profile } />

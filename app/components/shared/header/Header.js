@@ -1,26 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import NavLink from '../navigation/NavLink';
+import Login from '../auth/login/Login';
+import LogoutButton from '../auth/logout/LogoutButton';
+import { loginUser } from '../../../actions/auth/loginActions';
+import { logoutUser } from '../../../actions/auth/logoutActions';
 import styles from './Header.scss';
 
 class Header extends Component {
 
-  constructor() {
-    super();
-    this.handleLogout = this.handleLogout.bind(this);
-  }
-
-  handleLogout(){
-    this.props.auth.logout()
-    this.context.router.push('/login');
-  }
-
   render() {
-    const { loggedIn, getProfile, login, getToken } = this.props.auth;
-    const isLoggedIn = loggedIn();
-    const profile = getProfile();
-    console.log('profile: ', profile);
-    console.log('isLoggedIn: ', isLoggedIn);
-    console.log('getToken: ', getToken());
+    const {
+      dispatch,
+      isAuthenticated,
+      errorMessage
+    } = this.props;
 
     return (
       <div>
@@ -28,22 +21,15 @@ class Header extends Component {
           <NavLink to='/' onlyActiveOnIndex={true} className={styles.header_logo}>PostStream</NavLink>
           <ul className={styles.header_nav}>
             <li>[ <NavLink to='/about'>?</NavLink> ]</li>
-            { isLoggedIn === false &&
-              <li>[ <NavLink to='/register'>register</NavLink> ]</li>
-            }
-            { isLoggedIn === false &&
-              <li>[ <span onClick={ login.bind(this) }>login</span> ]</li>
-            }
-            { isLoggedIn === true &&
-              <span>
-                <li>[ <NavLink to='/logout' onClick={ this.handleLogout }>logout</NavLink> ]</li>
-              </span>
-            }
-            { isLoggedIn === true &&
-              <span>
-                <li>[ <NavLink to={`/user/${ profile.nickname }`}>profile</NavLink> ]</li>
-              </span>
-            }
+              {!isAuthenticated &&
+                <Login
+                 errorMessage={errorMessage}
+                 onLoginClick={ creds => dispatch(loginUser(creds)) }
+                />
+              }
+              {isAuthenticated &&
+                <LogoutButton onLogoutClick={() => dispatch(logoutUser())} />
+              }
           </ul>
         </header>
         <hr/>
@@ -53,8 +39,9 @@ class Header extends Component {
 }
 
 Header.propTypes = {
+  // dispatch: PropTypes.func.isRequired,
+  // isAuthenticated: PropTypes.bool.isRequired,
+  // errorMessage: PropTypes.string
+}
 
-};
-
-
-
+export default Header;
