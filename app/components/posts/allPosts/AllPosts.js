@@ -16,6 +16,7 @@ class AllPosts extends Component {
     const {
       posts,
       lastUpdated,
+      isAuthenticated,
     } = this.props;
 
     return (
@@ -26,14 +27,14 @@ class AllPosts extends Component {
           stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.
           {' '}
         </div>
-
-        <NewPost auth={this.props.auth}/>
-
+        { isAuthenticated &&
+          <NewPost auth={this.props.auth}/>
+        }
         <hr />
 
         <PostList
           posts={posts}
-          auth={this.props.auth}
+          isAuthenticated={isAuthenticated}
         />
 
       </div>

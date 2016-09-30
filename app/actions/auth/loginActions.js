@@ -3,6 +3,7 @@
 */
 
 import Auth0Lock from 'auth0-lock';
+const logo = require('../../components/shared/img/PS_58.png');
 
 export const LOCK_SUCCESS = 'LOCK_SUCCESS'
 export const LOCK_ERROR = 'LOCK_ERROR'
@@ -28,7 +29,16 @@ export function login() {
   const lock = new Auth0Lock(
     __AUTH0_CLIENT_ID__,
     __AUTH0_DOMAIN__, {
-      auth: { redirect: false }
+      auth: { redirect: false },
+      rememberLastLogin: true,
+      theme: {
+        logo,
+        primaryColor: '#1EAEDB'
+      },
+      languageDictionary: {
+        emailInputPlaceholder: "something@youremail.com",
+        title: "PostStream"
+      },
     }
   );
   lock.show()

@@ -12,12 +12,17 @@ import styles from './App.scss';
 
 class App extends Component {
   render() {
-    const { dispatch, quote, isAuthenticated, errorMessage } = this.props
-    console.log('this.props: ', this.props);
+    const {
+      dispatch,
+      quote,
+      isAuthenticated,
+      errorMessage
+    } = this.props;
+
     let children = null;
     if (this.props.children) {
       children = React.cloneElement(this.props.children, {
-        auth: this.props.route.auth //sends auth instance to children
+        isAuthenticated: isAuthenticated,
       })
     }
     return (
@@ -47,7 +52,6 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  console.log(state)
   const { auth } = state.rootReducer
   const { isAuthenticated, errorMessage } = auth
 

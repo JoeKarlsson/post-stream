@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import NavLink from '../navigation/NavLink';
 import Login from '../auth/login/Login';
 import LogoutButton from '../auth/logout/LogoutButton';
@@ -7,7 +7,6 @@ import { logoutUser } from '../../../actions/auth/logoutActions';
 import styles from './Header.scss';
 
 class Header extends Component {
-
   render() {
     const {
       dispatch,
@@ -21,15 +20,15 @@ class Header extends Component {
           <NavLink to='/' onlyActiveOnIndex={true} className={styles.header_logo}>PostStream</NavLink>
           <ul className={styles.header_nav}>
             <li>[ <NavLink to='/about'>?</NavLink> ]</li>
-              {!isAuthenticated &&
-                <Login
-                 errorMessage={errorMessage}
-                 onLoginClick={ creds => dispatch(login(creds, this.props.auth)) }
-                />
-              }
-              {isAuthenticated &&
-                <LogoutButton onLogoutClick={() => dispatch(logoutUser())} />
-              }
+            { !isAuthenticated &&
+              <Login
+               errorMessage={errorMessage}
+               onLoginClick={ creds => dispatch(login(creds, this.props.auth)) }
+              />
+            }
+            { isAuthenticated &&
+              <LogoutButton onLogoutClick={() => dispatch(logoutUser())} />
+            }
           </ul>
         </header>
         <hr/>
@@ -39,9 +38,9 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  // dispatch: PropTypes.func.isRequired,
-  // isAuthenticated: PropTypes.bool.isRequired,
-  // errorMessage: PropTypes.string
+  dispatch: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  errorMessage: PropTypes.string
 }
 
 export default Header;
