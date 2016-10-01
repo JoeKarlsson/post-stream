@@ -15,7 +15,7 @@ const receivePosts = (json) => {
 const fetchPosts = () => {
   return dispatch => {
     dispatch(requestPosts());
-    return fetch(`/post`)
+    return fetch(`/posts`)
     .then(response => response.json())
     .then(json => dispatch(receivePosts(json)));
   }

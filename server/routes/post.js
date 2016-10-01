@@ -3,9 +3,22 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./../models');
-const User = db.User;
 const Post = db.Post;
 const Comment = db.Comment;
+const jwt = require('express-jwt');
+
+const authenticate = jwt({
+  secret: new Buffer(process.env.AUTH0_CLIENT_SECRET,  'base64'),
+  audience: process.env.AUTH0_CLIENT_ID
+});
+
+function handleUnauth(err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(err.status).send(err.message);
+  } else {
+    next();
+  }
+};
 
 const exists = (req) => {
   if (typeof parseInt(req.params.id) === 'number') {
@@ -26,7 +39,7 @@ const exists = (req) => {
 
 router.route('/')
   // GET all of the posts
-  .get((req, res) => {
+  .get(authenticate, handleUnauth, (req, res) => {
     Post.findAll({
       limit: 10,
       order: [
@@ -59,7 +72,7 @@ router.route('/:id')
     }
   })
   // DELETE post from database by ID
-  .delete((req, res) => {
+  .delete(authenticate, handleUnauth, (req, res) => {
     if(exists) {
       Post.destroy({
         where : {
@@ -79,7 +92,7 @@ router.route('/:id')
 
 router.route('/:id/edit')
   // find by id and update the post
-  .put((req, res) => {
+  .put(authenticate, handleUnauth, (req, res) => {
     if(exists) {
       Post.findById(req.params.id)
       .then((foundPost) => {
@@ -125,8 +138,7 @@ router.route('/user/:username')
 
 router.route('/new')
   // create a new post
-  // TODO - updated user when AUTH is working
-  .post((req, res) => {
+  .post(authenticate, handleUnauth, (req, res) => {
     Post.create({
       body: req.body.body,
       userID: req.body.userID
@@ -156,12 +168,11 @@ router.route('/:id/comments')
 
 router.route('/:PostId/comments/:CommentId/new')
   // create a new comment on a post
-  .post((req, res) => {
+  .post(authenticate, handleUnauth, (req, res) => {
     let parentId = null;
     if(req.params.CommentId != 0){
       parentId = req.params.CommentId;
     }
-    console.log(parentId, req.body.body, req.body.userID,req.params.PostId );
     Comment.create({
       body: req.body.body,
       userID: req.body.userID,
@@ -189,7 +200,7 @@ router.route('/:PostId/comments/:CommentId/new')
 
 router.route('/:PostId/comments/:CommentId/edit')
   // find comment by id and update the comment
-  .put((req, res) => {
+  .put(authenticate, handleUnauth, (req, res) => {
     if(exists) {
       Comment.findById(req.params.CommentId)
       .then((foundComment) => {
@@ -211,4 +222,5 @@ router.route('/:PostId/comments/:CommentId/edit')
       res.json({ success: false });
     }
   })
+
 module.exports = router;

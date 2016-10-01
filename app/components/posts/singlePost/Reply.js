@@ -34,14 +34,12 @@ class Reply extends Component {
       id,
       replyBody
     } = this.props;
-    const profile = this.props.auth.getProfile();
-    console.log(profile)
     const actionData = {
       replyBody,
       index,
       id,
       commentId: 0,
-      userID: profile.user_id
+      userID: 'JoeJoebinks131'
     }
     dispatch(submitNewReply(actionData));
   }

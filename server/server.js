@@ -4,7 +4,6 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const fs = require('fs');
-const CONFIG = require('./config/config.json');
 const webpack = require('webpack');
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -13,17 +12,39 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const favicon = require('express-favicon');
 const Promise = require('bluebird');
-var jwt = require('express-jwt');
-
-const authenticate = jwt({
-  secret: new Buffer(process.env.AUTH0_CLIENT_SECRET,  'base64'),
-  audience: process.env.AUTH0_CLIENT_ID
-});
-
+// const logger = require('morgan');
+// const errorhandler = require('errorhandler');
+const jwt = require('express-jwt');
+const CONFIG = require('./config/config.json');
 const db = require('./models');
-const User = db.User;
-
 const post = require('./routes/post');
+const root = require('./routes/root');
+
+// const unauthorizedErrorHandler = (err, req, res, next) => {
+//     console.log('hit2: ');
+//   if (err.name === 'UnauthorizedError') {
+//     res.status(err.status).send(err.message);
+//   } else {
+//     next(err);
+//   }
+// };
+
+
+
+// app.use(unauthorizedErrorHandler)
+// const authenticate = jwt({
+//   secret: new Buffer(process.env.AUTH0_CLIENT_SECRET,  'base64'),
+//   audience: process.env.AUTH0_CLIENT_ID
+// });
+
+// app.use('/post', authenticate);
+
+// app.use(function (err, req, res, next) {
+//   console.log('hit1: ');
+//   if (err.name === 'UnauthorizedError') {
+//     res.status(err.status).send(err.message);
+//   }
+// });
 
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
@@ -38,15 +59,12 @@ Promise.onPossiblyUnhandledRejection((err) => {
 });
 
 app.use('/post', post);
-app.use('/api/auth', authenticate);
-
-app.get('/api/auth/ping', function(req, res) {
-  console.log('req.user: ', req.user);
-  res.status(200).send("All good. You only get this message if you're authenticated");
-});
+app.use('/posts', root);
 
 if (isDeveloping) {
   app.set('host', 'http://localhost');
+  // app.use(logger('dev'));
+  // app.use(errorhandler());
   const compiler = webpack(webpackConfig);
   const middleware = webpackMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
