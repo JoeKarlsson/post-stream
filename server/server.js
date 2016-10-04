@@ -12,39 +12,12 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const favicon = require('express-favicon');
 const Promise = require('bluebird');
-// const logger = require('morgan');
-// const errorhandler = require('errorhandler');
+const logger = require('morgan');
+const errorhandler = require('errorhandler');
 const jwt = require('express-jwt');
 const CONFIG = require('./config/config.json');
 const db = require('./models');
 const post = require('./routes/post');
-const root = require('./routes/root');
-
-// const unauthorizedErrorHandler = (err, req, res, next) => {
-//     console.log('hit2: ');
-//   if (err.name === 'UnauthorizedError') {
-//     res.status(err.status).send(err.message);
-//   } else {
-//     next(err);
-//   }
-// };
-
-
-
-// app.use(unauthorizedErrorHandler)
-// const authenticate = jwt({
-//   secret: new Buffer(process.env.AUTH0_CLIENT_SECRET,  'base64'),
-//   audience: process.env.AUTH0_CLIENT_ID
-// });
-
-// app.use('/post', authenticate);
-
-// app.use(function (err, req, res, next) {
-//   console.log('hit1: ');
-//   if (err.name === 'UnauthorizedError') {
-//     res.status(err.status).send(err.message);
-//   }
-// });
 
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
@@ -59,12 +32,11 @@ Promise.onPossiblyUnhandledRejection((err) => {
 });
 
 app.use('/post', post);
-app.use('/posts', root);
 
 if (isDeveloping) {
   app.set('host', 'http://localhost');
-  // app.use(logger('dev'));
-  // app.use(errorhandler());
+  app.use(logger('dev'));
+  app.use(errorhandler());
   const compiler = webpack(webpackConfig);
   const middleware = webpackMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,

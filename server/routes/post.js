@@ -39,7 +39,7 @@ const exists = (req) => {
 
 router.route('/')
   // GET all of the posts
-  .get(authenticate, handleUnauth, (req, res) => {
+  .get((req, res) => {
     Post.findAll({
       limit: 10,
       order: [
