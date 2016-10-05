@@ -39,7 +39,7 @@ export default store => next => action => {
     return next(action)
   }
 
-  let { endpoint, types, authenticated } = callAPI
+  let { endpoint, types, authenticated, headers } = callAPI
 
   const [ requestType, successType, errorType ] = types
 

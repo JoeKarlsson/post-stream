@@ -4,7 +4,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux'
-import { fetchQuote } from '../actions/posts/post2'
 import Header from './shared/header/Header';
 import Footer from './shared/footer/Footer';
 import normalize from './shared/styles/normalizer.scss';
@@ -14,16 +13,12 @@ import styles from './App.scss';
 class App extends Component {
 
   render() {
-
     const {
       dispatch,
       quote,
       isAuthenticated,
       errorMessage
     } = this.props;
-    const onQuoteClick = () => {
-      dispatch(fetchQuote());
-    }
 
     let children = null;
     if (this.props.children) {
@@ -40,12 +35,6 @@ class App extends Component {
           errorMessage={errorMessage}
           dispatch={dispatch}
         />
-
-        <div>
-          <button onClick={onQuoteClick}>
-            Get Quotes
-          </button>
-        </div>
 
         <div className={ styles.content }>
           <div className={ skeleton.container }>
@@ -66,13 +55,10 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  console.log('state: ', state);
-  const { auth, post2 } = state.root;
-  const { quote } = post2
+  const { auth } = state.root;
   const { isAuthenticated, errorMessage } = auth
 
   return {
-    quote,
     isAuthenticated,
     errorMessage
   }

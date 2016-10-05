@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import NewPost from '../newPost/NewPost';
 import PostList from '../postList/PostList';
 import styles from './AllPosts.scss';
-import { fetchPostsIfNeeded } from '../../../actions/posts/postActions';
+import { fetchPosts } from '../../../actions/posts/postActions';
 
 class AllPosts extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchPostsIfNeeded());
+    dispatch(fetchPosts());
   };
 
   render() {
@@ -27,6 +27,7 @@ class AllPosts extends Component {
           stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.
           {' '}
         </div>
+
         { isAuthenticated &&
           <NewPost auth={this.props.auth}/>
         }

@@ -1,3 +1,7 @@
+import {
+  POST_REQUEST, POST_SUCCESS, POST_FAILURE
+} from '../actions/posts/postActions';
+
 import { Map, List } from 'immutable';
 
 const initialState = Map({
@@ -14,17 +18,17 @@ const initialState = Map({
 const post = (state = initialState, action) => {
 
   switch(action.type) {
-    case 'INVALIDATE_POSTS':
+    case POST_FAILURE:
       return state.set('didInvalidate', true);
 
-    case 'REQUEST_POSTS':
+    case POST_REQUEST:
       return state.set('isFetchingPosts', true)
         .set('didInvalidate', false);
 
-    case 'RECEIVE_POSTS':
+    case POST_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
         return posts.clear().concat(
-          action.posts.map((post) => {
+          JSON.parse(action.response).map((post) => {
             return Map(post)
             .set('showComments', false)
             .set('isParentPost', true)
@@ -43,7 +47,7 @@ const post = (state = initialState, action) => {
       })
       .set('isFetchingPosts', false)
       .set('didInvalidate', false)
-      .set('lastUpdated', action.receivedAt);
+      .set('lastUpdated', Date.now());
 
     case 'HANDLE_NEW_POST_BODY_CHANGE':
       return state.set('newPostBody', action.body);

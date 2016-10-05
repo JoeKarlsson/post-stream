@@ -1,47 +1,29 @@
-const requestPosts = () => {
+// The middleware to call the API for quotes
+import { CALL_API } from '../../components/middleware/api'
+
+export const POST_REQUEST = 'POST_REQUEST'
+export const POST_SUCCESS = 'POST_SUCCESS'
+export const POST_FAILURE = 'POST_FAILURE'
+
+// Uses the API middlware to get a quote
+export function fetchPosts() {
   return {
-    type: 'REQUEST_POSTS',
-  }
-};
-
-const receivePosts = (json) => {
-  return {
-    type: 'RECEIVE_POSTS',
-    posts: json,
-    receivedAt: Date.now()
-  }
-};
-
-const fetchPosts = () => {
-  return dispatch => {
-    dispatch(requestPosts());
-    return fetch(`/post`)
-    .then(response => response.json())
-    .then(json => dispatch(receivePosts(json)));
-  }
-};
-
-export const invalidatePosts = () => {
-  return {
-    type: 'INVALIDATE_POSTS',
-  }
-};
-
-const shouldFetchPosts = (state) => {
-  const posts = state.root.post.posts;
-  if (!posts) {
-    return true;
-  } else if (posts.isFetching) {
-    return false;
-  } else {
-    return posts.didInvalidate;
-  }
-};
-
-export const fetchPostsIfNeeded = () => {
-  return (dispatch, getState) => {
-    if (shouldFetchPosts(getState())) {
-      return dispatch(fetchPosts());
+    [CALL_API]: {
+      endpoint: '/post',
+      types: [POST_REQUEST, POST_SUCCESS, POST_FAILURE]
     }
   }
-};
+}
+
+// // Same API middlware is used to get a
+// // secret quote, but we set authenticated
+// // to true so that the auth header is sent
+// export function fetchSecretQuote() {
+//   return {
+//     [CALL_API]: {
+//       endpoint: '/post',
+//       authenticated: true,
+//       types: [QUOTE_REQUEST, QUOTE_SUCCESS, QUOTE_FAILURE]
+//     }
+//   }
+// }
