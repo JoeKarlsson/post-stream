@@ -4,12 +4,16 @@ import {
 import {
   NEW_POST_REQUEST, NEW_POST_SUCCESS, NEW_POST_FAILURE
 } from '../actions/posts/newPostActions';
+import {
+  DESTROY_POST_REQUEST, DESTROY_POST_SUCCESS, DESTROY_POST_FAILURE
+} from '../actions/posts/destroyPostActions';
 
 import { Map, List } from 'immutable';
 
 const initialState = Map({
   isFetchingPosts: false,
   isFetchingComments: false,
+  isDestroyingPost: false,
   submittingNewPost: false,
   didInvalidate: false,
   lastUpdated: null,
@@ -108,13 +112,18 @@ const post = (state = initialState, action) => {
         })
       })
 
-    case 'DESTROY_POST':
-      return state;
+    case DESTROY_POST_REQUEST:
+      return state.set('isDestroyingPost', true)
 
-    case 'CONFIRMED_POST_DESTROYED':
+    case DESTROY_POST_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
-        return posts.delete(action.index);
-      });
+        return posts.delete(action.data.index);
+      })
+      .set('isDestroyingPost', false)
+
+    case DESTROY_POST_FAILURE:
+      return state.set('didInvalidate', true)
+        .set('isDestroyingPost', false)
 
     case 'INVALIDATE_COMMENTS':
       return state.set('didInvalidate', true);

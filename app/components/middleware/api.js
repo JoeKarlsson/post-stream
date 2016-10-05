@@ -1,3 +1,6 @@
+/*
+  eslint no-unused-vars: 0
+*/
 const BASE_URL = 'http://localhost:3000'
 
 function callApi(endpoint, authenticated, data={}) {
@@ -5,8 +8,10 @@ function callApi(endpoint, authenticated, data={}) {
   let token = localStorage.getItem('id_token') || null
   let config = {};
   const {method, body, headers} = data
-  if (method && body){
+  if (method){
     config.method = method;
+  }
+  if (body){
     config.body = body
   }
 
@@ -54,7 +59,8 @@ export default store => next => action => {
       next({
         response,
         authenticated,
-        type: successType
+        type: successType,
+        data
       }),
     error => next({
       error: error.message || 'There was an error.',

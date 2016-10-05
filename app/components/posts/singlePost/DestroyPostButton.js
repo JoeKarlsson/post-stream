@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { destroyPostsIfNeeded } from '../../../actions/posts/destroyPostActions';
+import { destroyPost } from '../../../actions/posts/destroyPostActions';
 import styles from './DestroyPostButton.scss';
 
 class DestroyPostButton extends Component {
@@ -11,7 +11,7 @@ class DestroyPostButton extends Component {
 
   handleDeletingPost() {
     const { dispatch, id, index } = this.props;
-    dispatch(destroyPostsIfNeeded(id, index));
+    dispatch(destroyPost(id, index));
   }
 
   render() {

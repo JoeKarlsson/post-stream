@@ -30,20 +30,3 @@ export const handleNewPostBodyChange = (body) => {
     body: body
   }
 };
-
-// export const submitNewPost = (body, userID) => {
-//   return dispatch => {
-//     dispatch(requestNewPost());
-//     let myHeaders = new Headers();
-//     myHeaders.append(
-//       'Content-Type', 'application/x-www-form-urlencoded'
-//     );
-//     return fetch(`/post/new`, {
-//       method: 'POST',
-//       headers: myHeaders,
-//       body: `body=${body}&userID=${userID}`
-//     })
-//     .then(response => response.json())
-//     .then(json => dispatch(receiveNewPost(json)));
-//   }
-// };
