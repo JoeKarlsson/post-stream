@@ -6,7 +6,7 @@ export const POST_SUCCESS = 'POST_SUCCESS'
 export const POST_FAILURE = 'POST_FAILURE'
 
 // Uses the API middlware to get all of the posts
-export function fetchPosts() {
+export const fetchPosts = () => {
   return {
     [CALL_API]: {
       endpoint: '/post',

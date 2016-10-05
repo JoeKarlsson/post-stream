@@ -5,7 +5,7 @@ export const NEW_POST_SUCCESS = 'NEW_POST_SUCCESS'
 export const NEW_POST_FAILURE = 'NEW_POST_FAILURE'
 
 // Uses the API middlware to create a new post
-export function submitNewPost(body, userID) {
+export const submitNewPost = (body, userID) => {
   const data = {
     method: 'POST',
     headers: {

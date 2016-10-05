@@ -6,7 +6,7 @@ export const EDIT_POST_FAILURE = 'EDIT_POST_FAILURE'
 export const HANDLE_UPDATED_POST_BODY_CHANGE = 'HANDLE_UPDATED_POST_BODY_CHANGE'
 
 // Uses the API middlware to edit a post
-export function submitUpdatedPost(body, postId, index) {
+export const submitUpdatedPost = (body, postId, index) => {
   const data = {
     method: 'PUT',
     headers: {
@@ -41,20 +41,3 @@ export const handleUpdatedPostBodyChange = (body, index) => {
     index,
   }
 };
-
-// export const submitUpdatedPost = (body, postId, index) => {
-//   return dispatch => {
-//     dispatch(requestUpdatedPost(index));
-//     let myHeaders = new Headers();
-//     myHeaders.append(
-//       'Content-Type', 'application/x-www-form-urlencoded'
-//     );
-//     return fetch(`/post/${postId}/edit`, {
-//       method: 'PUT',
-//       headers: myHeaders,
-//       body: `body=${body}`
-//     })
-//     .then(response => response.json())
-//     .then(json => dispatch(receiveUpdatedPost(json, index)));
-//   }
-// };

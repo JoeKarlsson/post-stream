@@ -6,7 +6,7 @@ export const DESTROY_POST_SUCCESS = 'DESTROY_POST_SUCCESS'
 export const DESTROY_POST_FAILURE = 'DESTROY_POST_FAILURE'
 
 // Uses the API middlware to get a quote
-export function destroyPost(postId, index) {
+export const destroyPost = (postId, index) => {
   const data = {
     method: 'DELETE',
     index,
