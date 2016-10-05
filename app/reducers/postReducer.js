@@ -1,16 +1,19 @@
 import {
   POST_REQUEST, POST_SUCCESS, POST_FAILURE
 } from '../actions/posts/postActions';
+import {
+  NEW_POST_REQUEST, NEW_POST_SUCCESS, NEW_POST_FAILURE
+} from '../actions/posts/newPostActions';
 
 import { Map, List } from 'immutable';
 
 const initialState = Map({
   isFetchingPosts: false,
   isFetchingComments: false,
+  submittingNewPost: false,
   didInvalidate: false,
   lastUpdated: null,
   newPostBody: '',
-  submittingPost: false,
   receivedAt: null,
   posts: List()
 });
@@ -52,12 +55,13 @@ const post = (state = initialState, action) => {
     case 'HANDLE_NEW_POST_BODY_CHANGE':
       return state.set('newPostBody', action.body);
 
-    case 'REQUEST_NEW_POSTS':
-      return state.set('submittingPost', true);
+    case NEW_POST_REQUEST:
+      return state.set('submittingNewPost', true);
 
-    case 'RECEIVE_NEW_POST':
+    case NEW_POST_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
-        return posts.unshift(Map(action.newPost)
+        let newPost = JSON.parse(action.response);
+        return posts.unshift(Map(newPost)
           .set('showComments', false)
           .set('isParentPost', true)
           .set('realName', 'Joe Karlsson')
@@ -66,14 +70,18 @@ const post = (state = initialState, action) => {
           .set('childId', 0)
           .set('childContext', Map())
           .set('didInvalidate', false)
-          .set('updatedPostBody', action.newPost.body)
+          .set('updatedPostBody', newPost.body)
           .set('editMode', false)
           .set('replyMode', false)
           .set('replyBody', '')
         );
       })
-      .set('submittingPost', false)
+      .set('submittingNewPost', false)
       .set('newPostBody', '');
+
+    case NEW_POST_FAILURE:
+      return state.set('didInvalidate', true)
+        .set('submittingNewPost', false)
 
     case 'TOGGLE_EDIT_MODE':
       return state.updateIn(['posts'], (posts) => {

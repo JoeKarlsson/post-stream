@@ -22,8 +22,8 @@ class NewPostForm extends Component {
   handleSubmitPost(e) {
     e.preventDefault();
     const { dispatch, newPostBody } = this.props;
-    const { getProfile } = this.props.auth;
-    const profile = getProfile();
+    // Retrieves the profile data from localStorage
+    const profile = localStorage.getItem('profile')
     dispatch(submitNewPost(newPostBody, profile.user_id))
   };
 

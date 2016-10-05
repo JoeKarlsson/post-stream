@@ -47,8 +47,7 @@ AllPosts.propTypes = {
   posts: React.PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  console.log('state: ', state);
+const mapStateToProps = (state, ownProps) => {
   return {
     posts: state.root.post.get('posts').toJS(),
     isFetching: state.root.post.get('isFetching'),
