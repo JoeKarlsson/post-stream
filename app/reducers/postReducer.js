@@ -151,10 +151,11 @@ const post = (state = initialState, action) => {
 
     case COMMENT_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
-        return posts.update(action.index, (post) => {
+        return posts.update(action.data.index, (post) => {
+          const parsedComments = JSON.parse(action.response);
           return post.updateIn(['comments'], (comments) => {
             return comments.clear().concat(
-              action.comments.map((comment) => {
+              parsedComments.map((comment) => {
                 return Map(comment)
                   .set('childId', 0)
                   .set('showComments', false)
@@ -163,7 +164,7 @@ const post = (state = initialState, action) => {
             );
           })
           .set('showComments', true)
-          .set('childContext', action.comments[0])
+          .set('childContext', parsedComments[0])
         })
       })
       .set('isFetchingPosts', false)
