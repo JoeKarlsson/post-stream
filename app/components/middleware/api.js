@@ -6,9 +6,10 @@ const BASE_URL = 'http://localhost:3000'
 
 function callApi(endpoint, authenticated, data={}) {
 
-  let token = localStorage.getItem('id_token') || null
+  let token = localStorage.getItem('id_token') || null;
   let config = {};
-  const {method, body, headers} = data
+  const {method, body, headers} = data;
+
   if (method){
     config.method = method;
   }
@@ -38,9 +39,9 @@ function callApi(endpoint, authenticated, data={}) {
 
       return text
     }).catch(err => console.log(err))
-}
+};
 
-export const CALL_API = Symbol('Call API')
+export const CALL_API = Symbol('Call API');
 
 export default store => next => action => {
   const callAPI = action[CALL_API]
@@ -50,9 +51,9 @@ export default store => next => action => {
     return next(action)
   }
 
-  let { endpoint, types, authenticated, data } = callAPI
+  let { endpoint, types, authenticated, data } = callAPI;
 
-  const [ requestType, successType, errorType ] = types
+  const [ requestType, successType, errorType ] = types;
 
   // Passing the authenticated boolean back in our data will let us distinguish between normal and secret quotes
   return callApi(endpoint, authenticated, data).then(
@@ -68,4 +69,4 @@ export default store => next => action => {
       type: errorType
     })
   )
-}
+};
