@@ -19,21 +19,6 @@ export const fetchCommentsIfNeeded = (postId, index) => {
   }
 };
 
-// const shouldFetchComments = (state, postId) => {
-//   const comments = state.root.post
-//     .get('posts')
-//     .get(postId)
-//     .get('comments').toJS();
-
-//   if (comments.length === 0) {
-//     return true;
-//   } else if (comments.isFetching) {
-//     return false;
-//   } else {
-//     return comments.didInvalidate;
-//   }
-// };
-
 export const toggleComment = (index, newChildId) => {
   return {
     type: 'TOGGLE_COMMENT',
