@@ -5,29 +5,28 @@ import {
   LOGOUT_SUCCESS
 } from '../actions/auth/logoutActions'
 import { isTokenExpired } from '../components/shared/auth/jwtHelper';
+import { Map } from 'immutable';
 
 // Checks if there is a saved token and it's still valid
 const token = localStorage.getItem('id_token');
 const isTokenValid = !!token && !isTokenExpired(token);
 
-// The auth reducer. The starting state sets authentication
-// based on a token being in local storage.
-function auth(state = {
-    isFetching: false,
-    isAuthenticated: isTokenValid
-  }, action) {
+const initialState = Map({
+  isFetching: false,
+  isAuthenticated: isTokenValid
+});
+
+function auth(state = initialState, action) {
   switch (action.type) {
     case LOCK_SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: false,
-        isAuthenticated: true,
-        errorMessage: ''
-      })
+      return state.set('isFetching', false)
+        .set('isAuthenticated', true)
+        .set('errorMessage', '')
+
     case LOGOUT_SUCCESS:
-      return Object.assign({}, state, {
-        isFetching: true,
-        isAuthenticated: false
-      })
+      return state.set('isFetching', true)
+        .set('isAuthenticated', false)
+
     default:
       return state
     }

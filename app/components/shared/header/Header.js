@@ -14,6 +14,8 @@ class Header extends Component {
       errorMessage
     } = this.props;
 
+    const profile = JSON.parse(localStorage.getItem('profile'));
+
     return (
       <div>
         <header className={styles.header_bar}>
@@ -25,6 +27,9 @@ class Header extends Component {
                errorMessage={errorMessage}
                onLoginClick={ creds => dispatch(login(creds, this.props.auth)) }
               />
+            }
+            { isAuthenticated &&
+              <li>[ <NavLink to={`/user/${ profile.user_id }`}>profile</NavLink> ]</li>
             }
             { isAuthenticated &&
               <LogoutButton onLogoutClick={() => dispatch(logoutUser())} />

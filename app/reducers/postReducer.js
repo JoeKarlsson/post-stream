@@ -142,9 +142,6 @@ const post = (state = initialState, action) => {
       return state.set('didInvalidate', true)
         .set('isDestroyingPost', false)
 
-    case 'INVALIDATE_COMMENTS':
-      return state.set('didInvalidate', true);
-
     case COMMENT_REQUEST:
       return state.set('isFetchingComments', true)
         .set('didInvalidate', false);

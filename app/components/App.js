@@ -59,8 +59,8 @@ function mapStateToProps(state) {
   const { isAuthenticated, errorMessage } = auth
 
   return {
-    isAuthenticated,
-    errorMessage
+    isAuthenticated: auth.get('isAuthenticated'),
+    errorMessage: auth.get('errorMessage')
   }
 }
 
