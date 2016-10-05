@@ -7,6 +7,12 @@ import {
 import {
   DESTROY_POST_REQUEST, DESTROY_POST_SUCCESS, DESTROY_POST_FAILURE
 } from '../actions/posts/destroyPostActions';
+import {
+  EDIT_POST_REQUEST,
+  EDIT_POST_SUCCESS,
+  EDIT_POST_FAILURE,
+  HANDLE_UPDATED_POST_BODY_CHANGE,
+} from '../actions/posts/editPostActions';
 
 import { Map, List } from 'immutable';
 
@@ -94,23 +100,27 @@ const post = (state = initialState, action) => {
         })
       })
 
-    case 'HANDLE_UPDATED_POST_BODY_CHANGE':
+    case HANDLE_UPDATED_POST_BODY_CHANGE:
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
           return post.set('updatedPostBody', action.body)
         })
       })
 
-    case 'REQUEST_UPDATED_POST':
+    case EDIT_POST_REQUEST:
       return state;
 
-    case 'RECEIVE_UPDATED_POST':
+    case EDIT_POST_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
-        return posts.update(action.index, (post) => {
-          return post.set('body', action.updatedPost.body)
+        return posts.update(action.data.index, (post) => {
+          let updatedPost = JSON.parse(action.response);
+          return post.set('body', updatedPost.body)
             .set('editMode', false);
         })
       })
+
+    case EDIT_POST_FAILURE:
+      return state;
 
     case DESTROY_POST_REQUEST:
       return state.set('isDestroyingPost', true)
