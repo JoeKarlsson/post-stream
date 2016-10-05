@@ -17,24 +17,29 @@ class Profile extends React.Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const profile = JSON.parse(localStorage.getItem('profile'));
-    dispatch(fetchUserPosts(profile.user_id));
+    const { userName} = this.props.params;
+    dispatch(fetchUserPosts(userName));
   };
 
   render() {
     const {
       posts,
+      isAuthenticated,
     } = this.props;
     const profile = JSON.parse(localStorage.getItem('profile'));
+    const { userName} = this.props.params;
 
     return (
       <div className={ styles.Profile }>
 
-        <h1>{ profile.nickname }'s PostStream</h1>
+        <h1>{ userName }'s PostStream</h1>
 
-        <ProfileDetails profile={ profile }></ProfileDetails>
-
-        <ProfileEdit profile={ profile } ></ProfileEdit>
+        { isAuthenticated &&
+          <div>
+            <ProfileDetails profile={ profile }></ProfileDetails>
+            <ProfileEdit profile={ profile } ></ProfileEdit>
+          </div>
+        }
 
         <PostList
           posts={ posts }
@@ -46,7 +51,11 @@ class Profile extends React.Component {
 };
 
 const mapStateToProps = (state) => {
+  const { auth } = state.root;
+  const { isAuthenticated } = auth
+
   return {
+    isAuthenticated: auth.get('isAuthenticated'),
     posts: state.root.profile.get('posts').toJS(),
   }
 };
