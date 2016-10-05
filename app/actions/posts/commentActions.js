@@ -1,55 +1,38 @@
-const requestComments = () => {
-  return {
-    type: 'REQUEST_COMMENTS',
-  }
-};
+import { CALL_API } from '../../components/middleware/api';
 
-const receiveComments = (comments, postId, index) => {
-  return {
-    type: 'RECEIVE_COMMENTS',
-    comments,
-    postId,
-    index,
-  }
-};
-
-const fetchComments = (postId, index) => {
-  return dispatch => {
-    dispatch(requestComments());
-    return fetch(`/post/${postId}/comments`)
-    .then(response => response.json())
-    .then(json => dispatch(receiveComments(json, postId, index)));
-  }
-};
-
-export const invalidateComments = () => {
-  return {
-    type: 'INVALIDATE_COMMENTS',
-  }
-};
-
-const shouldFetchComments = (state, postId) => {
-  const comments = state.root.post
-    .get('posts')
-    .get(postId)
-    .get('comments').toJS();
-
-  if (comments.length === 0) {
-    return true;
-  } else if (comments.isFetching) {
-    return false;
-  } else {
-    return comments.didInvalidate;
-  }
-};
+export const COMMENT_REQUEST = 'COMMENT_REQUEST';
+export const COMMENT_SUCCESS = 'COMMENT_SUCCESS';
+export const COMMENT_FAILURE = 'COMMENT_FAILURE';
 
 export const fetchCommentsIfNeeded = (postId, index) => {
-  return (dispatch, getState) => {
-    if (shouldFetchComments(getState(), postId)) {
-      return dispatch(fetchComments(postId, index));
+  const data = {
+    postId,
+    index,
+  };
+
+  return {
+    [CALL_API]: {
+      endpoint: `/post/${postId}/comments`,
+      types: [COMMENT_REQUEST, COMMENT_SUCCESS, COMMENT_FAILURE],
+      data,
     }
   }
 };
+
+// const shouldFetchComments = (state, postId) => {
+//   const comments = state.root.post
+//     .get('posts')
+//     .get(postId)
+//     .get('comments').toJS();
+
+//   if (comments.length === 0) {
+//     return true;
+//   } else if (comments.isFetching) {
+//     return false;
+//   } else {
+//     return comments.didInvalidate;
+//   }
+// };
 
 export const toggleComment = (index, newChildId) => {
   return {

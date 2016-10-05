@@ -5,7 +5,6 @@ export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS';
 export const EDIT_POST_FAILURE = 'EDIT_POST_FAILURE';
 export const HANDLE_UPDATED_POST_BODY_CHANGE = 'HANDLE_UPDATED_POST_BODY_CHANGE';
 
-// Uses the API middlware to edit a post
 export const submitUpdatedPost = (body, postId, index) => {
   const data = {
     method: 'PUT',

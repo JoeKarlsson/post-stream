@@ -13,6 +13,12 @@ import {
   EDIT_POST_FAILURE,
   HANDLE_UPDATED_POST_BODY_CHANGE,
 } from '../actions/posts/editPostActions';
+import {
+  REPLY_REQUEST, REPLY_SUCCESS, REPLY_FAILURE
+} from '../actions/posts/replyActions';
+import {
+  COMMENT_REQUEST, COMMENT_SUCCESS, COMMENT_FAILURE
+} from '../actions/posts/commentActions';
 
 import { Map, List } from 'immutable';
 
@@ -21,6 +27,7 @@ const initialState = Map({
   isFetchingComments: false,
   isDestroyingPost: false,
   submittingNewPost: false,
+  isSubmittingReply: false,
   didInvalidate: false,
   lastUpdated: null,
   newPostBody: '',
@@ -138,11 +145,11 @@ const post = (state = initialState, action) => {
     case 'INVALIDATE_COMMENTS':
       return state.set('didInvalidate', true);
 
-    case 'REQUEST_COMMENTS':
+    case COMMENT_REQUEST:
       return state.set('isFetchingComments', true)
         .set('didInvalidate', false);
 
-    case 'RECEIVE_COMMENTS':
+    case COMMENT_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
           return post.updateIn(['comments'], (comments) => {
@@ -161,6 +168,10 @@ const post = (state = initialState, action) => {
       })
       .set('isFetchingPosts', false)
       .set('didInvalidate', false);
+
+    case COMMENT_FAILURE:
+      return state.set('isFetchingComments', false)
+        .set('didInvalidate', true);
 
     case 'TOGGLE_COMMENT':
       return state.updateIn(['posts'], (posts) => {
@@ -191,18 +202,25 @@ const post = (state = initialState, action) => {
         })
       });
 
-    case 'REQUEST_NEW_REPLY':
-      return state;
+    case REPLY_REQUEST:
+      return state.set('isSubmittingReply', true)
+        .set('didInvalidate', false);
 
-    case 'RECEIVE_NEW_REPLY':
+    case REPLY_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
-        return posts.update(action.index, (post) => {
+        return posts.update(action.data.index, (post) => {
+          const comments = JSON.parse(action.response);
           return post.set('commentCount', post.get('commentCount') + 1)
             .set('replyBody', '')
-            .set('comments', post.get('comments').unshift(action.reply))
+            .set('comments', post.get('comments').unshift(comments))
             .set('replyMode', false)
         })
-      });
+      })
+      .set('isSubmittingReply', false);
+
+    case REPLY_FAILURE:
+      return state.set('isSubmittingReply', false)
+        .set('didInvalidate', true);
 
     default:
       return state;
