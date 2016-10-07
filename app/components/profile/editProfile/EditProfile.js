@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import EditForm from './editForm/EditForm';
 import styles from './EditProfile.scss';
 
 class EditProfile extends React.Component {
@@ -19,11 +20,11 @@ class EditProfile extends React.Component {
 
     return (
       <div className={ styles.Profile }>
-
         <h1>{ userName }'s PostStream</h1>
-
-
-
+        <EditForm
+          profile={ profile }
+          dispatch={ dispatch }
+        />
       </div>
     );
   }

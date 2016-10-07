@@ -4,9 +4,9 @@ import ReactDOM from 'react-dom';
 import {
   updateProfile,
   onFormChange,
-} from '../../../actions/profile/updateProfileActions';
+} from '../../../../actions/profile/updateProfileActions';
 
-export class ProfileEdit extends React.Component {
+export class EditForm extends React.Component {
 
   handleChange(e){
     const { dispatch } = this.props;
@@ -77,4 +77,4 @@ const mapStateToProps = (state) => {
 
 export default connect(
   mapStateToProps
-)(ProfileEdit);
+)(EditForm);

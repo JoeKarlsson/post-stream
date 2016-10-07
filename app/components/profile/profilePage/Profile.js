@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchUserPosts } from '../../../actions/profile/profileActions';
 import PostList from './postList/PostList';
-import ProfileEdit from './ProfileEdit';
 import ProfileDetails from './ProfileDetails';
 import styles from './Profile.scss';
 
@@ -30,11 +29,6 @@ class Profile extends React.Component {
         { isAuthenticated &&
           <div>
             <ProfileDetails profile={ profile }></ProfileDetails>
-            <ProfileEdit
-              profile={ profile }
-              dispatch={dispatch}
-            >
-            </ProfileEdit>
           </div>
         }
 
@@ -52,8 +46,8 @@ const mapStateToProps = (state) => {
 
   return {
     isAuthenticated: auth.get('isAuthenticated'),
-    posts: profile.get('posts').toJS(),
     profile: profile.get('profile').toJS(),
+    posts: profile.get('posts').toJS(),
   }
 };
 
