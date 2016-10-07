@@ -11,7 +11,6 @@ import {
 import Immutable, { Map, List} from 'immutable';
 
 const profileToken = JSON.parse(localStorage.getItem('profile'));
-console.log('profileToken: ', profileToken);
 const initialState = Map({
   profile: Immutable.fromJS(profileToken),
   isFetchingPosts: false,

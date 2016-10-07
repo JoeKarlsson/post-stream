@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchUserPosts } from '../../actions/profile/profileActions';
+import { fetchUserPosts } from '../../../actions/profile/profileActions';
 import PostList from './postList/PostList';
 import ProfileEdit from './ProfileEdit';
 import ProfileDetails from './ProfileDetails';

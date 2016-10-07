@@ -6,7 +6,6 @@
 
 
 const setProfile = (profile) => {
-  console.log('profile: ', profile);
   // Saves profile data to localStorage
   localStorage.setItem('profile', JSON.stringify(profile));
 };
