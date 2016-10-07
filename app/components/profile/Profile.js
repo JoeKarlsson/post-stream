@@ -7,14 +7,6 @@ import ProfileDetails from './ProfileDetails';
 import styles from './Profile.scss';
 
 class Profile extends React.Component {
-  constructor(props, context) {
-    super();
-
-    // props.auth.on('profile_updated', (newProfile) => {
-    //   this.setState({ profile: newProfile })
-    // })
-  }
-
   componentDidMount() {
     const { dispatch } = this.props;
     const { userName} = this.props.params;
@@ -25,8 +17,9 @@ class Profile extends React.Component {
     const {
       posts,
       isAuthenticated,
+      profile,
+      dispatch
     } = this.props;
-    const profile = JSON.parse(localStorage.getItem('profile'));
     const { userName} = this.props.params;
 
     return (
@@ -37,7 +30,11 @@ class Profile extends React.Component {
         { isAuthenticated &&
           <div>
             <ProfileDetails profile={ profile }></ProfileDetails>
-            <ProfileEdit profile={ profile } ></ProfileEdit>
+            <ProfileEdit
+              profile={ profile }
+              dispatch={dispatch}
+            >
+            </ProfileEdit>
           </div>
         }
 
@@ -51,12 +48,12 @@ class Profile extends React.Component {
 };
 
 const mapStateToProps = (state) => {
-  const { auth } = state.root;
-  const { isAuthenticated } = auth
+  const { auth, profile } = state.root;
 
   return {
     isAuthenticated: auth.get('isAuthenticated'),
-    posts: state.root.profile.get('posts').toJS(),
+    posts: profile.get('posts').toJS(),
+    profile: profile.get('profile').toJS(),
   }
 };
 

@@ -118,7 +118,6 @@ router.route('/:id/edit')
 router.route('/user/:username')
   // get an array of all the users posts
   .get((req, res) => {
-    console.log('req.params.username: ', req.params.username);
     Post.findAll({
       limit: 10,
       order: [

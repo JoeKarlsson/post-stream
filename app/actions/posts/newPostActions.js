@@ -5,12 +5,15 @@ export const NEW_POST_SUCCESS = 'NEW_POST_SUCCESS';
 export const NEW_POST_FAILURE = 'NEW_POST_FAILURE';
 
 export const submitNewPost = (body, userID) => {
+  const profile = JSON.parse(localStorage.getItem('profile'));
   const data = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `body=${body}&userID=${userID}`,
+    body: `body=${body}&userID=${profile.user_id}`,
+    name: profile.name,
+    user_id: profile.user_id,
   };
 
   return {

@@ -1,37 +1,39 @@
-import React, { PropTypes as T } from 'react'
-import ReactDOM from 'react-dom'
-import AuthService from '../shared/auth/AuthService'
+import React from 'react';
+import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
+import {
+  updateProfile,
+  onFormChange,
+} from '../../actions/profile/updateProfileActions';
 
 export class ProfileEdit extends React.Component {
-  // receiving AuthService instance and profile data as props
-  static propTypes = {
-    profile: T.object,
-    auth: T.instanceOf(AuthService)
-  }
 
   handleChange(e){
-
-  }
+    const { dispatch } = this.props;
+    dispatch(onFormChange(e.target.id, e.target.value))
+  };
 
   // method trigged when edit form is submitted
   handleSubmit(e){
     e.preventDefault()
     const {
       profile,
-      auth
-    } = this.props
-
-    auth.updateProfile(profile.user_id, {
+      dispatch
+    } = this.props;
+    const metadata = {
       user_metadata: {
-        address: ReactDOM.findDOMNode(this.refs.address).value
+        address: ReactDOM.findDOMNode(this.refs.address).value,
+        bio: ReactDOM.findDOMNode(this.refs.bio).value,
       }
-    })
-  }
+    };
+    dispatch(updateProfile(profile.user_id, metadata));
+  };
 
   render(){
-    const { profile } = this.props
-    const { address } = profile.user_metadata || {}
-    const { bio } = profile.user_metadata || {}
+    const { profile } = this.props;
+    const { address } = profile.user_metadata || {};
+    const { bio } = profile.user_metadata || {};
+
     return (
       <div>
           <h3>Editing Profile</h3>
@@ -43,8 +45,8 @@ export class ProfileEdit extends React.Component {
               id='address'
               className='u-full-width'
               placeholder='address'
-              value={address}
-              onChange={this.handleChange.bind(this)}
+              value={ address }
+              onChange={ this.handleChange.bind(this) }
             />
             <label htmlFor='bio'>bio</label>
             <input
@@ -53,8 +55,8 @@ export class ProfileEdit extends React.Component {
               id='bio'
               className='u-full-width'
               placeholder='bio'
-              value={bio}
-              onChange={this.handleChange.bind(this)}
+              value={ bio }
+              onChange={ this.handleChange.bind(this) }
             />
             <div>
               <button type='submit'>save</button>
@@ -63,6 +65,16 @@ export class ProfileEdit extends React.Component {
       </div>
     )
   }
-}
+};
 
-export default ProfileEdit;
+const mapStateToProps = (state) => {
+  const { profile } = state.root;
+
+  return {
+    profile: profile.get('profile').toJS(),
+  }
+};
+
+export default connect(
+  mapStateToProps
+)(ProfileEdit);

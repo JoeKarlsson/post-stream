@@ -47,13 +47,14 @@ const post = (state = initialState, action) => {
 
     case POST_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
+        const parsedPosts = JSON.parse(action.response);
         return posts.clear().concat(
-          JSON.parse(action.response).map((post) => {
+          parsedPosts.map((post) => {
             return Map(post)
             .set('showComments', false)
             .set('isParentPost', true)
             .set('realName', `Joe Karlsson`)
-            .set('username', 'JoeJoeBinks131')
+            .set('username', post.userID)
             .set('comments', List())
             .set('childId', 0)
             .set('childContext', {})
@@ -81,8 +82,8 @@ const post = (state = initialState, action) => {
         return posts.unshift(Map(newPost)
           .set('showComments', false)
           .set('isParentPost', true)
-          .set('realName', 'Joe Karlsson')
-          .set('username', 'joejoebinks3')
+          .set('realName', action.data.name)
+          .set('username', action.data.user_id)
           .set('comments', List())
           .set('childId', 0)
           .set('childContext', Map())
