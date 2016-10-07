@@ -5,15 +5,8 @@ import EditForm from './editForm/EditForm';
 import styles from './EditProfile.scss';
 
 class EditProfile extends React.Component {
-  componentDidMount() {
-    const { dispatch } = this.props;
-    const { userName} = this.props.params;
-  };
-
   render() {
     const {
-      posts,
-      isAuthenticated,
       profile,
       dispatch,
     } = this.props;

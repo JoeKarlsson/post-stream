@@ -202,16 +202,18 @@ Post.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const { profile, post } = state.root;
+
   return {
-    editMode: state.root.post
+    editMode: post
       .get('posts').get(ownProps.index).get('editMode'),
-    showComments: state.root.post
+    showComments: post
       .get('posts').get(ownProps.index).get('showComments'),
-    childId: state.root.post
+    childId: post
       .get('posts').get(ownProps.index).get('childId'),
-    childContext: state.root.post
+    childContext: post
       .get('posts').get(ownProps.index).get('childContext'),
-    isAuthenticated: state.root.profile.get('isAuthenticated'),
+    isAuthenticated: profile.get('isAuthenticated'),
   }
 };
 

@@ -18,7 +18,6 @@ class Profile extends React.Component {
       posts,
       isAuthenticated,
       profile,
-      dispatch
     } = this.props;
     const { userName} = this.props.params;
 
