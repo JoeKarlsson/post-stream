@@ -55,12 +55,11 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { auth } = state.root;
-  const { isAuthenticated, errorMessage } = auth
+  const { profile } = state.root;
 
   return {
-    isAuthenticated: auth.get('isAuthenticated'),
-    errorMessage: auth.get('errorMessage')
+    isAuthenticated: profile.get('isAuthenticated'),
+    errorMessage: profile.get('errorMessage'),
   }
 }
 

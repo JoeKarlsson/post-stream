@@ -1,4 +1,4 @@
-import { CALL_API } from '../../components/middleware/api';
+import { CALL_API } from '../../middleware/api';
 
 export const EDIT_POST_REQUEST = 'EDIT_POST_REQUEST';
 export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS';

@@ -6,9 +6,7 @@ class Logout extends Component {
     const { onLogoutClick } = this.props
 
     return (
-      <button onClick={() => onLogoutClick()} className="btn btn-primary">
-        Logout
-      </button>
+      <li>[ <span onClick={() => onLogoutClick()}>logout</span> ]</li>
     )
   }
 

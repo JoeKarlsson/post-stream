@@ -211,7 +211,7 @@ const mapStateToProps = (state, ownProps) => {
       .get('posts').get(ownProps.index).get('childId'),
     childContext: state.root.post
       .get('posts').get(ownProps.index).get('childContext'),
-    isAuthenticated: state.root.auth.get('isAuthenticated'),
+    isAuthenticated: state.root.profile.get('isAuthenticated'),
   }
 };
 

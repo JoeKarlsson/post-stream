@@ -1,4 +1,4 @@
-import { CALL_API } from '../../components/middleware/api';
+import { CALL_API } from '../../middleware/api';
 
 export const NEW_POST_REQUEST = 'NEW_POST_REQUEST';
 export const NEW_POST_SUCCESS = 'NEW_POST_SUCCESS';

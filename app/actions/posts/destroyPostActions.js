@@ -1,4 +1,4 @@
-import { CALL_API } from '../../components/middleware/api';
+import { CALL_API } from '../../middleware/api';
 
 export const DESTROY_POST_REQUEST = 'DESTROY_POST_REQUEST';
 export const DESTROY_POST_SUCCESS = 'DESTROY_POST_SUCCESS';

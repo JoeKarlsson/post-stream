@@ -5,7 +5,6 @@ import profile from './profileReducer';
 
 const root = combineReducers({
   post,
-  auth,
   profile,
 })
 

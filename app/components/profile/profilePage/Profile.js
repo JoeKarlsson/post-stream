@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { fetchUserPosts } from '../../../actions/profile/profileActions';
 import PostList from './postList/PostList';
 import ProfileDetails from './ProfileDetails';
@@ -29,6 +30,8 @@ class Profile extends React.Component {
         { isAuthenticated &&
           <div>
             <ProfileDetails profile={ profile }></ProfileDetails>
+            [ <Link to={`/user/${ profile.user_id }/edit`}>edit profile</Link> ]
+            <hr />
           </div>
         }
 
@@ -42,10 +45,10 @@ class Profile extends React.Component {
 };
 
 const mapStateToProps = (state) => {
-  const { auth, profile } = state.root;
-
+  const { profile } = state.root;
+  console.log('profile.toJS(): ', profile.toJS());
   return {
-    isAuthenticated: auth.get('isAuthenticated'),
+    isAuthenticated: profile.get('isAuthenticated'),
     profile: profile.get('profile').toJS(),
     posts: profile.get('posts').toJS(),
   }

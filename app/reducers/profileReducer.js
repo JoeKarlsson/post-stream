@@ -1,4 +1,10 @@
 import {
+  LOCK_SUCCESS
+} from '../actions/auth/loginActions'
+import {
+  LOGOUT_SUCCESS
+} from '../actions/auth/logoutActions'
+import { isTokenExpired } from '../components/shared/auth/jwtHelper';import {
   PROFILE_REQUEST,
   PROFILE_SUCCESS,
   PROFILE_FAILURE
@@ -10,16 +16,34 @@ import {
 } from '../actions/profile/updateProfileActions';
 import Immutable, { Map, List} from 'immutable';
 
-const profileToken = JSON.parse(localStorage.getItem('profile'));
+// Checks if there is a saved token and it's still valid
+const token = localStorage.getItem('id_token');
+const isTokenValid = !!token && !isTokenExpired(token);
+
+let profileToken = JSON.parse(localStorage.getItem('profile'));
+
 const initialState = Map({
   profile: Immutable.fromJS(profileToken),
   isFetchingPosts: false,
   didInvalidate: false,
   posts: List(),
+  isFetching: false,
+  isAuthenticated: isTokenValid,
 });
 
 function profile(state = initialState, action) {
   switch (action.type) {
+    case LOCK_SUCCESS:
+      let profileToken = JSON.parse(localStorage.getItem('profile'));
+      return state.set('isFetching', false)
+        .set('isAuthenticated', true)
+        .set('errorMessage', '')
+        .set('profile', Immutable.fromJS(profileToken))
+
+    case LOGOUT_SUCCESS:
+      return state.set('isFetching', true)
+        .set('isAuthenticated', false)
+
     case PROFILE_FAILURE:
       return state.set('didInvalidate', true);
 
@@ -70,7 +94,7 @@ function profile(state = initialState, action) {
 
     default:
       return state
-    }
+  }
 }
 
 export default profile;

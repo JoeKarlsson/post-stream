@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import EditForm from './editForm/EditForm';
 import styles from './EditProfile.scss';
 
@@ -14,7 +15,7 @@ class EditProfile extends React.Component {
       posts,
       isAuthenticated,
       profile,
-      dispatch
+      dispatch,
     } = this.props;
     const { userName} = this.props.params;
 
@@ -25,6 +26,7 @@ class EditProfile extends React.Component {
           profile={ profile }
           dispatch={ dispatch }
         />
+        [ <Link to={`/user/${ profile.user_id }`}>back</Link> ]
       </div>
     );
   }

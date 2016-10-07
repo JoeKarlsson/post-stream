@@ -7,9 +7,7 @@ export default class Login extends Component {
 
     return (
       <div>
-        <button onClick={(event) => this.handleClick(event)} className="btn btn-primary">
-          Login
-        </button>
+        <li>[ <span onClick={(event) => this.handleClick(event)}>login</span> ]</li>
 
         {errorMessage &&
           <p style={{color:'red'}}>{errorMessage}</p>
