@@ -9,13 +9,21 @@ const setProfile = (profile) => {
   localStorage.setItem('profile', JSON.stringify(profile));
 };
 
-function callApi(endpoint, authenticated=false, data={}, auth=false) {
+function callApi(endpoint, authenticated=false, data={}, auth={auth0: {
+        call: false,
+        readOnly: false,
+      }}) {
   let BASE_URL = 'http://localhost:3000';
-  let token = localStorage.getItem('id_token') || null;
+  let token;
+  if(auth.auth0.readOnly){
+    token = __AUTH0_TOKEN__ || {};
+  } else {
+    token = localStorage.getItem('id_token') || {};
+  }
   let config = {};
   const {method, body, headers} = data;
 
-  if(auth){
+  if(auth.auth0.call){
     BASE_URL = `https://${__AUTH0_DOMAIN__}/api/v2`;
   }
   if (method){
@@ -57,7 +65,6 @@ export const CALL_API = Symbol('Call API');
 
 export default store => next => action => {
   const callAPI = action[CALL_API];
-  console.log('callAPI: ', callAPI);
   // So the middleware doesn't get applied to every single action
   if (typeof callAPI === 'undefined') {
     return next(action);

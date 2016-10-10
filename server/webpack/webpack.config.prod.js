@@ -6,10 +6,10 @@ const StatsPlugin = require('stats-webpack-plugin');
 
 module.exports = {
   entry: [
-    path.join(__dirname, 'app/entry.js'),
+    path.join(__dirname, '../../app/components/entry.js'),
   ],
   output: {
-    path: path.join(__dirname, 'dist/'),
+    path: path.join(__dirname, '../dist/'),
     filename: '[name]-[hash].min.js',
     publicPath: '/',
   },
@@ -36,19 +36,37 @@ module.exports = {
     }),
   ],
   module: {
+    preLoaders: [
+      {
+        test: /\.js$/,
+        loader: 'eslint',
+        exclude: 'node_modules',
+      }
+    ],
     loaders: [{
-      test: /(\.js$|\.jsx$)/,
+      test: /(\.js$)/,
       exclude: /node_modules/,
       loader: 'babel',
       query: {
-        presets: ['react', 'es2015', 'stage-0', 'react-hmre'],
+        presets: ['react', 'es2015', 'stage-0'],
       },
     }, {
       test: /\.json?$/,
       loader: 'json',
     }, {
+      test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
+      loader: 'file',
+    }, {
+      test: /\.(mp4|webm)$/,
+      loader: 'url?limit=10000'
+    }, {
       test: /(\.scss$|\.css$)/,
-      loaders: ['style', 'css', 'sass'],
+      loaders: [
+        'style',
+        'css?modules&importLoaders=1' +
+        '&localIdentName=[path][local]__[hash:base64:5]!sass',
+        'sass',
+      ],
     }],
   },
   postcss: [

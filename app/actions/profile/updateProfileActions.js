@@ -24,7 +24,10 @@ export const updateProfile = (userId, metadata) => {
         UPDATE_PROFILE_FAILURE
       ],
       data,
-      auth: true,
+      auth0: {
+        call: true,
+        readOnly: false,
+      },
     }
   }
 };
@@ -37,19 +40,10 @@ export const onFormChange = (fieldName, content) => {
   }
 };
 
-// export const updateProfile = (userId, data) => {
-//   let token = localStorage.getItem('id_token');
-//   const headers = {
-//     'Accept': 'application/json',
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${token}`,
-//   };
-//   // making the PATCH http request to auth0 api
-//   return fetch(`https://${__AUTH0_DOMAIN__}/api/v2/users/${userId}`, {
-//     method: 'PATCH',
-//     headers: headers,
-//     body: JSON.stringify(data)
-//   })
-//   .then(response => response.json())
-//   .then(newProfile => setProfile(newProfile)) //updating current profile
-// };
+export const followUser = (profile, user_id) => {
+  const metadata = {
+    user_metadata: {
+      following: user_id,
+    }
+  };
+}
