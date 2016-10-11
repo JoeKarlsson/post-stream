@@ -5,9 +5,6 @@ const app = express();
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const webpackMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-const webpackConfig = require('./webpack/webpack.config.dev.js');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const favicon = require('express-favicon');
@@ -32,6 +29,9 @@ Promise.onPossiblyUnhandledRejection((err) => {
 app.use('/post', post);
 
 if (isDeveloping) {
+  const webpackMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+  const webpackConfig = require('./webpack/webpack.config.dev.js');
   app.set('host', 'http://localhost');
   app.use(logger('dev'));
   app.use(errorhandler());
