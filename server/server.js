@@ -17,7 +17,6 @@ const errorhandler = require('errorhandler');
 const jwt = require('express-jwt');
 const db = require('./models');
 const post = require('./routes/post');
-
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
 
@@ -63,6 +62,7 @@ if (isDeveloping) {
     res.write(
       fs.readFileSync(path.resolve(__dirname, 'dist/index.html'))
     );
+    res.end();
   });
 }
 
@@ -70,8 +70,6 @@ const onStart = (err) => {
   if (err) {
     throw new Error(err);
   }
-  console.log('process.env: ', process.env);
-  console.log('process.env.PORT: ', process.env.PORT);
   console.info(
     `==> 🌎 Listening on port ${port}. ` +
     `Open up http://localhost:${port}/ in your browser.`
