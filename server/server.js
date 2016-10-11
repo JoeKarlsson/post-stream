@@ -15,7 +15,6 @@ const Promise = require('bluebird');
 const logger = require('morgan');
 const errorhandler = require('errorhandler');
 const jwt = require('express-jwt');
-const CONFIG = require('./config/config.json');
 const db = require('./models');
 const post = require('./routes/post');
 
