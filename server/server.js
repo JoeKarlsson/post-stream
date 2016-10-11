@@ -20,6 +20,7 @@ const post = require('./routes/post');
 
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
+console.log('process.env: ', process.env);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
