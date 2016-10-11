@@ -16,6 +16,7 @@ const db = require('./models');
 const post = require('./routes/post');
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
+const host = isDeveloping ? 'localhost' :  '0.0.0.0';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -62,7 +63,6 @@ if (isDeveloping) {
     res.write(
       fs.readFileSync(path.resolve(__dirname, 'dist/index.html'))
     );
-    res.end();
   });
 }
 
@@ -80,7 +80,7 @@ const onStart = (err) => {
 };
 
 if (!module.parent) {
-  app.listen(port, 'localhost', onStart);
+  app.listen(port, host, onStart);
 }
 
 module.exports = app;
