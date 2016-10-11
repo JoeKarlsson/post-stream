@@ -16,7 +16,7 @@ function callApi(endpoint, authenticated=false, data={}, auth={auth0: {
   let BASE_URL = 'http://localhost:3000';
   let token;
   if(__NODE_ENV__ === 'production'){
-    BASE_URL = 'https://poststream.herokuapp.com/';
+    BASE_URL = 'https://poststream.herokuapp.com';
   }
   if(auth.auth0.readOnly){
     token = __AUTH0_TOKEN__ || {};
