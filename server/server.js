@@ -12,9 +12,17 @@ const Promise = require('bluebird');
 const logger = require('morgan');
 const errorhandler = require('errorhandler');
 const jwt = require('express-jwt');
+const isDeveloping = process.env.NODE_ENV !== 'production';
+let webpackMiddleware;
+let webpackHotMiddleware;
+let webpackConfig;
+if (isDeveloping) {
+  webpackMiddleware = require('webpack-dev-middleware');
+  webpackHotMiddleware = require('webpack-hot-middleware');
+  webpackConfig = require('./webpack/webpack.config.dev.js');
+}
 const db = require('./models');
 const post = require('./routes/post');
-const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
 const host = isDeveloping ? 'localhost' :  '0.0.0.0';
 
@@ -30,9 +38,6 @@ Promise.onPossiblyUnhandledRejection((err) => {
 app.use('/post', post);
 
 if (isDeveloping) {
-  const webpackMiddleware = require('webpack-dev-middleware');
-  const webpackHotMiddleware = require('webpack-hot-middleware');
-  const webpackConfig = require('./webpack/webpack.config.dev.js');
   app.set('host', 'http://localhost');
   app.use(logger('dev'));
   app.use(errorhandler());

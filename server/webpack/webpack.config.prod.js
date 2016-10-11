@@ -32,6 +32,7 @@ module.exports = {
       modules: false,
     }),
     new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       '__NODE_ENV__': JSON.stringify(process.env.NODE_ENV),
       '__AUTH0_CLIENT_ID__': JSON.stringify(process.env.AUTH0_CLIENT_ID),
       '__AUTH0_CLIENT_SECRET__': JSON.stringify(process.env.AUTH0_CLIENT_SECRET),
