@@ -69,7 +69,7 @@ module.exports = {
       ],
     }],
   },
-  postcss: [
-    require('autoprefixer'),
-  ],
+  postcss: function() {
+    return [autoprefixer];
+  },
 };
