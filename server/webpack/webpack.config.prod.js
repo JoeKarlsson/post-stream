@@ -40,6 +40,9 @@ module.exports = {
       '__AUTH0_DOMAIN__': JSON.stringify(process.env.AUTH0_DOMAIN),
       '__AUTH0_CALLBACK_URL__': JSON.stringify(process.env.AUTH0_CALLBACK_URL),
     }),
+    new webpack.ProvidePlugin({
+      'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+    }),
   ],
   module: {
     preLoaders: [
