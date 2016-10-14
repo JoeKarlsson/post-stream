@@ -50,7 +50,6 @@ AllPosts.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   const { post } = state.root;
 
-  console.log(post.get('posts').toJS());
   return {
     posts: post.get('posts').toJS(),
     isFetching: post.get('isFetching'),

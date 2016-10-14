@@ -1,4 +1,4 @@
-import { CALL_API } from '../../middleware/api';
+import { CALL_AUTH0_API } from '../../middleware/auth0api';
 
 export const UPDATE_PROFILE_REQUEST = 'UPDATE_PROFILE_REQUEST';
 export const UPDATE_PROFILE_SUCCESS = 'UPDATE_PROFILE_SUCCESS';
@@ -15,7 +15,7 @@ export const updateProfile = (userId, metadata) => {
   };
 
   return {
-    [CALL_API]: {
+    [CALL_AUTH0_API]: {
       endpoint: `/users/${userId}`,
       authenticated: true,
       types: [
@@ -41,9 +41,9 @@ export const onFormChange = (fieldName, content) => {
 };
 
 export const followUser = (profile, user_id) => {
-  const metadata = {
-    user_metadata: {
-      following: user_id,
-    }
-  };
+  // const metadata = {
+  //   user_metadata: {
+  //     following: user_id,
+  //   }
+  // };
 }

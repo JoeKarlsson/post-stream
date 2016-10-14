@@ -74,7 +74,7 @@ module.exports = {
       loader: 'json',
     }, {
       test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-      loader: 'file',
+      loader: 'file?name=[name]-[hash:6].[ext]',
     }, {
       test: /\.(mp4|webm)$/,
       loader: 'url?limit=10000'

@@ -18,6 +18,7 @@ function profile(state = initialState, action) {
   switch (action.type) {
 
     case GET_USER_REQUEST:
+      console.log('hit: ');
       return state;
 
     case GET_USER_SUCCESS:

@@ -29,7 +29,7 @@ const host = isDeveloping ? 'localhost' :  '0.0.0.0';
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
-app.use(favicon(`${__dirname}/favicon.ico`));
+// app.use(favicon(`${__dirname}/favicon.ico`));
 
 Promise.onPossiblyUnhandledRejection((err) => {
   throw new Error(err);
@@ -62,6 +62,7 @@ if (isDeveloping) {
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
   app.get('*', response);
+  console.log('path.resolve(__dirname, dist/index.html): ', path.resolve(__dirname, 'dist/index.html'));
 } else {
   app.use(express.static(`${__dirname}/dist`));
   app.get('*', (req, res) => {
@@ -77,7 +78,7 @@ const onStart = (err) => {
   }
   console.info(
     `==> 🌎 Listening on port ${port}. ` +
-    `Open up http://localhost:${port}/ in your browser.`
+    `Open up http://${host}:${port}/ in your browser.`
   );
   db.sequelize.sync(
     // {force: true}

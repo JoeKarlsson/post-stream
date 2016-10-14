@@ -4,31 +4,16 @@
   no-undef: 0
 */
 
-const setProfile = (profile) => {
-  // Saves profile data to localStorage
-  localStorage.setItem('profile', JSON.stringify(profile));
-};
-
-function callApi(endpoint, authenticated=false, data={}, auth={auth0: {
-        call: false,
-        readOnly: false,
-      }}) {
+function callApi(endpoint, authenticated=false, data={}) {
   let BASE_URL = 'http://localhost:3000';
   let token;
   if(__NODE_ENV__ === 'production'){
     BASE_URL = 'https://poststream.herokuapp.com';
   }
-  if(auth.auth0.readOnly){
-    token = __AUTH0_TOKEN__ || {};
-  } else {
-    token = localStorage.getItem('id_token') || {};
-  }
+
   let config = {};
   const {method, body, headers} = data;
 
-  if(auth.auth0.call){
-    BASE_URL = `https://${__AUTH0_DOMAIN__}/api/v2`;
-  }
   if (method){
     config.method = method;
   }
@@ -55,11 +40,6 @@ function callApi(endpoint, authenticated=false, data={}, auth={auth0: {
       if (!response.ok) {
         return Promise.reject(text);
       }
-      if(auth){
-        const profile = JSON.parse(text);
-        setProfile(profile);
-      }
-
       return text
     }).catch(err => console.log(err));
 };
@@ -73,12 +53,12 @@ export default store => next => action => {
     return next(action);
   }
 
-  let { endpoint, types, authenticated, data, auth } = callAPI;
+  let { endpoint, types, authenticated, data } = callAPI;
 
   const [ requestType, successType, errorType ] = types;
 
   // Passing the authenticated boolean back in our data will let us distinguish between normal and secret quotes
-  return callApi(endpoint, authenticated, data, auth).then(
+  return callApi(endpoint, authenticated, data).then(
     response =>
       next({
         response,

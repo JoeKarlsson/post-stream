@@ -38,6 +38,8 @@ Run the seed scripts to enter the default data in the DB.
 
     sequelize db:seed:all
 
+You will then need to setup Auth0 credentials and put them in the `.env` file. You can go to [auth0](https://auth0.com/docs/overview) for details on setting up an account.
+
 And you should now be ready to spin up a development build of your new project:
 
     npm start
@@ -73,10 +75,6 @@ In order to get an update from this repo, open your directory and type this comm
   - brilliant
 - No ads or sponsored posts
 
-## Todo
-  - EmojiOne support
-  - Verifed Users
-
 ## Stretch Goals
   - Possible fuzzy metrics (Your engagement is {very high} {high} {average})
   - SMS-support
@@ -84,212 +82,32 @@ In order to get an update from this repo, open your directory and type this comm
     - Mute options for keywords
     - Signup categories - subscribe to posts from only certain categories
     - Autofilter based on keywords, hashtags
-  - Verification
-    - Keybase???
+  - Keybase Verification
   - Highlight text [medium.com]
   - Permalinks - jump to comment or highlight
   - Customize appearance
     - Theme support (Github, Solarized, Tomorrow, etc.)
-
-### Handling posts
-#### Viewing shared links:
-
-- collapsible (a la [Folding Text](http://www.foldingtext.com), [Minimal Reader](http://www.minimalreader))
-- plain-text reader mode stripped of images for articles
-- viewable highlights/annotations from share
-
-#### Idea on infinite nested comments: http://ux.stackexchange.com/a/1736
-
-- collapsible
-- one comment at a time
-- nested comments display below
-
 
 ## Inspiration
 
 - [Little Voices](http://www.littlevoicesapp.com)
 - [Rainbow Stream](http://www.rainbowstream.org)
 
+##Contributing
+1. Fork it!
+2. Create your feature branch: ```git checkout -b my-new-feature```
+3. Commit your changes: ```git commit -am 'Add some feature'```
+4. Push to the branch: ````git push origin my-new-feature````
+5. Submit a pull request :D
+
+## Credits
+- Ray Farias
+- Jacoby Young
+- Joe Carlson
+
 --------------------
 
 ### Routes
-
-request
-
-    GET /user
-
-response - Returns an array of all the users in the DB
-
-    [
-      {
-        "id": 1,
-        "username": "JohnDoe131",
-        "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
-        "first_name": "John",
-        "last_name": "Doe",
-        "bio": "I am a new user to this site.",
-        "following": [
-          2,
-          3
-        ],
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z"
-      },
-      {
-        "id": 2,
-        "username": "JaneDoe343",
-        "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
-        "first_name": "Jane",
-        "last_name": "Doe",
-        "bio": "I am a new user to this site.",
-        "following": [
-          1,
-          3
-        ],
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z"
-      },
-      {
-        "id": 3,
-        "username": "JoeJoeBinks131",
-        "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
-        "first_name": "Joe",
-        "last_name": "Carlson",
-        "bio": "I am a new user to this site.",
-        "following": [
-          1,
-          2
-        ],
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z"
-      },
-      ...
-    ]
-
-request
-
-    GET /user/{id}
-
-response - Returns an object of the user of that ID
-
-    {
-      "id": 1,
-      "username": "JohnDoe131",
-      "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
-      "first_name": "John",
-      "last_name": "Doe",
-      "bio": "I am a new user to this site.",
-      "following": [
-        2,
-        3
-      ],
-      "createdAt": "2016-07-28T01:37:36.809Z",
-      "updatedAt": "2016-07-28T01:37:36.809Z"
-    }
-
-request
-
-    PUT /user/{id}/edit
-
-response - Returns the updated user object.
-
-    {
-      "id": 8,
-      "username": "joejoebinks67",
-      "password": "$2a$10$sq4.ixJxkHrrEBaUfg6aZeTDzSJxWhfMLlE7U6ecRjjWkYSsv3wKm",
-      "first_name": "Joe",
-      "last_name": "Carlson",
-      "bio": "I am cool",
-      "following": [
-        2,
-        "3"
-      ],
-      "createdAt": "2016-07-28T02:58:23.655Z",
-      "updatedAt": "2016-08-09T01:55:40.073Z"
-    }
-
-request
-
-    GET /user/{id}/posts
-
-response - Retrns an array of all the users posts
-
-    [
-      {
-        "id": 7,
-        "body": "JoeJoeBinks131 post 1",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 3
-      },
-      {
-        "id": 8,
-        "body": "JoeJoeBinks131 post 2",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 3
-      },
-      {
-        "id": 9,
-        "body": "JoeJoeBinks131 post 3",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 3
-      }
-    ]
-
-request
-
-    GET /user/{id}/following
-
-response - Returns an array of all the posts of the users they are following
-
-    [
-      {
-        "id": 1,
-        "body": "JohnDoe131 post 1",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 1
-      },
-      {
-        "id": 2,
-        "body": "JohnDoe131 post 2",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 1
-      },
-      {
-        "id": 3,
-        "body": "JohnDoe131 post 3",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 1
-      },
-      ...
-    ]
-
-request
-
-    POST /register
-
-response - Returns the new user obj that is stored in memory
-
-    {
-      "id": 10,
-      "username": "joejoebinks312121",
-      "password": "$2a$10$dFMu/mB2kTYb3uFnt37z4OSEAQbzxso33fQw5tkLIEq0XYWwkSQRm",
-      "first_name": "Joe",
-      "last_name": "Carlson",
-      "bio": "I am cool",
-      "following": [
-        2
-      ],
-      "updatedAt": "2016-08-09T01:26:34.359Z",
-      "createdAt": "2016-08-09T01:26:34.359Z"
-    }
-
---------------------
 
 request
 
@@ -448,15 +266,3 @@ response - Returns the updated comment object on a post
       "updatedAt": "2016-07-28T01:37:36.809Z",
       "UserId": 1
     }
-
-##Contributing
-1. Fork it!
-2. Create your feature branch: ```git checkout -b my-new-feature```
-3. Commit your changes: ```git commit -am 'Add some feature'```
-4. Push to the branch: ````git push origin my-new-feature````
-5. Submit a pull request :D
-
-## Credits
-- Ray Farias
-- Jacoby Young
-- Joe Carlson

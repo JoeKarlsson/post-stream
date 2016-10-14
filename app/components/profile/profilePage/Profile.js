@@ -12,8 +12,8 @@ class Profile extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
     const { userName} = this.props.params;
-    dispatch(getUserProfile(userName));
     dispatch(fetchUserPosts(userName));
+    dispatch(getUserProfile(userName));
   };
 
   render() {

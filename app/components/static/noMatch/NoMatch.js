@@ -5,7 +5,7 @@ class NoMatch extends React.Component {
   render() {
     return (
       <div className={styles.noMatch}>
-        No Page Found
+        404 - sry no page found
       </div>
     );
   }
