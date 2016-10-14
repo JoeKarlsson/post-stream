@@ -8,7 +8,11 @@ export const fetchUserPosts = (userName) => {
   return {
     [CALL_API]: {
       endpoint: `/post/user/${userName}`,
-      types: [PROFILE_REQUEST, PROFILE_SUCCESS, PROFILE_FAILURE],
+      types: [
+        PROFILE_REQUEST,
+        PROFILE_SUCCESS,
+        PROFILE_FAILURE
+      ],
     }
   }
 };

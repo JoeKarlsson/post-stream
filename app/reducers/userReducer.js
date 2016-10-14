@@ -14,16 +14,14 @@ const initialState = Map({
   posts: List(),
 });
 
-function profile(state = initialState, action) {
+function user(state = initialState, action) {
   switch (action.type) {
 
     case GET_USER_REQUEST:
-      console.log('hit: ');
       return state;
 
     case GET_USER_SUCCESS:
     const parsedProfile = JSON.parse(action.response);
-    console.log('parsedProfile: ', parsedProfile);
       return state.set('isFetching', false)
         .set('isAuthenticated', true)
         .set('errorMessage', '')
@@ -37,4 +35,4 @@ function profile(state = initialState, action) {
   }
 }
 
-export default profile;
+export default user;

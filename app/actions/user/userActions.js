@@ -10,7 +10,11 @@ export const getUserProfile = (userId) => {
       endpoint: `/users/${userId}`,
       authenticated: true,
       readOnly: true,
-      types: [GET_USER_REQUEST, GET_USER_SUCCESS, GET_USER_FAILURE],
+      types: [
+        GET_USER_REQUEST,
+        GET_USER_SUCCESS,
+        GET_USER_FAILURE
+      ],
     }
   }
 };

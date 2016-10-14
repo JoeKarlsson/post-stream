@@ -31,7 +31,7 @@ class Profile extends React.Component {
 
         { isAuthenticated &&
           <div>
-            { !profile &&
+            { profile &&
               <ProfileDetails profile={ profile }></ProfileDetails>
             }
             [ <Link to={`/user/${ profile.user_id }/edit`}>edit profile</Link> ]
@@ -51,7 +51,7 @@ class Profile extends React.Component {
 
 const mapStateToProps = (state) => {
   const { profile, user } = state.root;
-
+  console.log(user.get('profile').toJS())
   return {
     isAuthenticated: profile.get('isAuthenticated'),
     profile: user.get('profile').toJS(),

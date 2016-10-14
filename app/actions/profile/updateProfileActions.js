@@ -24,10 +24,7 @@ export const updateProfile = (userId, metadata) => {
         UPDATE_PROFILE_FAILURE
       ],
       data,
-      auth0: {
-        call: true,
-        readOnly: false,
-      },
+      readOnly: false,
     }
   }
 };

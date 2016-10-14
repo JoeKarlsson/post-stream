@@ -26,10 +26,9 @@ class EditProfile extends React.Component {
 };
 
 const mapStateToProps = (state) => {
-  const { auth, profile } = state.root;
+  const { profile } = state.root;
 
   return {
-    isAuthenticated: auth.get('isAuthenticated'),
     profile: profile.get('profile').toJS(),
   }
 };
