@@ -20,7 +20,7 @@ import Immutable, { Map, List} from 'immutable';
 const token = localStorage.getItem('id_token');
 const isTokenValid = !!token && !isTokenExpired(token);
 
-let profileToken = JSON.parse(localStorage.getItem('profile'));
+let profileToken = JSON.parse(localStorage.getItem('profile')) || {};
 
 const initialState = Map({
   profile: Immutable.fromJS(profileToken),

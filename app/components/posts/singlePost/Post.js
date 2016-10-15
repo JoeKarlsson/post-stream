@@ -117,14 +117,15 @@ class Post extends Component {
                   index={index}
                 />
 
-                <Reply
-                  id={id}
-                  index={index}
-                  auth={this.props.auth}
-                />
               </div>
             }
-
+            { isAuthenticated &&
+              <Reply
+                id={id}
+                index={index}
+                auth={this.props.auth}
+              />
+            }
             <div className='comment-count' onClick={this.handleShowingChild}>
               <CommentCount
                 numOfComments={commentCount}
