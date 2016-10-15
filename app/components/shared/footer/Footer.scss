@@ -1,6 +1,10 @@
-$white: white;
+$charade: #2A2937;
 
 .footer {
+  width: 100%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  background-color: darken( $charade, 1% );
   .footer_content {
     text-align: center;
   }
