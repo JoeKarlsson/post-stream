@@ -94,6 +94,8 @@ class Post extends Component {
       createdAt,
       dispatch,
       isAuthenticated,
+      postUserID,
+      profile,
     } = this.props;
 
     return (
@@ -107,7 +109,7 @@ class Post extends Component {
 
             <span dangerouslySetInnerHTML={ this.rawMarkup() } />
 
-            { isAuthenticated &&
+            { isAuthenticated && postUserID === profile.user_id &&
               <div>
                 <span onClick={ this.handleEdit }>[ edit ]</span>
                 <DestroyPostButton
@@ -213,7 +215,10 @@ const mapStateToProps = (state, ownProps) => {
       .get('posts').get(ownProps.index).get('childId'),
     childContext: post
       .get('posts').get(ownProps.index).get('childContext'),
+    postUserID: post
+      .get('posts').get(ownProps.index).get('userID'),
     isAuthenticated: profile.get('isAuthenticated'),
+    profile: profile.get('profile').toJS(),
   }
 };
 
