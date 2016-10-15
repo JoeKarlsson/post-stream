@@ -14,6 +14,21 @@ class Post extends Component {
     return { __html: output };
   };
 
+  getRandomColor() {
+    const colors = [
+      'teal',
+      'red',
+      'purple',
+      'orange',
+      'pink',
+      'lightGreen',
+      'forrestGreen'
+    ];
+
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    return color;
+  }
+
   render() {
     const {
       username,
@@ -21,15 +36,17 @@ class Post extends Component {
       createdAt,
     } = this.props;
 
+    const color = this.getRandomColor();
+
     return (
       <div className={styles.post}>
 
         <div>
-          { username} | {realName } | { new Date(createdAt).toLocaleTimeString() }
+          <span className={ styles.username }>{ username}</span> | {realName } | <span className={ styles.timeStamp }>{ new Date(createdAt).toLocaleTimeString() }</span>
         </div>
 
         <div>
-          <span dangerouslySetInnerHTML={ this.rawMarkup() } />
+          <span className={ styles[color] } dangerouslySetInnerHTML={ this.rawMarkup() } />
         </div>
 
         <hr/>

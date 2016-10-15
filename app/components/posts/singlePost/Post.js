@@ -153,7 +153,7 @@ class Post extends Component {
 
         { !isParentPost &&
           <div>
-            <span dangerouslySetInnerHTML={ this.rawMarkup() } />
+            <span className={ styles[color] } dangerouslySetInnerHTML={ this.rawMarkup() } />
 
             { !showComments &&
               <div className='comment-count' onClick={ this.handleShowingChild }>

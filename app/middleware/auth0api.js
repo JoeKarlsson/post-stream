@@ -64,7 +64,6 @@ function callApi(
 export const CALL_AUTH0_API = Symbol('Call Auth0 API');
 
 export default store => next => action => {
-  console.log('action: ', action[CALL_AUTH0_API]);
   const callAuth0API = action[CALL_AUTH0_API];
   // So the middleware doesn't get applied to every single action
   if (typeof callAuth0API === 'undefined') {

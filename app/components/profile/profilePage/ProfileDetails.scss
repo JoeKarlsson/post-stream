@@ -1,3 +1,5 @@
+$blue: #1EAEDB;
+$darkerBlue: #11657F;
 $teal: #00B8A9;
 $red: #F90000;
 $purple: #9373C1;
@@ -5,6 +7,13 @@ $orange: #E6834A;
 $pink: #D70090;
 $lightGreen: #61D76B;
 $forrestGreen: #00CE58;
+
+.username {
+  color: darken( $blue, 20% );
+}
+.timeStamp {
+  color: darken( $forrestGreen, 20% );
+}
 
 .teal {
   color: $teal;
@@ -25,5 +34,5 @@ $forrestGreen: #00CE58;
   color: $lightGreen;
 }
 .forrestGreen {
-    color: $forrestGreen;
+  color: $forrestGreen;
 }

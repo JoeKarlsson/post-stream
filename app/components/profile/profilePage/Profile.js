@@ -29,16 +29,18 @@ class Profile extends React.Component {
 
         <h1>{ userName }'s PostStream</h1>
 
-        { isAuthenticated &&
+        { profile &&
           <div>
-            { profile &&
-              <ProfileDetails profile={ profile }></ProfileDetails>
-            }
-            [ <Link to={`/user/${ profile.user_id }/edit`}>edit profile</Link> ]
+            <ProfileDetails profile={ profile }></ProfileDetails>
             <FollowButton user_id={ profile.user_id } />
-            <hr />
           </div>
         }
+        { isAuthenticated && profile.user_id === userName &&
+          <div>
+            [ <Link to={`/user/${ profile.user_id }/edit`}>edit profile</Link> ]
+          </div>
+        }
+        <hr />
 
         <PostList
           posts={ posts }
