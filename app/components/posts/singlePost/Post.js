@@ -104,14 +104,14 @@ class Post extends Component {
         { editMode === false && isParentPost &&
           <div>
             <div>
-              <Link to={`/user/${username}`}>{ username}</Link> | <Link to={`/user/${username}`}>{ realName }</Link> | { new Date(createdAt).toLocaleTimeString() }
+              <Link to={`/user/${username}`}>{ username}</Link> | <Link to={`/user/${username}`}>{ realName }</Link> | <span className={ styles.timeStamp }>{ new Date(createdAt).toLocaleTimeString() }</span>
             </div>
 
             <span dangerouslySetInnerHTML={ this.rawMarkup() } />
 
             { isAuthenticated && postUserID === profile.user_id &&
               <div>
-                <span onClick={ this.handleEdit }>[ edit ]</span>
+                [ <span className={ styles.editButton } onClick={ this.handleEdit }>edit</span> ]
                 <DestroyPostButton
                   id={id}
                   index={index}

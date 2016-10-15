@@ -1,13 +1,13 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react';
+import styles from './Login.scss';
 
 export default class Login extends Component {
-
   render() {
-    const { errorMessage } = this.props
+    const { errorMessage } = this.props;
 
     return (
       <div>
-        <li>[ <span onClick={(event) => this.handleClick(event)}>login</span> ]</li>
+        <li>[ <span className={styles.loginButton} onClick={(event) => this.handleClick(event)}>login</span> ]</li>
 
         {errorMessage &&
           <p style={{color:'red'}}>{errorMessage}</p>
@@ -17,11 +17,11 @@ export default class Login extends Component {
   }
 
   handleClick(event) {
-    this.props.onLoginClick()
-  }
-}
+    this.props.onLoginClick();
+  };
+};
 
 Login.propTypes = {
   onLoginClick: PropTypes.func.isRequired,
   errorMessage: PropTypes.string
-}
+};

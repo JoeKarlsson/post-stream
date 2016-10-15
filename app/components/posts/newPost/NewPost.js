@@ -31,7 +31,7 @@ class NewPostForm extends Component {
     return (
       <div className={styles.u_full_width}>
         <form>
-          <label htmlFor="body">create a new post</label>
+          <label htmlFor="body" className={styles.bodyLabel}>create a new post</label>
           <textarea
             ref="body"
             type='textarea'

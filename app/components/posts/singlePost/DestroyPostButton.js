@@ -17,12 +17,10 @@ class DestroyPostButton extends Component {
   render() {
     return (
       <div className={styles.destroyPost}>
-        <div
-          className="removePost"
+        [ <span
+          className={styles.destroyButton}
           onClick={this.handleDeletingPost}
-        >
-          [ destroy ]
-        </div>
+        >destroy</span> ]
       </div>
     );
   }

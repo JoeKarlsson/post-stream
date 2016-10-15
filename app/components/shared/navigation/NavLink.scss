@@ -1,6 +1,9 @@
-$red: red;
-$white: white;
+$orange: #E6834A;
 
 .active {
-  color: $red !important;
+  color: $orange !important;
+};
+
+.active:hover {
+  color: darken( $orange, 20% ) !important;
 };

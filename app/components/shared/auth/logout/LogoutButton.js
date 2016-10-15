@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import styles from './LogoutButton.scss';
 
 class Logout extends Component {
 
@@ -6,7 +7,7 @@ class Logout extends Component {
     const { onLogoutClick } = this.props
 
     return (
-      <li>[ <span onClick={() => onLogoutClick()}>logout</span> ]</li>
+      <li>[ <span className={styles.logoutButton} onClick={() => onLogoutClick()}>logout</span> ]</li>
     )
   }
 

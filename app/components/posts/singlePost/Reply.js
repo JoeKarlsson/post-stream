@@ -73,11 +73,11 @@ class Reply extends Component {
           </div>
         }
         { !replyMode &&
-          <div
-            className="reply"
-            onClick={ this.handleToggleReplyMode }
-          >
-            [ reply ]
+          <div>
+            [ <span
+              className={ styles.replyButton }
+              onClick={ this.handleToggleReplyMode }
+            >reply</span> ]
           </div>
         }
       </div>

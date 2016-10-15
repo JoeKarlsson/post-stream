@@ -1,6 +1,14 @@
-$lightBlue: #bdbaf3;
-$white: white;
+$forrestGreen: #00CE58;
+$blue: #1EAEDB;
+$darkerBlue: #11657F;
 
-.post {
-  background-color: $white;
+.editButton {
+  color: $blue;
+}
+.editButton:hover {
+  color: $darkerBlue;
+}
+
+.timeStamp {
+  color: $forrestGreen;
 }

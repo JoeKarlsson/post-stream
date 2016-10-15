@@ -1,5 +1,6 @@
 $blue: #1EAEDB;
 $darkerBlue: #11657F;
+$orange: #E6834A;
 
 .newPost {
 
@@ -15,4 +16,8 @@ $darkerBlue: #11657F;
 }
 .clickable:hover {
   color: $darkerBlue;
+}
+
+.bodyLabel {
+  color: $orange;
 }
