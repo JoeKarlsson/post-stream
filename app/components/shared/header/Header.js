@@ -18,18 +18,18 @@ class Header extends Component {
 
     return (
       <div>
-        <header className={styles.header_bar}>
-          <NavLink to='/' onlyActiveOnIndex={true} className={styles.header_logo}>PostStream</NavLink>
-          <ul className={styles.header_nav}>
+        <header className={ styles.header_bar }>
+          <NavLink to='/' onlyActiveOnIndex={ true } className={ styles.header_logo }>PostStream</NavLink>
+          <ul className={ styles.header_nav }>
             <li>[ <NavLink to='/about'>?</NavLink> ]</li>
             { !isAuthenticated &&
               <Login
-               errorMessage={errorMessage}
+               errorMessage={ errorMessage }
                onLoginClick={ creds => dispatch(login(creds, this.props.auth)) }
               />
             }
             { isAuthenticated &&
-              <li>[ <NavLink to={`/user/${ profile.user_id }`}>profile</NavLink> ]</li>
+              <li>[ <NavLink to={ `/user/${ profile.user_id }` }>profile</NavLink> ]</li>
             }
             { isAuthenticated &&
               <LogoutButton onLogoutClick={() => dispatch(logoutUser())} />

@@ -1,4 +1,5 @@
 $charade: #2A2937;
+$forrestGreen: #00CE58;
 
 .footer {
   width: 100%;
@@ -7,5 +8,8 @@ $charade: #2A2937;
   background-color: darken( $charade, 1% );
   .footer_content {
     text-align: center;
+  }
+  p {
+    color: $forrestGreen;
   }
 }

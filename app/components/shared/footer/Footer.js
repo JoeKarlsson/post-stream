@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './Footer.scss';
 
-const Footer = ({item}) => (
+const Footer = ({ item }) => (
   <div>
-    <footer className={styles.footer}>
-      <div className={styles.footer_content}>
-        <p>/* site by <a href='http://www.rayfarias.com'>ray</a>, <a href='http://jacobyyoung.com/'>jacoby</a> and <a href='http://www.callmejoe.net/'>joe</a> */</p>
+    <footer className={ styles.footer }>
+      <div className={ styles.footer_content }>
+        <p>/* site by <a target='_blank' href='http://www.rayfarias.com'>ray</a>, <a target='_blank' href='http://jacobyyoung.com/'>jacoby</a> and <a target='_blank' href='http://www.callmejoe.net/'>joe</a> */</p>
       </div>
     </footer>
   </div>
