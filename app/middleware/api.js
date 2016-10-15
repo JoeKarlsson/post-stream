@@ -6,7 +6,7 @@
 
 function callApi(endpoint, authenticated=false, data={}) {
   let BASE_URL = 'http://localhost:3000';
-  let token;
+  let token = localStorage.getItem('id_token') || {};
   if(__NODE_ENV__ === 'production'){
     BASE_URL = 'https://poststream.herokuapp.com';
   }
