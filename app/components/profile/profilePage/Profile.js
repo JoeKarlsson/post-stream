@@ -51,7 +51,6 @@ class Profile extends React.Component {
 
 const mapStateToProps = (state) => {
   const { profile, user } = state.root;
-  console.log(user.get('profile').toJS())
   return {
     isAuthenticated: profile.get('isAuthenticated'),
     profile: user.get('profile').toJS(),

@@ -13,14 +13,34 @@ export class FollowButton extends React.Component {
       user_id,
       dispatch
     } = this.props;
-
-    dispatch(followUser(profile, user_id));
+    const { user_metadata } = profile;
+    const followings = user_metadata.following || []
+    if(followings.indexOf(user_id) === -1){
+      followings.push(user_id);
+    }
+    const metadata = {
+      user_metadata: {
+        following: followings,
+        ...user_metadata,
+      }
+    };
+    dispatch(followUser(profile, metadata));
   };
 
   render(){
+    const {
+      profile,
+      user_id,
+      dispatch
+    } = this.props;
+
     return (
       <div>
-        [ <span onClick={(event) => this.handleClick(event)}>follow</span> ]
+        { profile.user_id !== user_id &&
+          <div>
+            [ <span onClick={(event) => this.handleClick(event)}>follow</span> ]
+          </div>
+        }
       </div>
     )
   }

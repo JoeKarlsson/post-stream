@@ -87,7 +87,8 @@ function profile(state = initialState, action) {
       return state;
 
     case UPDATE_PROFILE_SUCCESS:
-      return state;
+      const parsedProfile = JSON.parse(action.response);
+      return state.set('profile', Immutable.fromJS(parsedProfile));
 
     case UPDATE_PROFILE_FAILURE:
       return state;

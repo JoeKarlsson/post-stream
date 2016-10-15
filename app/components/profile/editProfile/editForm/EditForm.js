@@ -20,10 +20,13 @@ export class EditForm extends React.Component {
       profile,
       dispatch
     } = this.props;
+    const { user_metadata } = profile;
+
     const metadata = {
       user_metadata: {
         address: ReactDOM.findDOMNode(this.refs.address).value,
         bio: ReactDOM.findDOMNode(this.refs.bio).value,
+        ...user_metadata,
       }
     };
     dispatch(updateProfile(profile.user_id, metadata));

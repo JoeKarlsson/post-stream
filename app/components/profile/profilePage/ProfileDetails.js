@@ -7,21 +7,22 @@ export class ProfileDetails extends React.Component {
 
   render(){
     const { profile } = this.props;
-    const { address } = profile.user_metadata || {} // new address field
-    const { bio } = profile.user_metadata || {} // new bio field
+    const { address, bio, following } = profile.user_metadata || {};
+    console.log('profile: ', profile);
 
     return (
       <div>
-        <img src={profile.picture}/>
+        <img src={ profile.picture }/>
         <div>
           <h3>Profile</h3>
-          <p><strong>Name: </strong> {profile.name}</p>
-          <p><strong>Email: </strong> {profile.email}</p>
-          <p><strong>Nickname: </strong> {profile.nickname}</p>
-          <p><strong>Address: </strong> {address}</p>
-          <p><strong>Bio: </strong> {bio}</p>
-          <p><strong>Created At: </strong> {profile.created_at}</p>
-          <p><strong>Updated At: </strong> {profile.updated_at}</p>
+          <p><strong>Name: </strong> { profile.name }</p>
+          <p><strong>Email: </strong> { profile.email }</p>
+          <p><strong>Nickname: </strong> { profile.nickname }</p>
+          <p><strong>Address: </strong> { address }</p>
+          <p><strong>Bio: </strong> { bio }</p>
+          <p><strong>Following: </strong> { following }</p>
+          <p><strong>Created At: </strong> { profile.created_at }</p>
+          <p><strong>Updated At: </strong> { profile.updated_at }</p>
         </div>
       </div>
     )

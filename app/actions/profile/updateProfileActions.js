@@ -37,10 +37,28 @@ export const onFormChange = (fieldName, content) => {
   }
 };
 
-export const followUser = (profile, user_id) => {
-  // const metadata = {
-  //   user_metadata: {
-  //     following: user_id,
-  //   }
-  // };
-}
+export const followUser = (profile, metadata) => {
+
+  const data = {
+    method: 'PATCH',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(metadata),
+  };
+
+  return {
+    [CALL_AUTH0_API]: {
+      endpoint: `/users/${profile.user_id}`,
+      authenticated: true,
+      types: [
+        UPDATE_PROFILE_REQUEST,
+        UPDATE_PROFILE_SUCCESS,
+        UPDATE_PROFILE_FAILURE
+      ],
+      data,
+      readOnly: false,
+    }
+  }
+};
