@@ -79,6 +79,21 @@ class Post extends Component {
     }
   };
 
+  getRandomColor() {
+    const colors = [
+      'teal',
+      'red',
+      'purple',
+      'orange',
+      'pink',
+      'lightGreen',
+      'forrestGreen'
+    ];
+
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    return color;
+  }
+
   render() {
     const {
       username,
@@ -98,16 +113,18 @@ class Post extends Component {
       profile,
     } = this.props;
 
+    const color = this.getRandomColor();
+
     return (
       <div className={styles.post}>
 
         { editMode === false && isParentPost &&
           <div>
-            <div>
-              [<Link to={`/user/${username}`}> { username} </Link>] | [<Link to={`/user/${username}`}> { realName } </Link>] | <span className={ styles.timeStamp }>{ new Date(createdAt).toLocaleTimeString() }</span>
+            <div className={ styles.statusBar }>
+              [<Link to={`/user/${username}`} className={ styles.username }> { realName } </Link>] | <span className={ styles.timeStamp }>{ new Date(createdAt).toLocaleTimeString() }</span>
             </div>
 
-            <span dangerouslySetInnerHTML={ this.rawMarkup() } />
+            <span className={ styles[color] } dangerouslySetInnerHTML={ this.rawMarkup() } />
 
             { isAuthenticated && postUserID === profile.user_id &&
               <div>
