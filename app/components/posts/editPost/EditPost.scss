@@ -1,3 +1,16 @@
-.editPost {
+$blue: #1EAEDB;
+$darkerBlue: #11657F;
 
+.saveButton {
+  color: $blue;
+}
+.saveButton:hover {
+  color: $darkerBlue;
+}
+
+.cancelButton {
+  color: $blue;
+}
+.cancelButton:hover {
+  color: $darkerBlue;
 }

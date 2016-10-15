@@ -46,10 +46,10 @@ class EditPost extends Component {
             onChange={this.handleBodyChange}
           ></textarea>
           <div>
-            <span onClick={this.handleSubmitUpdatedPost}>[ save ] </span>
+            [<span className={ styles.saveButton }  onClick={this.handleSubmitUpdatedPost}> save </span> ]
           </div>
           <div>
-            <span onClick={this.handleCancel}>[ cancel ] </span>
+            [ <span className={ styles.cancelButton } onClick={this.handleCancel}> cancel </span> ]
           </div>
         </form>
       </div>

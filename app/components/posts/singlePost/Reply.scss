@@ -1,9 +1,28 @@
 $blue: #1EAEDB;
 $darkerBlue: #11657F;
+$teal: #00B8A9;
+
+.replyLabel {
+  color: $teal;
+}
 
 .replyButton {
   color: $blue;
 }
 .replyButton:hover {
+  color: $darkerBlue;
+}
+
+.postReplyBotton {
+  color: $blue;
+}
+.postReplyBotton:hover {
+  color: $darkerBlue;
+}
+
+.cancelReplyButton {
+  color: $blue;
+}
+.cancelReplyButton:hover {
   color: $darkerBlue;
 }

@@ -20,22 +20,22 @@ class AllPosts extends Component {
     } = this.props;
 
     return (
-      <div className={styles.allPosts}>
+      <div className={ styles.allPosts }>
         <h1>PostStream</h1>
 
-        <div className={styles.lastUpdated}>
-          stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.
-          {' '}
+        <div className={ styles.lastUpdated }>
+          stream was last updated at { new Date(lastUpdated).toLocaleTimeString() }.
+          { ' ' }
         </div>
 
         { isAuthenticated &&
-          <NewPost auth={this.props.auth}/>
+          <NewPost auth={ this.props.auth }/>
         }
         <hr />
 
         <PostList
-          posts={posts}
-          isAuthenticated={isAuthenticated}
+          posts={ posts }
+          isAuthenticated={ isAuthenticated }
         />
 
       </div>

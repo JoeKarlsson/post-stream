@@ -51,7 +51,7 @@ class Reply extends Component {
         { replyMode &&
           <div className={ styles.u_full_width }>
             <form>
-              <label htmlFor="reply">reply</label>
+              <label className={ styles.replyLabel } htmlFor="reply">reply</label>
               <textarea
                 ref="reply"
                 type='text'
@@ -63,10 +63,10 @@ class Reply extends Component {
                 onChange={ this.handleBodyChange }
               ></textarea>
               <div>
-                <span onClick={this.handleSubmitReply}>[ reply ] </span>
+                [<span className={ styles.postReplyBotton } onClick={this.handleSubmitReply}> reply </span>]
               </div>
               <div>
-                <span onClick={this.handleToggleReplyMode}>[ cancel ] </span>
+                [<span className={ styles.cancelReplyButton } onClick={this.handleToggleReplyMode}> cancel </span>]
 
               </div>
             </form>

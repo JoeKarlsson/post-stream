@@ -104,7 +104,7 @@ class Post extends Component {
         { editMode === false && isParentPost &&
           <div>
             <div>
-              <Link to={`/user/${username}`}>{ username}</Link> | <Link to={`/user/${username}`}>{ realName }</Link> | <span className={ styles.timeStamp }>{ new Date(createdAt).toLocaleTimeString() }</span>
+              [<Link to={`/user/${username}`}> { username} </Link>] | [<Link to={`/user/${username}`}> { realName } </Link>] | <span className={ styles.timeStamp }>{ new Date(createdAt).toLocaleTimeString() }</span>
             </div>
 
             <span dangerouslySetInnerHTML={ this.rawMarkup() } />
@@ -164,11 +164,11 @@ class Post extends Component {
           <div className='replies'>
 
             { childId !== 0 &&
-              <span onClick={this.handlePrev}>[ left ] </span>
+              <span>[<span className={ styles.leftButton } onClick={this.handlePrev}> left </span>]</span>
             }
 
             { childId !== commentCount-1 &&
-              <span onClick={this.handleNext}>[ right ]</span>
+              <span>[<span className={ styles.rightButton } onClick={this.handleNext}> right </span>]</span>
             }
 
               <Post
