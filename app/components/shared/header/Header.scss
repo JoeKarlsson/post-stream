@@ -1,11 +1,14 @@
 $white: white;
+$charade: #2A2937;
 
 header {
   width: 100%;
-  padding-top: 2%;
+  padding-top: 1%;
+  padding-bottom: 1%;
   font-size: 1.25rem;
   display: flex;
   flex-direction: row;
+  background-color: darken( $charade, 1% );
 }
 
 .header_bar {

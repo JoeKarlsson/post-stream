@@ -19,7 +19,7 @@ class Header extends Component {
     return (
       <div>
         <header className={styles.header_bar}>
-          <span>[ <NavLink to='/' onlyActiveOnIndex={true} className={styles.header_logo}>PostStream</NavLink> ]</span>
+          <NavLink to='/' onlyActiveOnIndex={true} className={styles.header_logo}>PostStream</NavLink>
           <ul className={styles.header_nav}>
             <li>[ <NavLink to='/about'>?</NavLink> ]</li>
             { !isAuthenticated &&
@@ -36,7 +36,6 @@ class Header extends Component {
             }
           </ul>
         </header>
-        <hr/>
       </div>
     )
   }
