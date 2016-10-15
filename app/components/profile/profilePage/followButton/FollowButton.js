@@ -31,7 +31,6 @@ export class FollowButton extends React.Component {
     const {
       profile,
       user_id,
-      dispatch
     } = this.props;
 
     return (

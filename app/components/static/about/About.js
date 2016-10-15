@@ -33,9 +33,9 @@ class About extends React.Component {
         <p>We are always looking to improve - if you find a bug, please report it <a href='https://github.com/JoeKarlsson1/post-stream/issues' target="_blank">here</a>.</p>
         <a width="150" height="50" href="https://auth0.com/?utm_source=oss&utm_medium=gp&utm_campaign=oss" target="_blank" alt="Single Sign On & Token Based Authentication - Auth0"><img width="150" height="50" alt="JWT Auth for open source projects" src="//cdn.auth0.com/oss/badges/a0-badge-light.png"/></a>
         <p>site by
-          <a href='http://www.rayfarias.com' target="_blank">ray</a>,
-          <a href='http://jacobyyoung.com/' target="_blank">jacoby</a> and
-          <a href='http://www.callmejoe.net/' target="_blank">joe</a>
+          <a href='http://www.rayfarias.com' target="_blank"> ray</a>,
+          <a href='http://jacobyyoung.com/' target="_blank"> jacoby</a> and
+          <a href='http://www.callmejoe.net/' target="_blank"> joe</a>
         </p>
         <img src={ logo } />
       </div>
