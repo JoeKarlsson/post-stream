@@ -32,7 +32,7 @@ function callApi(endpoint, authenticated=false, data={}) {
     }
   }
 
-  return fetch(BASE_URL + endpoint, config)
+  return fetch(endpoint, config)
     .then(response =>
       response.text()
       .then(text => ({ text, response }))
