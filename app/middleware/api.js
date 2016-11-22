@@ -5,11 +5,7 @@
 */
 
 function callApi(endpoint, authenticated=false, data={}) {
-  let BASE_URL = 'http://localhost:3000';
   let token = localStorage.getItem('id_token') || {};
-  if(__NODE_ENV__ === 'production'){
-    BASE_URL = 'http://poststream.herokuapp.com';
-  }
 
   let config = {};
   const {method, body, headers} = data;
