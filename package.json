@@ -33,12 +33,12 @@
     "postinstall": "rimraf dist && set NODE_ENV=production && webpack --config ./server/webpack/webpack.config.prod.js --progress --profile --colors"
   },
   "bugs": {
-    "url": "https://github.com/JoeKarlsson1/post-stream/issues"
+    "url": "https://github.com/JoeKarlsson/post-stream/issues"
   },
   "main": "server/server.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JoeKarlsson1/post-stream"
+    "url": "https://github.com/JoeKarlsson/post-stream"
   },
   "devDependencies": {
     "chai": "^3.5.0",
