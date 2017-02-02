@@ -17,9 +17,9 @@ Tentative example post:
 
 ## Setup Your Project
 
-Download and unpack [PostStream](https://github.com/JoeKarlsson1/post-stream). Or alternatively checkout from source:
+Download and unpack [PostStream](https://github.com/JoeKarlsson/post-stream). Or alternatively checkout from source:
 
-    git clone git@github.com:JoeKarlsson1/post-stream.git
+    git clone git@github.com:JoeKarlsson/post-stream.git
     cd post-stream
 
 Next, inside the project, you need to install the project's various NPM dependencies:
@@ -103,7 +103,7 @@ In order to get an update from this repo, open your directory and type this comm
 ## Credits
 - Ray Farias
 - Jacoby Young
-- Joe Carlson
+- Joe Karlsson
 
 --------------------
 
