@@ -1,5 +1,7 @@
 # PostStream
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/JoeKarlsson/post-stream.svg)](https://greenkeeper.io/)
+
 PostStream is an undesigned social network. It is a text-based response to the majority of modern social media platforms. This is certainly not for everyone as you will be interacting with others exclusively through text posts. You will notice several features intentionally left out in order to promote meaningful engagement. We hope you enjoy something a little different.
 
 ## Text-Based Social Network
