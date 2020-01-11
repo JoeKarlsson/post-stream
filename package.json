@@ -91,7 +91,7 @@
     "jwt-decode": "^2.1.0",
     "method-override": "^2.3.6",
     "morgan": "^1.7.0",
-    "node-sass": "^3.8.0",
+    "node-sass": "^4.11.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "pg": "^6.0.3",
