@@ -30,7 +30,9 @@
     "start": "node server/server.js",
     "test": "./node_modules/.bin/mocha -R spec tests/server/**/**.spec.js",
     "build": "rimraf dist && set NODE_ENV=production && webpack --config ./server/webpack/webpack.config.prod.js --progress --profile --colors",
-    "postinstall": "rimraf dist && set NODE_ENV=production && webpack --config ./server/webpack/webpack.config.prod.js --progress --profile --colors"
+    "postinstall": "rimraf dist && set NODE_ENV=production && webpack --config ./server/webpack/webpack.config.prod.js --progress --profile --colors",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "bugs": {
     "url": "https://github.com/JoeKarlsson/post-stream/issues"
@@ -114,6 +116,8 @@
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.1",
-    "whatwg-fetch": "^1.0.0"
-  }
+    "whatwg-fetch": "^1.0.0",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
