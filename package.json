@@ -72,7 +72,7 @@
     "dotenv": "^2.0.0",
     "emojione": "^2.2.6",
     "errorhandler": "^1.4.3",
-    "eslint": "3.1.1",
+    "eslint": "4.0.0",
     "eslint-loader": "1.4.1",
     "eslint-plugin-import": "1.10.3",
     "eslint-plugin-react": "5.2.2",
