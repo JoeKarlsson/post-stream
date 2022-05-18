@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "auth0-lock": "^10.2.2",
-    "autoprefixer": "6.3.7",
+    "autoprefixer": "9.0.0",
     "babel-core": "6.10.4",
     "babel-eslint": "6.1.2",
     "babel-loader": "6.2.4",
@@ -68,7 +68,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "bcrypt": "^0.8.7",
     "body-parser": "^1.15.2",
-    "css-loader": "^0.23.1",
+    "css-loader": "^1.0.0",
     "dotenv": "^2.0.0",
     "emojione": "^2.2.6",
     "errorhandler": "^1.4.3",
