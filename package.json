@@ -104,7 +104,7 @@
     "redux": "^3.5.2",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.1.0",
-    "remarkable": "^1.6.2",
+    "remarkable": "^2.0.0",
     "sass-loader": "^4.0.0",
     "sequelize": "^3.23.6",
     "sequelize-hierarchy": "^1.0.0",
