@@ -91,7 +91,7 @@
     "jwt-decode": "^2.1.0",
     "method-override": "^2.3.6",
     "morgan": "^1.7.0",
-    "node-sass": "^3.8.0",
+    "node-sass": "^5.0.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "pg": "^6.0.3",
@@ -112,7 +112,7 @@
     "style-loader": "0.13.1",
     "url-loader": "0.6.0",
     "webpack": "^1.13.1",
-    "webpack-dev-middleware": "^1.6.1",
+    "webpack-dev-middleware": "^5.3.4",
     "webpack-hot-middleware": "^2.12.1",
     "whatwg-fetch": "^1.0.0"
   }
