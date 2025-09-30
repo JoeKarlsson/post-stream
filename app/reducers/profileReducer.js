@@ -1,6 +1,7 @@
 import {
-  LOCK_SUCCESS
-} from '../actions/auth/loginActions'
+  LOGIN_SUCCESS,
+  REGISTER_SUCCESS
+} from '../actions/auth/localAuthActions'
 import {
   LOGOUT_SUCCESS
 } from '../actions/auth/logoutActions'
@@ -17,13 +18,13 @@ import {
 import Immutable, { Map, List} from 'immutable';
 
 // Checks if there is a saved token and it's still valid
-const token = localStorage.getItem('id_token');
+const token = localStorage.getItem('token');
 const isTokenValid = !!token && !isTokenExpired(token);
 
-let profileToken = JSON.parse(localStorage.getItem('profile')) || {};
+let userToken = JSON.parse(localStorage.getItem('user')) || {};
 
 const initialState = Map({
-  profile: Immutable.fromJS(profileToken),
+  profile: Immutable.fromJS(userToken),
   isFetchingPosts: false,
   didInvalidate: false,
   posts: List(),
@@ -33,12 +34,13 @@ const initialState = Map({
 
 function profile(state = initialState, action) {
   switch (action.type) {
-    case LOCK_SUCCESS:
-      let profileToken = JSON.parse(localStorage.getItem('profile'));
+    case LOGIN_SUCCESS:
+    case REGISTER_SUCCESS:
+      let userToken = JSON.parse(localStorage.getItem('user'));
       return state.set('isFetching', false)
         .set('isAuthenticated', true)
         .set('errorMessage', '')
-        .set('profile', Immutable.fromJS(profileToken))
+        .set('profile', Immutable.fromJS(userToken))
 
     case LOGOUT_SUCCESS:
       return state.set('isFetching', true)

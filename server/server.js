@@ -10,7 +10,7 @@ const methodOverride = require('method-override');
 const favicon = require('express-favicon');
 const logger = require('morgan');
 const errorhandler = require('errorhandler');
-const jwt = require('express-jwt');
+const passport = require('passport');
 const isDeveloping = process.env.NODE_ENV !== 'production';
 let webpackMiddleware;
 let webpackHotMiddleware;
@@ -22,15 +22,18 @@ if (isDeveloping) {
 }
 const db = require('./models');
 const post = require('./routes/post');
+const auth = require('./routes/auth');
 const port = isDeveloping ? 3000 : process.env.PORT;
 const host = '0.0.0.0';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
+app.use(passport.initialize());
 // app.use(favicon(`${__dirname}/favicon.ico`));
 
 app.use('/post', post);
+app.use('/auth', auth);
 
 if (isDeveloping) {
   app.set('host', 'http://localhost');

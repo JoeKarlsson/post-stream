@@ -1,28 +1,60 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styles from './Login.scss';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import LoginForm from './LoginForm';
+import './Login.scss';
 
-export default class Login extends Component {
-  render() {
-    const { errorMessage } = this.props;
+const Login = ({ isAuthenticated, history }) => {
+  const [isRegister, setIsRegister] = useState(false);
 
-    return (
-      <div>
-        <li>[ <span className={styles.loginButton} onClick={(event) => this.handleClick(event)}>login</span> ]</li>
+  const handleSuccess = () => {
+    if (history) {
+      history.push('/');
+    }
+  };
 
-        {errorMessage &&
-          <p style={{ color: 'red' }}>{errorMessage}</p>
-        }
-      </div>
-    )
+  if (isAuthenticated) {
+    if (history) {
+      history.push('/');
+    }
+    return null;
   }
 
-  handleClick(event) {
-    this.props.onLoginClick();
-  };
+  return (
+    <div className="login">
+      <div className="login-container">
+        <h1>PostStream</h1>
+        <p>{isRegister ? 'Create your account' : 'Sign in to your account'}</p>
+
+        <LoginForm
+          isRegister={isRegister}
+          onSuccess={handleSuccess}
+        />
+
+        <div className="auth-switch">
+          <p>
+            {isRegister ? 'Already have an account?' : "Don't have an account?"}
+            <button
+              type="button"
+              className="switch-button"
+              onClick={() => setIsRegister(!isRegister)}
+            >
+              {isRegister ? 'Sign In' : 'Create Account'}
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-Login.propTypes = {
-  onLoginClick: PropTypes.func.isRequired,
-  errorMessage: PropTypes.string
-};
+function mapStateToProps(state) {
+  const { profile } = state.root;
+
+  return {
+    isAuthenticated: profile.get('isAuthenticated'),
+    isFetching: profile.get('isFetching'),
+    errorMessage: profile.get('errorMessage')
+  };
+}
+
+export default connect(mapStateToProps)(Login);

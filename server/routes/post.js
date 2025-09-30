@@ -5,21 +5,10 @@ const router = express.Router();
 const db = require('./../models');
 const Post = db.Post;
 const Comment = db.Comment;
-const { expressjwt: jwt } = require('express-jwt');
+const { authenticateJWT, handleUnauthorized } = require('./../middleware/jwt');
 
-const authenticate = jwt({
-  secret: process.env.AUTH0_CLIENT_SECRET ? Buffer.from(process.env.AUTH0_CLIENT_SECRET, 'base64') : 'fallback-secret',
-  audience: process.env.AUTH0_CLIENT_ID,
-  algorithms: ['HS256']
-});
-
-function handleUnauth(err, req, res, next) {
-  if (err.name === 'UnauthorizedError') {
-    res.status(err.status).send(err.message);
-  } else {
-    next();
-  }
-};
+const authenticate = authenticateJWT;
+const handleUnauth = handleUnauthorized;
 
 const exists = (req) => {
   if (typeof parseInt(req.params.id) === 'number') {

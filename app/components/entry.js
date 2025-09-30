@@ -39,7 +39,6 @@ root.render(
           <Route path='/user/:userName' element={<Profile />} />
           <Route path='/user/:userName/edit' element={<EditProfile />} />
           <Route path='/login' element={<Login />} />
-          <Route path="access_token=:token" element={<Login />} />
           <Route path='/logout' element={<Logout />} />
           <Route path='*' element={<NoMatch />} />
         </Route>

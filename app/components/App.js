@@ -17,7 +17,8 @@ class App extends Component {
     const {
       dispatch,
       isAuthenticated,
-      errorMessage
+      errorMessage,
+      user
     } = this.props;
 
     return (
@@ -26,6 +27,7 @@ class App extends Component {
           isAuthenticated={isAuthenticated}
           errorMessage={errorMessage}
           dispatch={dispatch}
+          user={user}
         />
 
         <div className={styles.content}>
@@ -42,10 +44,12 @@ class App extends Component {
 
 function mapStateToProps(state) {
   const { profile } = state.root;
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   return {
     isAuthenticated: profile.get('isAuthenticated'),
     errorMessage: profile.get('errorMessage'),
+    user
   }
 }
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import NavLink from '../navigation/NavLink';
 import Login from '../auth/login/Login';
 import LogoutButton from '../auth/logout/LogoutButton';
-import { login } from '../../../actions/auth/loginActions';
+import { login } from '../../../actions/auth/localAuthActions';
 import { logoutUser } from '../../../actions/auth/logoutActions';
 import styles from './Header.scss';
 
@@ -11,10 +11,9 @@ class Header extends Component {
     const {
       dispatch,
       isAuthenticated,
-      errorMessage
+      errorMessage,
+      user
     } = this.props;
-
-    const profile = JSON.parse(localStorage.getItem('profile'));
 
     return (
       <div>
@@ -23,13 +22,10 @@ class Header extends Component {
           <ul className={styles.header_nav}>
             <li>[ <NavLink to='/about'>?</NavLink> ]</li>
             {!isAuthenticated &&
-              <Login
-                errorMessage={errorMessage}
-                onLoginClick={() => dispatch(login())}
-              />
+              <li>[ <NavLink to='/login'>login</NavLink> ]</li>
             }
             {isAuthenticated &&
-              <li>[ <NavLink to={`/user/${profile.user_id}`}>profile</NavLink> ]</li>
+              <li>[ <NavLink to={`/user/${user.username}`}>profile</NavLink> ]</li>
             }
             {isAuthenticated &&
               <LogoutButton onLogoutClick={() => dispatch(logoutUser())} />

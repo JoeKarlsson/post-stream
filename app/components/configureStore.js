@@ -7,7 +7,7 @@ import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import * as reducers from '../reducers';
 import api from '../middleware/api';
-import auth0api from '../middleware/auth0api';
+import localApi from '../middleware/localApi';
 
 const reducer = combineReducers(reducers);
 const loggerMiddleware = createLogger({
@@ -20,7 +20,7 @@ export default function configureStore(preloadedState) {
     reducer,
     preloadedState,
     applyMiddleware(
-      auth0api,
+      localApi,
       api,
       thunkMiddleware,
       loggerMiddleware
