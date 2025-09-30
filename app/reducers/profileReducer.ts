@@ -36,7 +36,7 @@ function profile(state = initialState, action) {
   switch (action.type) {
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS: {
-      const userToken = JSON.parse(localStorage.getItem('user'));
+      let userToken = JSON.parse(localStorage.getItem('user'));
       return state.set('isFetching', false)
         .set('isAuthenticated', true)
         .set('errorMessage', '')

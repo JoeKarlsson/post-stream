@@ -70,8 +70,8 @@ The Docker setup automatically handles:
 
 1. **Run database migrations and seeders:**
 
-   npx sequelize db:migrate
-   npx sequelize db:seed:all
+   npm run db:migrate
+   npm run db:seed
 
 1. **Setup Auth0 credentials:**
    - Create an account at [Auth0](https://auth0.com/docs/overview)
@@ -118,6 +118,10 @@ PostStream now uses modern build tools for improved performance:
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
 - `npm test` - Run server tests
+- `npm run db:migrate` - Run database migrations
+- `npm run db:seed` - Seed database with sample data
+- `npm run db:seed:undo` - Remove all seeded data
+- `npm run db:reset` - Reset database by undoing and re-running seeders
 
 ## Update Your Project
 
@@ -210,6 +214,38 @@ This project includes Docker support for easier development and deployment. The 
 The application runs on port 3002 (mapped from container port 3000) to avoid conflicts with other services. The database runs on the standard PostgreSQL port 5432.
 
 For detailed Docker setup instructions, see [DOCKER_README.md](DOCKER_README.md).
+
+## Database Management
+
+PostStream uses PostgreSQL with Sequelize ORM for database management. The application includes comprehensive seeders that populate the database with realistic test data.
+
+### Database Scripts
+
+- **`npm run db:migrate`** - Run database migrations to set up the schema
+- **`npm run db:seed`** - Populate database with sample users, posts, and comments
+- **`npm run db:seed:undo`** - Remove all seeded data (keeps schema intact)
+- **`npm run db:reset`** - Reset database by undoing and re-running all seeders
+
+### Sample Data
+
+The seeders create:
+
+- **3 Users** with complete profiles and authentication:
+  - `johndoe131` - Software developer and tech enthusiast
+  - `janedoe343` - Designer and creative thinker  
+  - `joejoebinks131` - Full-stack developer and coffee lover
+
+- **9 Posts** with realistic content covering various topics
+- **10 Comments** with proper relationships and conversation flow
+
+All user passwords are set to `password123` for testing purposes.
+
+### Database Schema
+
+- **Users**: Authentication, profile information, and user preferences
+- **Posts**: User-generated content with comment counts and timestamps
+- **Comments**: Threaded comments with parent-child relationships
+- **Foreign Keys**: Proper relationships between all entities
 
 ## Credits
 

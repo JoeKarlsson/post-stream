@@ -1,11 +1,18 @@
 import { handleApiError } from '../utils/errorHandler';
 import { logApiError } from '../utils/errorLogger';
+import { ApiCallConfig, ApiMiddlewareAction, RootState } from '../types';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
 
-function callApi(endpoint, method = 'GET', body = null, headers = {}, authenticated = false) {
+function callApi(
+  endpoint: string, 
+  method: string = 'GET', 
+  body: string | null = null, 
+  headers: Record<string, string> = {}, 
+  authenticated: boolean = false
+): Promise<any> {
   const url = API_BASE_URL + endpoint;
-  const config = {
+  const config: RequestInit = {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -48,14 +55,15 @@ function callApi(endpoint, method = 'GET', body = null, headers = {}, authentica
 
 export const api = Symbol('Call API');
 
-export default store => next => action => {
+export default (store: any) => (next: any) => (action: any) => {
   const callAPI = action[api];
 
   if (typeof callAPI === 'undefined') {
     return next(action);
   }
 
-  let { endpoint, method, body, headers, authenticated, types } = callAPI;
+  let { endpoint } = callAPI;
+  const { method, body, headers, authenticated, types } = callAPI;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());

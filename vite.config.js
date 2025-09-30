@@ -7,23 +7,44 @@ export default defineConfig({
     plugins: [
         react({
             include: /\.(jsx|js|tsx|ts)$/,
+            jsxImportSource: 'react',
         })
     ],
     root: 'app',
     esbuild: {
-        loader: 'jsx',
-        include: /app\/.*\.js$/,
+        loader: 'tsx',
+        include: /app\/.*\.(js|jsx|ts|tsx)$/,
         exclude: [],
     },
     optimizeDeps: {
         esbuildOptions: {
             loader: {
                 '.js': 'jsx',
+                '.ts': 'tsx',
+                '.tsx': 'tsx',
             },
         },
         // Force re-bundling of dependencies to fix source map issues
         force: true,
-        include: ['twemoji'],
+        include: [
+            'twemoji',
+            'cookie',
+            'set-cookie-parser',
+            'use-sync-external-store',
+            'redux-logger',
+            'redux-thunk',
+            'prop-types',
+            'remarkable',
+            'immutable',
+            'jwt-decode'
+        ],
+        // Exclude problematic dependencies from pre-bundling (but keep react and react-dom)
+        exclude: ['react-redux', 'react-router-dom', '@reduxjs/toolkit'],
+    },
+    resolve: {
+        alias: {
+            'use-sync-external-store/with-selector.js': 'use-sync-external-store/with-selector'
+        }
     },
     define: {
         __NODE_ENV__: JSON.stringify(process.env.NODE_ENV),
@@ -34,16 +55,16 @@ export default defineConfig({
         // Note: AUTH0_CLIENT_SECRET and AUTH0_TOKEN should never be exposed to frontend
         // They should only be used server-side
     },
-    // Disable source maps to fix pre-bundled dependency errors
+    // Configure source maps for development
     cssCodeSplit: false,
-    sourcemap: true,
+    sourcemap: false,
     build: {
         outDir: '../server/dist',
         emptyOutDir: true,
         rollupOptions: {
             input: path.resolve(__dirname, 'app/index.html')
         },
-        sourcemap: true
+        sourcemap: false
     },
     server: {
         port: 3000,

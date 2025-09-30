@@ -1,12 +1,10 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  followUser,
-} from '../../../../actions/profile/updateProfileActions';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { followUser } from "../../../../actions/profile/updateProfileActions";
 
 const FollowButton = ({ user_id }) => {
   const dispatch = useDispatch();
-  const profile = useSelector(state => state.root.profile.get('profile').toJS());
+  const profile = useSelector((state) => state.profile.get("profile").toJS());
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -19,18 +17,18 @@ const FollowButton = ({ user_id }) => {
       user_metadata: {
         following: followings,
         ...user_metadata,
-      }
+      },
     };
     dispatch(followUser(profile, metadata));
   };
 
   return (
     <div>
-      {profile.user_id !== user_id &&
+      {profile.user_id !== user_id && (
         <div>
           [ <span onClick={handleClick}>follow</span> ]
         </div>
-      }
+      )}
     </div>
   );
 };

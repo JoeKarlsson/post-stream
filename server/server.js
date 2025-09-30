@@ -57,6 +57,31 @@ app.use(methodOverride());
 app.use(passport.initialize());
 // app.use(favicon(`${__dirname}/favicon.ico`));
 
+// Health check endpoint
+app.get('/health', async (req, res) => {
+  try {
+    // Check database connectivity
+    await db.sequelize.authenticate();
+
+    res.status(200).json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      database: 'connected',
+      environment: process.env.NODE_ENV || 'development'
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      database: 'disconnected',
+      environment: process.env.NODE_ENV || 'development',
+      error: error.message
+    });
+  }
+});
+
 app.use('/post', post);
 app.use('/auth', authLimiter, auth);
 
