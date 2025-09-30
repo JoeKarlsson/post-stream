@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Post from '../singlePost/Post';
 import styles from './PostList.scss';
 
@@ -8,7 +9,7 @@ class PostList extends Component {
       posts,
     } = this.props;
 
-    const postNode = posts.map(( post, i ) => {
+    const postNode = posts.map((post, i) => {
       return (
         <Post
           {...post}
@@ -22,11 +23,11 @@ class PostList extends Component {
     return (
       <div className={styles.PostList}>
 
-        { posts.length === 0 &&
+        {posts.length === 0 &&
           <h2>Loading...</h2>
         }
 
-        { posts.length > 2 &&
+        {posts.length > 2 &&
           <div>
             {postNode}
           </div>
@@ -37,7 +38,7 @@ class PostList extends Component {
 };
 
 PostList.propTypes = {
-  posts: React.PropTypes.array.isRequired,
+  posts: PropTypes.array.isRequired,
 };
 
 export default PostList;

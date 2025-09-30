@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 import styles from './NavLink.scss';
 
 class NavLink extends React.Component {
   render() {
-    return <Link {...this.props} activeClassName={styles.active}/>;
+    return <RouterNavLink {...this.props} className={({ isActive }) => isActive ? styles.active : ''} />;
   }
 }
 

@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $blue: #1EAEDB;
 $teal: #00B8A9;
 $red: #F90000;
@@ -8,10 +10,10 @@ $lightGreen: #61D76B;
 $forrestGreen: #00CE58;
 
 .username {
-  color: darken( $blue, 20% );
+  color: color.adjust($blue, $lightness: -20%);
 }
 .timeStamp {
-  color: darken( $forrestGreen, 20% );
+  color: color.adjust($forrestGreen, $lightness: -20%);
 }
 
 .teal {

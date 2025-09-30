@@ -1,30 +1,26 @@
 'use strict';
-module.exports = function(sequelize, DataTypes) {
-  var Comment = sequelize.define('Comment', {
+module.exports = function (sequelize, DataTypes) {
+  const Comment = sequelize.define('Comment', {
     body: {
-      type : DataTypes.STRING,
-      allowNull : false,
-      required : true
+      type: DataTypes.STRING,
+      allowNull: false,
+      required: true
     },
     commentCount: {
-      type : DataTypes.INTEGER,
+      type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: false
     },
     userID: {
-      type : DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
-      required : true
+      required: true
     },
   }, {
-    classMethods: {
-      associate: function(models) {
-        Comment.belongsTo(models.Post);
-      }
+    associate: function (models) {
+      Comment.belongsTo(models.Post);
     }
   });
-
-  Comment.isHierarchy();
 
   return Comment;
 };

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 const Remarkable = require('remarkable');
 const emojione = require('emojione');
@@ -25,7 +26,7 @@ class Post extends Component {
       'forrestGreen'
     ];
 
-    const color = colors[Math.floor(Math.random()*colors.length)];
+    const color = colors[Math.floor(Math.random() * colors.length)];
     return color;
   }
 
@@ -42,31 +43,31 @@ class Post extends Component {
       <div className={styles.post}>
 
         <div>
-          <span className={ styles.username }>{ username}</span> | {realName } | <span className={ styles.timeStamp }>{ new Date(createdAt).toLocaleTimeString() }</span>
+          <span className={styles.username}>{username}</span> | {realName} | <span className={styles.timeStamp}>{new Date(createdAt).toLocaleTimeString()}</span>
         </div>
 
         <div>
-          <span className={ styles[color] } dangerouslySetInnerHTML={ this.rawMarkup() } />
+          <span className={styles[color]} dangerouslySetInnerHTML={this.rawMarkup()} />
         </div>
 
-        <hr/>
+        <hr />
       </div>
     );
   }
 };
 
 Post.propTypes = {
-  id: React.PropTypes.number,
-  comments: React.PropTypes.arrayOf(React.PropTypes.object),
-  showComments: React.PropTypes.bool,
-  isParentPost: React.PropTypes.bool,
-  realName: React.PropTypes.string,
-  username: React.PropTypes.string,
-  body: React.PropTypes.string,
-  created_at: React.PropTypes.number,
-  commentCount: React.PropTypes.number,
-  childId: React.PropTypes.number,
-  childContext: React.PropTypes.object
+  id: PropTypes.number,
+  comments: PropTypes.arrayOf(PropTypes.object),
+  showComments: PropTypes.bool,
+  isParentPost: PropTypes.bool,
+  realName: PropTypes.string,
+  username: PropTypes.string,
+  body: PropTypes.string,
+  created_at: PropTypes.number,
+  commentCount: PropTypes.number,
+  childId: PropTypes.number,
+  childContext: PropTypes.object
 };
 
 const mapStateToProps = (state, ownProps) => {

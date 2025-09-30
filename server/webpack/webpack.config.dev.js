@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const dotenv = require('dotenv');
@@ -14,19 +13,20 @@ const resolve = path.resolve;
 const dotEnvVars = dotenv.config();
 
 const envVariables =
-    Object.assign({}, dotEnvVars);
+  Object.assign({}, dotEnvVars);
 
 const defines =
   Object.keys(envVariables)
-  .reduce((memo, key) => {
-    const val = JSON.stringify(envVariables[key]);
-    memo[`__${key.toUpperCase()}__`] = val;
-    return memo;
-  }, {
-    __NODE_ENV__: JSON.stringify(NODE_ENV)
-  });
+    .reduce((memo, key) => {
+      const val = JSON.stringify(envVariables[key]);
+      memo[`__${key.toUpperCase()}__`] = val;
+      return memo;
+    }, {
+      __NODE_ENV__: JSON.stringify(NODE_ENV)
+    });
 
 module.exports = {
+  mode: 'development',
   devtool: 'eval-source-map',
   entry: [
     'webpack-hot-middleware/client?reload=true',
@@ -36,9 +36,10 @@ module.exports = {
     path: path.resolve(__dirname, '../dist/'),
     filename: '[name].js',
     publicPath: '/',
+    clean: true,
   },
   resolve: {
-    extensions: ['', '.js'],
+    extensions: ['.js', '.jsx'],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -46,53 +47,75 @@ module.exports = {
       inject: 'body',
       filename: 'index.html',
     }),
-    new webpack.ProvidePlugin({
-      'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
-    }),
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin(defines),
   ],
   module: {
-    preLoaders: [
+    rules: [
       {
-        test: /\.js$/,
-        loader: 'eslint',
-        exclude: 'node_modules',
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+            plugins: [
+              '@babel/plugin-transform-class-properties',
+              '@babel/plugin-transform-object-rest-spread'
+            ]
+          }
+        }
+      },
+      {
+        test: /\.json$/,
+        type: 'json'
+      },
+      {
+        test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: '[name]-[hash:6][ext]'
+        }
+      },
+      {
+        test: /\.(mp4|webm)$/,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10000
+          }
+        }
+      },
+      {
+        test: /(\.scss$|\.css$)/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[path][local]__[hash:base64:5]'
+              },
+              importLoaders: 1
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              api: 'modern'
+            }
+          }
+        ],
       }
     ],
-    loaders: [{
-      test: /(\.js$)/,
-      exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        presets: ['react', 'es2015', 'stage-0'],
-      },
-    }, {
-      test: /\.json?$/,
-      loader: 'json',
-    }, {
-      test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-      loader: 'file?name=[name]-[hash:6].[ext]',
-    }, {
-      test: /\.(mp4|webm)$/,
-      loader: 'url?limit=10000'
-    }, {
-      test: /(\.scss$|\.css$)/,
-      loaders: [
-        'style',
-        'css?modules&importLoaders=1' +
-        '&localIdentName=[path][local]__[hash:base64:5]!sass',
-        'sass',
-      ],
-    }],
   },
-  eslint: {
-    configFile: path.join(__dirname, 'eslint.js'),
-    useEslintrc: false
-  },
-  postcss: function() {
-    return [autoprefixer];
+  devServer: {
+    static: {
+      directory: path.join(__dirname, '../dist'),
+    },
+    compress: true,
+    port: 3000,
+    hot: true,
+    historyApiFallback: true,
   },
 };

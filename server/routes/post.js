@@ -5,11 +5,12 @@ const router = express.Router();
 const db = require('./../models');
 const Post = db.Post;
 const Comment = db.Comment;
-const jwt = require('express-jwt');
+const { expressjwt: jwt } = require('express-jwt');
 
 const authenticate = jwt({
-  secret: new Buffer(process.env.AUTH0_CLIENT_SECRET,  'base64'),
-  audience: process.env.AUTH0_CLIENT_ID
+  secret: process.env.AUTH0_CLIENT_SECRET ? Buffer.from(process.env.AUTH0_CLIENT_SECRET, 'base64') : 'fallback-secret',
+  audience: process.env.AUTH0_CLIENT_ID,
+  algorithms: ['HS256']
 });
 
 function handleUnauth(err, req, res, next) {
@@ -46,45 +47,45 @@ router.route('/')
         ['createdAt', 'DESC']
       ]
     })
-    .then((posts) => {
-      res.json(posts);
-    })
-    .catch((err) => {
-      res.json({ error: err });
-    });
+      .then((posts) => {
+        res.json(posts);
+      })
+      .catch((err) => {
+        res.json({ error: err });
+      });
   })
 
 router.route('/:id')
   // GET one post by ID
   .get((req, res) => {
-    if(exists) {
+    if (exists) {
       Post.findOne({
         id: req.params.id
       })
-      .then((post) => {
-        res.json(post);
-      })
-      .catch((err) => {
-        res.json({ error: err });
-      })
+        .then((post) => {
+          res.json(post);
+        })
+        .catch((err) => {
+          res.json({ error: err });
+        })
     } else {
       res.json({ success: false });
     }
   })
   // DELETE post from database by ID
   .delete(authenticate, handleUnauth, (req, res) => {
-    if(exists) {
+    if (exists) {
       Post.destroy({
-        where : {
-          id : req.params.id
+        where: {
+          id: req.params.id
         }
       })
-      .then((data) => {
-        res.json({ success: true });
-      })
-      .catch((err) => {
-        res.json({ error: err });
-      })
+        .then((data) => {
+          res.json({ success: true });
+        })
+        .catch((err) => {
+          res.json({ error: err });
+        })
     } else {
       res.json({ success: false });
     }
@@ -93,23 +94,23 @@ router.route('/:id')
 router.route('/:id/edit')
   // find by id and update the post
   .put(authenticate, handleUnauth, (req, res) => {
-    if(exists) {
+    if (exists) {
       Post.findById(req.params.id)
-      .then((foundPost) => {
-        // then update
-        foundPost.update({
-          body : req.body.body,
-        })
-        .then((newPost) => {
-          res.json(newPost);
+        .then((foundPost) => {
+          // then update
+          foundPost.update({
+            body: req.body.body,
+          })
+            .then((newPost) => {
+              res.json(newPost);
+            })
+            .catch((err) => {
+              res.json({ error: err });
+            })
         })
         .catch((err) => {
           res.json({ error: err });
         })
-      })
-      .catch((err) => {
-        res.json({ error: err });
-      })
     } else {
       res.json({ success: false });
     }
@@ -123,16 +124,16 @@ router.route('/user/:username')
       order: [
         ['createdAt', 'DESC']
       ],
-      where : {
-        userID : req.params.username
+      where: {
+        userID: req.params.username
       }
     })
-    .then((userPosts) => {
-      res.json(userPosts);
-    })
-    .catch((err) => {
-      res.json({ error: err });
-    })
+      .then((userPosts) => {
+        res.json(userPosts);
+      })
+      .catch((err) => {
+        res.json({ error: err });
+      })
   })
 
 router.route('/new')
@@ -142,12 +143,12 @@ router.route('/new')
       body: req.body.body,
       userID: req.body.userID
     })
-    .then((post) => {
-      res.json(post);
-    })
-    .catch((err) => {
-      res.json({ error: err });
-    })
+      .then((post) => {
+        res.json(post);
+      })
+      .catch((err) => {
+        res.json({ error: err });
+      })
   })
 
 // Commments on a Post
@@ -157,19 +158,19 @@ router.route('/:id/comments')
     Comment.findAll({
       hierarchy: true,
       where: {
-        PostId : req.params.id
+        PostId: req.params.id
       }
     })
-    .then((comments) => {
-      res.json(comments);
-    })
+      .then((comments) => {
+        res.json(comments);
+      })
   })
 
 router.route('/:PostId/comments/:CommentId/new')
   // create a new comment on a post
   .post(authenticate, handleUnauth, (req, res) => {
     let parentId = null;
-    if(req.params.CommentId != 0){
+    if (req.params.CommentId != 0) {
       parentId = req.params.CommentId;
     }
     Comment.create({
@@ -178,45 +179,45 @@ router.route('/:PostId/comments/:CommentId/new')
       PostId: req.params.PostId,
       parentId
     })
-    .then((comment) => {
-      res.json(comment);
+      .then((comment) => {
+        res.json(comment);
 
-      Post.findById(req.params.PostId)
-      .then((foundPost) => {
-        // then update
-        foundPost.update({
-          commentCount : ++foundPost.commentCount,
-        })
-        .catch((err) => {
-          console.error(err)
-        })
+        Post.findById(req.params.PostId)
+          .then((foundPost) => {
+            // then update
+            foundPost.update({
+              commentCount: ++foundPost.commentCount,
+            })
+              .catch((err) => {
+                console.error(err)
+              })
+          })
       })
-    })
-    .catch((err) => {
-      res.json({ error: err });
-    })
+      .catch((err) => {
+        res.json({ error: err });
+      })
   })
 
 router.route('/:PostId/comments/:CommentId/edit')
   // find comment by id and update the comment
   .put(authenticate, handleUnauth, (req, res) => {
-    if(exists) {
+    if (exists) {
       Comment.findById(req.params.CommentId)
-      .then((foundComment) => {
-        // then update
-        foundComment.update({
-          body : req.body.body,
-        })
-        .then((updatedComment) => {
-          res.json(updatedComment);
+        .then((foundComment) => {
+          // then update
+          foundComment.update({
+            body: req.body.body,
+          })
+            .then((updatedComment) => {
+              res.json(updatedComment);
+            })
+            .catch((err) => {
+              res.json({ error: err });
+            })
         })
         .catch((err) => {
           res.json({ error: err });
         })
-      })
-      .catch((err) => {
-        res.json({ error: err });
-      })
     } else {
       res.json({ success: false });
     }

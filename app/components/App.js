@@ -2,8 +2,9 @@
   eslint no-unused-vars: 0
 */
 
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Outlet } from 'react-router-dom';
 import Header from './shared/header/Header';
 import Footer from './shared/footer/Footer';
 import normalize from './shared/styles/normalizer.scss';
@@ -15,30 +16,21 @@ class App extends Component {
   render() {
     const {
       dispatch,
-      quote,
       isAuthenticated,
       errorMessage
     } = this.props;
 
-    let children = null;
-    if (this.props.children) {
-      children = React.cloneElement(this.props.children, {
-        isAuthenticated: isAuthenticated,
-      })
-    }
-
-
     return (
-      <div className={ styles.app }>
+      <div className={styles.app}>
         <Header
           isAuthenticated={isAuthenticated}
           errorMessage={errorMessage}
           dispatch={dispatch}
         />
 
-        <div className={ styles.content }>
-          <div className={ skeleton.container }>
-            { children }
+        <div className={styles.content}>
+          <div className={skeleton.container}>
+            <Outlet context={{ isAuthenticated }} />
           </div>
         </div>
 
@@ -47,12 +39,6 @@ class App extends Component {
     );
   }
 };
-
-App.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
-  errorMessage: PropTypes.string,
-}
 
 function mapStateToProps(state) {
   const { profile } = state.root;

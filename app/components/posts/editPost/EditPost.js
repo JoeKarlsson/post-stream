@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   submitUpdatedPost,
@@ -46,10 +47,10 @@ class EditPost extends Component {
             onChange={this.handleBodyChange}
           ></textarea>
           <div>
-            [<span className={ styles.saveButton }  onClick={this.handleSubmitUpdatedPost}> save </span> ]
+            [<span className={styles.saveButton} onClick={this.handleSubmitUpdatedPost}> save </span> ]
           </div>
           <div>
-            [ <span className={ styles.cancelButton } onClick={this.handleCancel}> cancel </span> ]
+            [ <span className={styles.cancelButton} onClick={this.handleCancel}> cancel </span> ]
           </div>
         </form>
       </div>
@@ -58,7 +59,7 @@ class EditPost extends Component {
 };
 
 EditPost.propTypes = {
-  id: React.PropTypes.number,
+  id: PropTypes.number,
 };
 
 const mapStateToProps = (state, ownProps) => {

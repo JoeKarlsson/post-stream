@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $orange: #E6834A;
 
 .active {
@@ -5,5 +7,5 @@ $orange: #E6834A;
 };
 
 .active:hover {
-  color: darken( $orange, 20% ) !important;
+  color: color.adjust($orange, $lightness: -20%) !important;
 };

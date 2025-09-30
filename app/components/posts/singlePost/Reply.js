@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   onToggleReplyMode,
@@ -26,7 +27,7 @@ class Reply extends Component {
     dispatch(handleReplyBodyChange(e.target.value, index))
   }
 
-  handleSubmitReply(e){
+  handleSubmitReply(e) {
     e.preventDefault();
     const {
       dispatch,
@@ -47,11 +48,11 @@ class Reply extends Component {
   render() {
     const { replyMode, replyBody } = this.props;
     return (
-      <div className={ styles.destroyPost }>
-        { replyMode &&
-          <div className={ styles.u_full_width }>
+      <div className={styles.destroyPost}>
+        {replyMode &&
+          <div className={styles.u_full_width}>
             <form>
-              <label className={ styles.replyLabel } htmlFor="reply">reply</label>
+              <label className={styles.replyLabel} htmlFor="reply">reply</label>
               <textarea
                 ref="reply"
                 type='text'
@@ -59,24 +60,24 @@ class Reply extends Component {
                 rows='3'
                 className="u-full-width"
                 placeholder='say something nice...'
-                value={ replyBody }
-                onChange={ this.handleBodyChange }
+                value={replyBody}
+                onChange={this.handleBodyChange}
               ></textarea>
               <div>
-                [<span className={ styles.postReplyBotton } onClick={this.handleSubmitReply}> reply </span>]
+                [<span className={styles.postReplyBotton} onClick={this.handleSubmitReply}> reply </span>]
               </div>
               <div>
-                [<span className={ styles.cancelReplyButton } onClick={this.handleToggleReplyMode}> cancel </span>]
+                [<span className={styles.cancelReplyButton} onClick={this.handleToggleReplyMode}> cancel </span>]
 
               </div>
             </form>
           </div>
         }
-        { !replyMode &&
+        {!replyMode &&
           <div>
             [ <span
-              className={ styles.replyButton }
-              onClick={ this.handleToggleReplyMode }
+              className={styles.replyButton}
+              onClick={this.handleToggleReplyMode}
             >reply</span> ]
           </div>
         }
@@ -86,7 +87,7 @@ class Reply extends Component {
 };
 
 Reply.propTypes = {
-  id: React.PropTypes.number,
+  id: PropTypes.number,
 };
 
 const mapStateToProps = (state, ownProps) => {

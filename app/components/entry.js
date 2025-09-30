@@ -3,13 +3,12 @@
 */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import {
-  Router,
-  Route,
-  browserHistory,
-  IndexRoute
-} from 'react-router';
+  BrowserRouter,
+  Routes,
+  Route
+} from 'react-router-dom';
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
 import App from './App';
@@ -22,21 +21,29 @@ import About from './static/about/About';
 import NoMatch from './static/noMatch/NoMatch';
 
 const store = configureStore();
+const container = document.getElementById('root');
+const root = createRoot(container);
 
-ReactDOM.render(
-  <Provider store={ store }>
-    <Router history={ browserHistory }>
-      <Route path='/' component={ App }>
-        <IndexRoute component={ AllPosts } />
-        <Route path='/about' component={ About } />
-        <Route path='/user/:userName' component={ Profile } />
-        <Route path='/user/:userName/edit' component={ EditProfile } />
-        <Route path='/login' component={ Login } />
-        <Route path="access_token=:token" component={Login} /> //to prevent router errors
-        <Route path='/logout' component={ Logout } />
-        <Route path='*' component={ NoMatch } />
-      </Route>
-    </Router>
-  </Provider>,
-  document.getElementById('root')
+root.render(
+  <Provider store={store}>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}
+    >
+      <Routes>
+        <Route path='/' element={<App />}>
+          <Route index element={<AllPosts />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/user/:userName' element={<Profile />} />
+          <Route path='/user/:userName/edit' element={<EditProfile />} />
+          <Route path='/login' element={<Login />} />
+          <Route path="access_token=:token" element={<Login />} />
+          <Route path='/logout' element={<Logout />} />
+          <Route path='*' element={<NoMatch />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  </Provider>
 );

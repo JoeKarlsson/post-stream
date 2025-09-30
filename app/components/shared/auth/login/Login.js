@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './Login.scss';
 
 export default class Login extends Component {
@@ -10,7 +11,7 @@ export default class Login extends Component {
         <li>[ <span className={styles.loginButton} onClick={(event) => this.handleClick(event)}>login</span> ]</li>
 
         {errorMessage &&
-          <p style={{color:'red'}}>{errorMessage}</p>
+          <p style={{ color: 'red' }}>{errorMessage}</p>
         }
       </div>
     )

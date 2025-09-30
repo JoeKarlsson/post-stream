@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $white: white;
 $charade: #2A2937;
 
@@ -8,7 +10,7 @@ header {
   font-size: 1.25rem;
   display: flex;
   flex-direction: row;
-  background-color: darken( $charade, 3% );
+  background-color: color.adjust($charade, $lightness: -3%);
 }
 
 .header_bar {

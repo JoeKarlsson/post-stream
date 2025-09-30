@@ -8,7 +8,6 @@ const webpack = require('webpack');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const favicon = require('express-favicon');
-const Promise = require('bluebird');
 const logger = require('morgan');
 const errorhandler = require('errorhandler');
 const jwt = require('express-jwt');
@@ -24,16 +23,12 @@ if (isDeveloping) {
 const db = require('./models');
 const post = require('./routes/post');
 const port = isDeveloping ? 3000 : process.env.PORT;
-const host = isDeveloping ? 'localhost' :  '0.0.0.0';
+const host = '0.0.0.0';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 // app.use(favicon(`${__dirname}/favicon.ico`));
-
-Promise.onPossiblyUnhandledRejection((err) => {
-  throw new Error(err);
-});
 
 app.use('/post', post);
 
@@ -44,7 +39,6 @@ if (isDeveloping) {
   const compiler = webpack(webpackConfig);
   const middleware = webpackMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
-    contentBase: 'src',
     stats: {
       colors: true,
       hash: false,
@@ -55,7 +49,14 @@ if (isDeveloping) {
     },
   });
   const response = (req, res) => {
-    res.write(middleware.fileSystem.readFileSync(path.resolve(__dirname, 'dist/index.html')));
+    try {
+      // Try to read from webpack memory filesystem first
+      res.write(middleware.fileSystem.readFileSync(path.resolve(__dirname, 'dist/index.html')));
+    } catch (error) {
+      // Fallback to static file if webpack compilation failed
+      console.log('Webpack compilation failed, serving static HTML file');
+      res.write(fs.readFileSync(path.resolve(__dirname, 'dist/index.html')));
+    }
     res.end();
   };
 

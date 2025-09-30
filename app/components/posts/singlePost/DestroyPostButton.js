@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { destroyPost } from '../../../actions/posts/destroyPostActions';
 import styles from './DestroyPostButton.scss';
@@ -27,7 +28,7 @@ class DestroyPostButton extends Component {
 };
 
 DestroyPostButton.propTypes = {
-  id: React.PropTypes.number,
+  id: PropTypes.number,
 };
 
 const mapStateToProps = (state) => {

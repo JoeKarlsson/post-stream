@@ -1,35 +1,27 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const StatsPlugin = require('stats-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+  mode: 'production',
   entry: [
     path.join(__dirname, '../../app/components/entry.js'),
   ],
   output: {
     path: path.join(__dirname, '../dist/'),
-    filename: '[name]-[hash].min.js',
+    filename: '[name]-[contenthash].min.js',
     publicPath: '/',
+    clean: true,
   },
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
     new HtmlWebpackPlugin({
       template: 'app/index.tpl.html',
       inject: 'body',
       filename: 'index.html',
     }),
-    new ExtractTextPlugin('[name]-[hash].min.css'),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false,
-        screw_ie8: true,
-      },
-    }),
-    new StatsPlugin('webpack.stats.json', {
-      source: false,
-      modules: false,
+    new MiniCssExtractPlugin({
+      filename: '[name]-[contenthash].min.css',
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
@@ -40,49 +32,69 @@ module.exports = {
       '__AUTH0_DOMAIN__': JSON.stringify(process.env.AUTH0_DOMAIN),
       '__AUTH0_CALLBACK_URL__': JSON.stringify(process.env.AUTH0_CALLBACK_URL),
     }),
-    new webpack.ProvidePlugin({
-      'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
-    }),
   ],
   module: {
-    preLoaders: [
+    rules: [
       {
-        test: /\.js$/,
-        loader: 'eslint',
-        exclude: 'node_modules',
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+            plugins: [
+              '@babel/plugin-transform-class-properties',
+              '@babel/plugin-transform-object-rest-spread'
+            ]
+          }
+        }
+      },
+      {
+        test: /\.json$/,
+        type: 'json'
+      },
+      {
+        test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: '[name]-[hash:6][ext]'
+        }
+      },
+      {
+        test: /\.(mp4|webm)$/,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10000
+          }
+        }
+      },
+      {
+        test: /(\.scss$|\.css$)/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[path][local]__[hash:base64:5]'
+              },
+              importLoaders: 1
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              api: 'modern'
+            }
+          }
+        ],
       }
     ],
-    loaders: [{
-      test: /(\.js$)/,
-      exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        presets: ['react', 'es2015', 'stage-0'],
-      },
-    }, {
-      test: /\.json?$/,
-      loader: 'json',
-    }, {
-      test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-      loader: 'file',
-    }, {
-      test: /\.(mp4|webm)$/,
-      loader: 'url?limit=10000'
-    }, {
-      test: /(\.scss$|\.css$)/,
-      loaders: [
-        'style',
-        'css?modules&importLoaders=1' +
-        '&localIdentName=[path][local]__[hash:base64:5]!sass',
-        'sass',
-      ],
-    }],
   },
-  eslint: {
-    configFile: path.join(__dirname, 'eslint.js'),
-    useEslintrc: false
-  },
-  postcss: function() {
-    return [autoprefixer];
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
   },
 };

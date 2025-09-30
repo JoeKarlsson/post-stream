@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 const Remarkable = require('remarkable');
 const emojione = require('emojione');
@@ -36,7 +37,7 @@ class Post extends Component {
   };
 
   handleToggleComments() {
-    const {dispatch, index, showComments } = this.props;
+    const { dispatch, index, showComments } = this.props;
     dispatch(toggleShowComment(index, !showComments));
   }
 
@@ -90,7 +91,7 @@ class Post extends Component {
       'forrestGreen'
     ];
 
-    const color = colors[Math.floor(Math.random()*colors.length)];
+    const color = colors[Math.floor(Math.random() * colors.length)];
     return color;
   }
 
@@ -118,17 +119,17 @@ class Post extends Component {
     return (
       <div className={styles.post}>
 
-        { editMode === false && isParentPost &&
+        {editMode === false && isParentPost &&
           <div>
-            <div className={ styles.statusBar }>
-              [<Link to={`/user/${username}`} className={ styles.username }> { realName } </Link>] | <span className={ styles.timeStamp }>{ new Date(createdAt).toLocaleTimeString() }</span>
+            <div className={styles.statusBar}>
+              [<Link to={`/user/${username}`} className={styles.username}> {realName} </Link>] | <span className={styles.timeStamp}>{new Date(createdAt).toLocaleTimeString()}</span>
             </div>
 
-            <span className={ styles[color] } dangerouslySetInnerHTML={ this.rawMarkup() } />
+            <span className={styles[color]} dangerouslySetInnerHTML={this.rawMarkup()} />
 
-            { isAuthenticated && postUserID === profile.user_id &&
+            {isAuthenticated && postUserID === profile.user_id &&
               <div>
-                [ <span className={ styles.editButton } onClick={ this.handleEdit }>edit</span> ]
+                [ <span className={styles.editButton} onClick={this.handleEdit}>edit</span> ]
                 <DestroyPostButton
                   id={id}
                   index={index}
@@ -136,7 +137,7 @@ class Post extends Component {
 
               </div>
             }
-            { isAuthenticated &&
+            {isAuthenticated &&
               <Reply
                 id={id}
                 index={index}
@@ -151,16 +152,16 @@ class Post extends Component {
           </div>
         }
 
-        { !isParentPost &&
+        {!isParentPost &&
           <div>
-            <span className={ styles[color] } dangerouslySetInnerHTML={ this.rawMarkup() } />
+            <span className={styles[color]} dangerouslySetInnerHTML={this.rawMarkup()} />
 
-            { !showComments &&
-              <div className='comment-count' onClick={ this.handleShowingChild }>
+            {!showComments &&
+              <div className='comment-count' onClick={this.handleShowingChild}>
               </div>
             }
 
-            { showComments &&
+            {showComments &&
               <div className='comment-count' onClick={this.handleToggleComments}>
                 <CommentCount
                   numOfComments={commentCount}
@@ -170,36 +171,36 @@ class Post extends Component {
           </div>
         }
 
-        { editMode === true &&
+        {editMode === true &&
           <EditPost
             id={id}
             index={index}
           />
         }
 
-        { showComments &&
+        {showComments &&
           <div className='replies'>
 
-            { childId !== 0 &&
-              <span>[<span className={ styles.leftButton } onClick={this.handlePrev}> left </span>]</span>
+            {childId !== 0 &&
+              <span>[<span className={styles.leftButton} onClick={this.handlePrev}> left </span>]</span>
             }
 
-            { childId !== commentCount-1 &&
-              <span>[<span className={ styles.rightButton } onClick={this.handleNext}> right </span>]</span>
+            {childId !== commentCount - 1 &&
+              <span>[<span className={styles.rightButton} onClick={this.handleNext}> right </span>]</span>
             }
 
-              <Post
-                {...childContext}
-                dispatch={dispatch}
-                isParentPost={false}
-                key={childContext.id}
-              />
+            <Post
+              {...childContext}
+              dispatch={dispatch}
+              isParentPost={false}
+              key={childContext.id}
+            />
 
           </div>
         }
 
-        { isParentPost &&
-          <hr/>
+        {isParentPost &&
+          <hr />
         }
       </div>
     );
@@ -207,18 +208,18 @@ class Post extends Component {
 };
 
 Post.propTypes = {
-  id: React.PropTypes.number,
-  comments: React.PropTypes.arrayOf(React.PropTypes.object),
-  showComments: React.PropTypes.bool,
-  isParentPost: React.PropTypes.bool,
-  realName: React.PropTypes.string,
-  username: React.PropTypes.string,
-  body: React.PropTypes.string,
-  created_at: React.PropTypes.number,
-  commentCount: React.PropTypes.number,
-  childId: React.PropTypes.number,
-  childContext: React.PropTypes.object,
-  isAuthenticated: React.PropTypes.bool,
+  id: PropTypes.number,
+  comments: PropTypes.arrayOf(PropTypes.object),
+  showComments: PropTypes.bool,
+  isParentPost: PropTypes.bool,
+  realName: PropTypes.string,
+  username: PropTypes.string,
+  body: PropTypes.string,
+  created_at: PropTypes.number,
+  commentCount: PropTypes.number,
+  childId: PropTypes.number,
+  childContext: PropTypes.object,
+  isAuthenticated: PropTypes.bool,
 };
 
 const mapStateToProps = (state, ownProps) => {

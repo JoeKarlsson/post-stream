@@ -1,15 +1,16 @@
-import React, { PropTypes as T } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import LinkedAccountItem from './LinkedAccountItem'
 import AuthService from '../AuthService';
 import LinkAccountService from '../LinkAccountService'
 
 export class LinkedAccountsList extends React.Component {
   static propTypes = {
-    auth: T.instanceOf(AuthService),
-    profile: T.object
+    auth: PropTypes.instanceOf(AuthService),
+    profile: PropTypes.object
   }
 
-  render(){
+  render() {
     const { profile, auth } = this.props;
     const linker = new LinkAccountService(auth); // initializing the new helper
     let items = []
