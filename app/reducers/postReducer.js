@@ -51,13 +51,22 @@ const post = (state = initialState, action) => {
         try {
           parsedPosts = typeof action.response === 'string' ? JSON.parse(action.response) : action.response;
         } catch (error) {
-          console.error('Failed to parse posts response:', action.response);
+          // Log error using centralized logger
+          const { logError } = require('../utils/errorLogger');
+          logError('PostReducer', error, {
+            action: 'POST_SUCCESS',
+            response: action.response
+          });
           parsedPosts = [];
         }
 
         // Ensure parsedPosts is an array before mapping
         if (!Array.isArray(parsedPosts)) {
-          console.error('Posts response is not an array:', parsedPosts);
+          const { logError } = require('../utils/errorLogger');
+          logError('PostReducer', new Error('Posts response is not an array'), {
+            action: 'POST_SUCCESS',
+            parsedPosts
+          });
           parsedPosts = [];
         }
 
@@ -175,7 +184,7 @@ const post = (state = initialState, action) => {
             );
           })
             .set('showComments', true)
-            .set('childContext', parsedComments[0])
+            .set('childContext', parsedComments.length > 0 ? parsedComments[0] : null)
         })
       })
         .set('isFetchingPosts', false)

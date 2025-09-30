@@ -4,40 +4,51 @@
   no-undef: 0
 */
 
-function callApi(endpoint, authenticated=false, data={}) {
+import { handleApiError } from '../utils/errorHandler';
+import { logApiError } from '../utils/errorLogger';
+
+function callApi(endpoint, authenticated = false, data = {}) {
   let token = localStorage.getItem('id_token') || {};
 
   let config = {};
-  const {method, body, headers} = data;
+  const { method, body, headers } = data;
 
-  if (method){
+  if (method) {
     config.method = method;
   }
-  if (body){
+  if (body) {
     config.body = body;
   }
 
-  if(authenticated) {
-    if(token) {
+  if (authenticated) {
+    if (token) {
       config.headers = {
-          'Authorization': `Bearer ${token}`,
-          ...headers
-        };
+        'Authorization': `Bearer ${token}`,
+        ...headers
+      };
     } else {
-      throw new Error("No token saved!");
+      const error = new Error("No token saved!");
+      logApiError(endpoint, error, { authenticated, data });
+      throw error;
     }
   }
 
   return fetch(endpoint, config)
     .then(response =>
       response.text()
-      .then(text => ({ text, response }))
+        .then(text => ({ text, response }))
     ).then(({ text, response }) => {
       if (!response.ok) {
-        return Promise.reject(text);
+        const error = new Error(`HTTP ${response.status}: ${response.statusText}`);
+        error.response = { status: response.status, statusText: response.statusText, data: text };
+        logApiError(endpoint, error, { authenticated, data, response: { status: response.status } });
+        return Promise.reject(error);
       }
       return text
-    }).catch(err => console.log(err));
+    }).catch(err => {
+      logApiError(endpoint, err, { authenticated, data });
+      throw err;
+    });
 };
 
 export const CALL_API = Symbol('Call API');
@@ -51,7 +62,7 @@ export default store => next => action => {
 
   let { endpoint, types, authenticated, data } = callAPI;
 
-  const [ requestType, successType, errorType ] = types;
+  const [requestType, successType, errorType] = types;
 
   // Dispatch request action
   next({ type: requestType });
@@ -65,9 +76,13 @@ export default store => next => action => {
         type: successType,
         data
       }),
-    error => next({
-      error: error.message || 'There was an error.',
-      type: errorType
-    })
+    error => {
+      const errorResponse = handleApiError(error, endpoint, data);
+      return next({
+        error: errorResponse.error.message,
+        errorCode: errorResponse.error.code,
+        type: errorType
+      });
+    }
   )
 };

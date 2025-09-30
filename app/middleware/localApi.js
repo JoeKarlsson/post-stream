@@ -1,3 +1,6 @@
+import { handleApiError } from '../utils/errorHandler';
+import { logApiError } from '../utils/errorLogger';
+
 const API_BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
 
 function callApi(endpoint, method = 'GET', body = null, headers = {}, authenticated = false) {
@@ -19,19 +22,26 @@ function callApi(endpoint, method = 'GET', body = null, headers = {}, authentica
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     } else {
-      return Promise.reject(new Error('No authentication token found'));
+      const error = new Error('No authentication token found');
+      logApiError(endpoint, error, { authenticated, method });
+      return Promise.reject(error);
     }
   }
 
   return fetch(url, config)
     .then(response => {
       if (!response.ok) {
-        return response.json().then(err => Promise.reject(err));
+        return response.json().then(err => {
+          const error = new Error(`HTTP ${response.status}: ${response.statusText}`);
+          error.response = { status: response.status, statusText: response.statusText, data: err };
+          logApiError(endpoint, error, { authenticated, method, body, response: { status: response.status } });
+          return Promise.reject(error);
+        });
       }
       return response.json();
     })
     .catch(error => {
-      console.error('API call failed:', error);
+      logApiError(endpoint, error, { authenticated, method, body });
       throw error;
     });
 }
@@ -87,15 +97,18 @@ export default store => next => action => {
       }));
     },
     error => {
+      const errorResponse = handleApiError(error, endpoint, { method, body, authenticated });
+
       // Handle authentication errors
-      if (error.error && (error.error.includes('token') || error.error.includes('unauthorized'))) {
+      if (errorResponse.error.code === 'UNAUTHORIZED' || errorResponse.error.code === 'INVALID_TOKEN') {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
 
       return next(actionWith({
         type: failureType,
-        error: error.error || 'Something bad happened'
+        error: errorResponse.error.message,
+        errorCode: errorResponse.error.code
       }));
     }
   );

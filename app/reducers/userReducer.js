@@ -23,7 +23,8 @@ const initialState = Map({
   didInvalidate: false,
   posts: List(),
   isAuthenticated: false,
-  errorMessage: ''
+  errorMessage: '',
+  errorCode: null
 });
 
 function user(state = initialState, action) {
@@ -37,6 +38,7 @@ function user(state = initialState, action) {
       return state.set('isFetching', false)
         .set('isAuthenticated', true)
         .set('errorMessage', '')
+        .set('errorCode', null)
         .set('profile', fromJS(parsedProfile))
     }
 
@@ -49,6 +51,7 @@ function user(state = initialState, action) {
       return state.set('isFetching', false)
         .set('isAuthenticated', true)
         .set('errorMessage', '')
+        .set('errorCode', null)
         .set('profile', fromJS(action.response.user || action.response))
 
     case LOGIN_FAILURE:
@@ -57,11 +60,17 @@ function user(state = initialState, action) {
       return state.set('isFetching', false)
         .set('isAuthenticated', false)
         .set('errorMessage', action.error)
+        .set('errorCode', action.errorCode)
 
     case LOGOUT_SUCCESS:
       return state.set('isAuthenticated', false)
         .set('profile', Map())
         .set('errorMessage', '')
+        .set('errorCode', null)
+
+    case 'CLEAR_ERROR':
+      return state.set('errorMessage', '')
+        .set('errorCode', null)
 
     default:
       return state

@@ -169,12 +169,14 @@ const Post = ({
             <span>[<span className={styles.rightButton} onClick={handleNext}> right </span>]</span>
           }
 
-          <Post
-            {...childContext}
-            dispatch={dispatch}
-            isParentPost={false}
-            key={childContext.id}
-          />
+          {childContext && childContext.id && (
+            <Post
+              {...childContext}
+              dispatch={dispatch}
+              isParentPost={false}
+              key={childContext.id}
+            />
+          )}
 
         </div>
       }
