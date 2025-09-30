@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-const Remarkable = require('remarkable');
+import { Remarkable } from 'remarkable';
 const emojione = require('emojione');
 import styles from './Post.scss';
 

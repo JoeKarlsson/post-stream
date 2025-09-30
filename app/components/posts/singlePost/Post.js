@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-const Remarkable = require('remarkable');
+import { Remarkable } from 'remarkable';
 const emojione = require('emojione');
 import {
   toggleComment,
