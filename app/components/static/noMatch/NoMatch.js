@@ -1,14 +1,12 @@
 import React from 'react';
-import styles from './NoMatch.scss';
+import styles from './NoMatch.module.scss';
 
-class NoMatch extends React.Component {
-  render() {
-    return (
-      <div className={styles.noMatch}>
-        404 - sry no page found
-      </div>
-    );
-  }
-}
+const NoMatch = () => {
+  return (
+    <div className={styles.noMatch}>
+      404 - sry no page found
+    </div>
+  );
+};
 
 export default NoMatch;

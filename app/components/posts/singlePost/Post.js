@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Remarkable } from 'remarkable';
-const emojione = require('emojione');
+import twemoji from 'twemoji';
 import {
   toggleComment,
   fetchCommentsIfNeeded,
@@ -16,71 +16,42 @@ import CommentCount from './CommentCount';
 import DestroyPostButton from './DestroyPostButton';
 import Reply from './Reply';
 import EditPost from './../editPost/EditPost';
-import styles from './Post.scss';
+import styles from './Post.module.scss';
 
-class Post extends Component {
-  constructor() {
-    super();
-    this.handleEdit = this.handleEdit.bind(this);
-    this.handleToggleComments = this.handleToggleComments.bind(this);
-    this.handleShowingChild = this.handleShowingChild.bind(this);
-    this.handlePrev = this.handlePrev.bind(this);
-    this.handleNext = this.handleNext.bind(this);
-  };
+const Post = ({
+  username,
+  realName,
+  commentCount,
+  id,
+  index,
+  isParentPost,
+  createdAt,
+  body,
+  comments,
+  auth
+}) => {
+  const dispatch = useDispatch();
+  const { profile, post } = useSelector(state => state.root);
 
-  rawMarkup() {
-    const { body } = this.props;
-    var md = new Remarkable();
-    var rawMarkup = md.render(body.toString());
-    let output = emojione.shortnameToImage(rawMarkup);
+  const editMode = post.get('posts').get(index).get('editMode');
+  const showComments = post.get('posts').get(index).get('showComments');
+  const childId = post.get('posts').get(index).get('childId');
+  const childContext = post.get('posts').get(index).get('childContext');
+  const postUserID = post.get('posts').get(index).get('userID');
+  const isAuthenticated = profile.get('isAuthenticated');
+  const profileData = profile.get('profile').toJS();
+
+  const rawMarkup = useMemo(() => {
+    const md = new Remarkable();
+    const rawMarkup = md.render(body.toString());
+    const output = twemoji.parse(rawMarkup, {
+      folder: 'svg',
+      ext: '.svg'
+    });
     return { __html: output };
-  };
+  }, [body]);
 
-  handleToggleComments() {
-    const { dispatch, index, showComments } = this.props;
-    dispatch(toggleShowComment(index, !showComments));
-  }
-
-  handleEdit() {
-    const { dispatch, index, editMode } = this.props;
-    dispatch(toggleEditMode(index, !editMode));
-  };
-
-  handleShowingChild() {
-    const { dispatch, id, index } = this.props;
-    dispatch(fetchCommentsIfNeeded(id, index));
-  };
-
-  handlePrev() {
-    const {
-      dispatch,
-      index,
-      childId,
-    } = this.props;
-
-    const newChildId = childId - 1;
-
-    if (!!~newChildId) {
-      dispatch(toggleComment(index, newChildId));
-    }
-  };
-
-  handleNext() {
-    const {
-      dispatch,
-      index,
-      childId,
-      comments
-    } = this.props;
-
-    const newChildId = childId + 1;
-
-    if (newChildId < comments.length) {
-      dispatch(toggleComment(index, newChildId));
-    }
-  };
-
-  getRandomColor() {
+  const getRandomColor = () => {
     const colors = [
       'teal',
       'red',
@@ -93,118 +64,126 @@ class Post extends Component {
 
     const color = colors[Math.floor(Math.random() * colors.length)];
     return color;
-  }
+  };
 
-  render() {
-    const {
-      username,
-      realName,
-      commentCount,
-      showComments,
-      childContext,
-      childId,
-      id,
-      index,
-      editMode,
-      isParentPost,
-      createdAt,
-      dispatch,
-      isAuthenticated,
-      postUserID,
-      profile,
-    } = this.props;
+  const handleToggleComments = () => {
+    dispatch(toggleShowComment(index, !showComments));
+  };
 
-    const color = this.getRandomColor();
+  const handleEdit = () => {
+    dispatch(toggleEditMode(index, !editMode));
+  };
 
-    return (
-      <div className={styles.post}>
+  const handleShowingChild = () => {
+    dispatch(fetchCommentsIfNeeded(id, index));
+  };
 
-        {editMode === false && isParentPost &&
-          <div>
-            <div className={styles.statusBar}>
-              [<Link to={`/user/${username}`} className={styles.username}> {realName} </Link>] | <span className={styles.timeStamp}>{new Date(createdAt).toLocaleTimeString()}</span>
-            </div>
+  const handlePrev = () => {
+    const newChildId = childId - 1;
 
-            <span className={styles[color]} dangerouslySetInnerHTML={this.rawMarkup()} />
+    if (~newChildId) {
+      dispatch(toggleComment(index, newChildId));
+    }
+  };
 
-            {isAuthenticated && postUserID === profile.user_id &&
-              <div>
-                [ <span className={styles.editButton} onClick={this.handleEdit}>edit</span> ]
-                <DestroyPostButton
-                  id={id}
-                  index={index}
-                />
+  const handleNext = () => {
+    const newChildId = childId + 1;
 
-              </div>
-            }
-            {isAuthenticated &&
-              <Reply
+    if (newChildId < comments.length) {
+      dispatch(toggleComment(index, newChildId));
+    }
+  };
+
+  const color = getRandomColor();
+
+  return (
+    <div className={styles.post}>
+
+      {editMode === false && isParentPost &&
+        <div>
+          <div className={styles.statusBar}>
+            [<Link to={`/user/${username}`} className={styles.username}> {realName} </Link>] | <span className={styles.timeStamp}>{new Date(createdAt).toLocaleTimeString()}</span>
+          </div>
+
+          <span className={styles[color]} dangerouslySetInnerHTML={rawMarkup} />
+
+          {isAuthenticated && postUserID === profileData.user_id &&
+            <div>
+              [ <span className={styles.editButton} onClick={handleEdit}>edit</span> ]
+              <DestroyPostButton
                 id={id}
                 index={index}
-                auth={this.props.auth}
               />
-            }
-            <div className='comment-count' onClick={this.handleShowingChild}>
+
+            </div>
+          }
+          {isAuthenticated &&
+            <Reply
+              id={id}
+              index={index}
+              auth={auth}
+            />
+          }
+          <div className='comment-count' onClick={handleShowingChild}>
+            <CommentCount
+              numOfComments={commentCount}
+            />
+          </div>
+        </div>
+      }
+
+      {!isParentPost &&
+        <div>
+          <span className={styles[color]} dangerouslySetInnerHTML={rawMarkup} />
+
+          {!showComments &&
+            <div className='comment-count' onClick={handleShowingChild}>
+            </div>
+          }
+
+          {showComments &&
+            <div className='comment-count' onClick={handleToggleComments}>
               <CommentCount
                 numOfComments={commentCount}
               />
             </div>
-          </div>
-        }
+          }
+        </div>
+      }
 
-        {!isParentPost &&
-          <div>
-            <span className={styles[color]} dangerouslySetInnerHTML={this.rawMarkup()} />
+      {editMode === true &&
+        <EditPost
+          id={id}
+          index={index}
+        />
+      }
 
-            {!showComments &&
-              <div className='comment-count' onClick={this.handleShowingChild}>
-              </div>
-            }
+      {showComments &&
+        <div className='replies'>
 
-            {showComments &&
-              <div className='comment-count' onClick={this.handleToggleComments}>
-                <CommentCount
-                  numOfComments={commentCount}
-                />
-              </div>
-            }
-          </div>
-        }
+          {childId !== 0 &&
+            <span>[<span className={styles.leftButton} onClick={handlePrev}> left </span>]</span>
+          }
 
-        {editMode === true &&
-          <EditPost
-            id={id}
-            index={index}
+          {childId !== commentCount - 1 &&
+            <span>[<span className={styles.rightButton} onClick={handleNext}> right </span>]</span>
+          }
+
+          <Post
+            {...childContext}
+            dispatch={dispatch}
+            isParentPost={false}
+            key={childContext.id}
           />
-        }
 
-        {showComments &&
-          <div className='replies'>
+        </div>
+      }
 
-            {childId !== 0 &&
-              <span>[<span className={styles.leftButton} onClick={this.handlePrev}> left </span>]</span>
-            }
-
-            {childId !== commentCount - 1 &&
-              <span>[<span className={styles.rightButton} onClick={this.handleNext}> right </span>]</span>
-            }
-
-            <Post
-              {...childContext}
-              dispatch={dispatch}
-              isParentPost={false}
-              key={childContext.id}
-            />
-
-          </div>
-        }
-
-        {isParentPost &&
-          <hr />
-        }
-      </div>
-    );
-  }
+      {isParentPost &&
+        <hr />
+      }
+    </div>
+  );
 };
 
 Post.propTypes = {
@@ -215,32 +194,13 @@ Post.propTypes = {
   realName: PropTypes.string,
   username: PropTypes.string,
   body: PropTypes.string,
-  created_at: PropTypes.number,
+  createdAt: PropTypes.number,
   commentCount: PropTypes.number,
   childId: PropTypes.number,
   childContext: PropTypes.object,
   isAuthenticated: PropTypes.bool,
+  index: PropTypes.number,
+  auth: PropTypes.object,
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const { profile, post } = state.root;
-
-  return {
-    editMode: post
-      .get('posts').get(ownProps.index).get('editMode'),
-    showComments: post
-      .get('posts').get(ownProps.index).get('showComments'),
-    childId: post
-      .get('posts').get(ownProps.index).get('childId'),
-    childContext: post
-      .get('posts').get(ownProps.index).get('childContext'),
-    postUserID: post
-      .get('posts').get(ownProps.index).get('userID'),
-    isAuthenticated: profile.get('isAuthenticated'),
-    profile: profile.get('profile').toJS(),
-  }
-};
-
-export default connect(
-  mapStateToProps
-)(Post);
+export default Post;

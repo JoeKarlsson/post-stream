@@ -35,9 +35,7 @@ Download and unpack [PostStream](https://github.com/JoeKarlsson/post-stream). Or
 
 1. **Start the application:**
 
-   ```bash
-   docker-compose up --build
-   ```
+   `docker-compose up --build`
 
 2. **Access the application:**
    - Open [http://localhost:3002](http://localhost:3002) in your browser
@@ -53,15 +51,12 @@ The Docker setup automatically handles:
 
 1. **Install dependencies:**
 
-   ```bash
-   npm install
-   ```
+    npm install
 
-2. **Setup PostgreSQL:**
+1. **Setup PostgreSQL:**
    - Create a new database called `poststream_development`
    - Update `server/config/config.json` with your database credentials:
 
-   ```json
    {
      "development": {
        "username": "your_username",
@@ -72,36 +67,57 @@ The Docker setup automatically handles:
        "port": 5432
      }
    }
-   ```
 
-3. **Run database migrations and seeders:**
+1. **Run database migrations and seeders:**
 
-   ```bash
    npx sequelize db:migrate
    npx sequelize db:seed:all
-   ```
 
-4. **Setup Auth0 credentials:**
+1. **Setup Auth0 credentials:**
    - Create an account at [Auth0](https://auth0.com/docs/overview)
    - Create a new application in your Auth0 dashboard
    - Create a `.env` file with your Auth0 credentials:
 
-   ```
    AUTH0_CLIENT_ID=your_client_id
    AUTH0_CLIENT_SECRET=your_client_secret
    AUTH0_DOMAIN=your_domain.auth0.com
-   AUTH0_CALLBACK_URL=http://localhost:3000/
+   AUTH0_CALLBACK_URL=<http://localhost:3000/>
    AUTH0_TOKEN=your_token
-   ```
 
-5. **Start the development server:**
+1. **Build the application (first time only):**
 
-   ```bash
+   npm run build
+
+1. **Start the development server:**
+
    npm run dev
-   ```
 
-6. **Access the application:**
+   This will start:
+   - Vite dev server on [http://localhost:3000](http://localhost:3000) (frontend)
+   - Express API server on [http://localhost:3001](http://localhost:3001) (backend)
+
+1. **Access the application:**
    - Navigate to [http://localhost:3000](http://localhost:3000) in your browser
+
+## Build Tools & Technology Stack
+
+PostStream now uses modern build tools for improved performance:
+
+- **Vite**: Lightning-fast build tool with instant HMR (Hot Module Replacement)
+- **React 18.3**: Latest React with modern features
+- **Redux 5**: State management with improved TypeScript support
+- **React Router DOM 6**: Modern routing solution
+- **SCSS Modules**: Scoped styling with CSS modules
+- **ESLint 8**: Modern linting with React hooks support
+
+### Available Scripts
+
+- `npm run dev` - Start development (both Vite and Express concurrently)
+- `npm run dev:client` - Start Vite dev server only
+- `npm run dev:server` - Start Express server only
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm test` - Run server tests
 
 ## Update Your Project
 
@@ -113,6 +129,12 @@ If you're using Docker, rebuild the containers after pulling updates:
 
     docker-compose down
     docker-compose up --build
+
+For major updates, you may need to:
+
+    rm -rf node_modules package-lock.json
+    npm install
+    npm run build
 
 ### Important concepts
 
@@ -205,116 +227,96 @@ For detailed Docker setup instructions, see [DOCKER_README.md](DOCKER_README.md)
 
 **Request:**
 
-```
-GET /post
-```
+    GET /post
 
 **Response:**
 
-```json
-[
-  {
-    "id": 1,
-    "body": "JohnDoe131 post 1",
-    "createdAt": "2016-07-28T01:37:36.809Z",
-    "updatedAt": "2016-07-28T01:37:36.809Z",
-    "UserId": 1
-  },
-  {
-    "id": 2,
-    "body": "JohnDoe131 post 2",
-    "createdAt": "2016-07-28T01:37:36.809Z",
-    "updatedAt": "2016-07-28T01:37:36.809Z",
-    "UserId": 1
-  }
-]
-```
+    [
+      {
+        "id": 1,
+        "body": "JohnDoe131 post 1",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1
+      },
+      {
+        "id": 2,
+        "body": "JohnDoe131 post 2",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1
+      }
+    ]
 
 #### Get Single Post
 
 **Request:**
 
-```
-GET /post/:id
-```
+    GET /post/:id
 
 **Response:**
 
-```json
-{
-  "id": 1,
-  "body": "JohnDoe131 post 1",
-  "createdAt": "2016-07-28T01:37:36.809Z",
-  "updatedAt": "2016-07-28T01:37:36.809Z",
-  "UserId": 1
-}
-```
+    {
+      "id": 1,
+      "body": "JohnDoe131 post 1",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
 
 #### Create New Post
 
 **Request:**
 
-```
-POST /post/new
-Content-Type: application/json
+    POST /post/new
+    Content-Type: application/json
 
-{
-  "body": "Your post content here"
-}
-```
+    {
+      "body": "Your post content here"
+    }
 
 **Response:**
 
-```json
-{
-  "id": 1,
-  "body": "Your post content here",
-  "createdAt": "2016-07-28T01:37:36.809Z",
-  "updatedAt": "2016-07-28T01:37:36.809Z",
-  "UserId": 1
-}
-```
+    {
+      "id": 1,
+      "body": "Your post content here",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
 
 #### Edit Post
 
 **Request:**
 
-```
-PUT /post/:id/edit
-Content-Type: application/json
+    PUT /post/:id/edit
+    Content-Type: application/json
 
-{
-  "body": "Updated post content"
-}
-```
+    {
+      "body": "Updated post content"
+    }
 
 **Response:**
 
-```json
-{
-  "id": 1,
-  "body": "Updated post content",
-  "createdAt": "2016-07-28T01:37:36.809Z",
-  "updatedAt": "2016-07-28T01:37:36.809Z",
-  "UserId": 1
-}
-```
+    {
+      "id": 1,
+      "body": "Updated post content",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
 
 #### Delete Post
 
 **Request:**
 
-```
-DELETE /post/:id
-```
+    DELETE /post/:id
 
 **Response:**
 
-```json
-{
-  "success": true
-}
-```
+    {
+      "success": true
+    }
 
 ### Comments
 
@@ -322,79 +324,67 @@ DELETE /post/:id
 
 **Request:**
 
-```
-GET /post/:id/comments
-```
+    GET /post/:id/comments
 
 **Response:**
 
-```json
-[
-  {
-    "id": 2,
-    "body": "JohnDoe131 comment 1 post 2",
-    "createdAt": "2016-07-28T01:37:36.809Z",
-    "updatedAt": "2016-07-28T01:37:36.809Z",
-    "UserId": 1,
-    "PostId": 2
-  },
-  {
-    "id": 5,
-    "body": "JaneDoe343 comment 2 post 2",
-    "createdAt": "2016-07-28T01:37:36.809Z",
-    "updatedAt": "2016-07-28T01:37:36.809Z",
-    "UserId": 2,
-    "PostId": 2
-  }
-]
-```
+    [
+      {
+        "id": 2,
+        "body": "JohnDoe131 comment 1 post 2",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 1,
+        "PostId": 2
+      },
+      {
+        "id": 5,
+        "body": "JaneDoe343 comment 2 post 2",
+        "createdAt": "2016-07-28T01:37:36.809Z",
+        "updatedAt": "2016-07-28T01:37:36.809Z",
+        "UserId": 2,
+        "PostId": 2
+      }
+    ]
 
 #### Create New Comment
 
 **Request:**
 
-```
-POST /:PostId/comments/:CommentId/newPost
-Content-Type: application/json
+    POST /:PostId/comments/:CommentId/newPost
+    Content-Type: application/json
 
-{
-  "body": "Your comment content here"
-}
-```
+    {
+      "body": "Your comment content here"
+    }
 
 **Response:**
 
-```json
-{
-  "id": 1,
-  "body": "Your comment content here",
-  "createdAt": "2016-07-28T01:37:36.809Z",
-  "updatedAt": "2016-07-28T01:37:36.809Z",
-  "UserId": 1
-}
-```
+    {
+      "id": 1,
+      "body": "Your comment content here",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }
 
 #### Edit Comment
 
 **Request:**
 
-```
-PUT /:PostId/comments/:CommentId/edit
-Content-Type: application/json
+    PUT /:PostId/comments/:CommentId/edit
+    Content-Type: application/json
 
-{
-  "body": "Updated comment content"
-}
-```
+    {
+      "body": "Updated comment content"
+    }
 
 **Response:**
 
-```json
-{
-  "id": 1,
-  "body": "Updated comment content",
-  "createdAt": "2016-07-28T01:37:36.809Z",
-  "updatedAt": "2016-07-28T01:37:36.809Z",
-  "UserId": 1
-}
-```
+    {
+      "id": 1,
+      "body": "Updated comment content",
+      "createdAt": "2016-07-28T01:37:36.809Z",
+      "updatedAt": "2016-07-28T01:37:36.809Z",
+      "UserId": 1
+    }

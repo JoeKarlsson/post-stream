@@ -39,13 +39,17 @@ passport.use(new LocalStrategy({
 
 // Generate JWT token
 const generateToken = (user) => {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET environment variable is required');
+    }
+
     return jwt.sign(
         {
             id: user.id,
             username: user.username,
             email: user.email
         },
-        process.env.JWT_SECRET || 'fallback-secret',
+        process.env.JWT_SECRET,
         { expiresIn: '7d' }
     );
 };
@@ -165,6 +169,30 @@ router.put('/change-password', passport.authenticate('jwt', { session: false }),
     } catch (error) {
         console.error('Password change error:', error);
         res.status(500).json({ error: 'Password change failed' });
+    }
+});
+
+// Get user profile by username
+router.get('/user/:username', async (req, res) => {
+    try {
+        const { username } = req.params;
+
+        const user = await User.findOne({
+            where: { username: username },
+            attributes: ['id', 'username', 'email', 'first_name', 'last_name', 'bio', 'createdAt']
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({
+            success: true,
+            user: user.toJSON()
+        });
+    } catch (error) {
+        console.error('Get user profile error:', error);
+        res.status(500).json({ error: 'Failed to get user profile' });
     }
 });
 

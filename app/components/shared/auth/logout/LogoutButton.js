@@ -1,21 +1,15 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import styles from './LogoutButton.scss';
+import React from 'react';
+import PropTypes from 'prop-types';
+import styles from './LogoutButton.module.scss';
 
-class Logout extends Component {
+const LogoutButton = ({ onLogoutClick }) => {
+  return (
+    <li>[ <span className={styles.logoutButton} onClick={() => onLogoutClick()}>logout</span> ]</li>
+  );
+};
 
-  render() {
-    const { onLogoutClick } = this.props
-
-    return (
-      <li>[ <span className={styles.logoutButton} onClick={() => onLogoutClick()}>logout</span> ]</li>
-    )
-  }
-
-}
-
-Logout.propTypes = {
+LogoutButton.propTypes = {
   onLogoutClick: PropTypes.func.isRequired
-}
+};
 
-export default Logout;
+export default LogoutButton;

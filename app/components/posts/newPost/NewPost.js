@@ -1,66 +1,54 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   submitNewPost,
   handleNewPostBodyChange
 } from '../../../actions/posts/newPostActions';
-import styles from './NewPost.scss';
+import styles from './NewPost.module.scss';
 
-class NewPostForm extends Component {
+const NewPostForm = () => {
+  const dispatch = useDispatch();
+  const bodyRef = useRef();
+  const newPostBody = useSelector(state => state.root.post.get('newPostBody'));
 
-  constructor() {
-    super();
-    this.handleSubmitPost = this.handleSubmitPost.bind(this);
-    this.handleBodyChange = this.handleBodyChange.bind(this);
-  }
-
-  handleBodyChange(e) {
-    const { dispatch } = this.props;
-    dispatch(handleNewPostBodyChange(e.target.value))
-  }
-
-  handleSubmitPost(e) {
-    e.preventDefault();
-    const { dispatch, newPostBody } = this.props;
-    // Retrieves the profile data from localStorage
-    const profile = localStorage.getItem('profile')
-    dispatch(submitNewPost(newPostBody, profile.user_id))
+  const handleBodyChange = (e) => {
+    dispatch(handleNewPostBodyChange(e.target.value));
   };
 
-  render() {
-    return (
-      <div className={styles.u_full_width}>
-        <form>
-          <label htmlFor="body" className={styles.bodyLabel}>create a new post</label>
-          <textarea
-            ref="body"
-            type='textarea'
-            id='body'
-            rows='5'
-            className="u-full-width"
-            placeholder='share it with the world...'
-            value={this.props.newPostBody}
-            onChange={this.handleBodyChange}
-          ></textarea>
-          <div>
-            [<span className={styles.clickable} onClick={this.handleSubmitPost}> post </span>]
-          </div>
-        </form>
-      </div>
-    );
-  }
+  const handleSubmitPost = (e) => {
+    e.preventDefault();
+    // Retrieves the profile data from localStorage
+    const profile = localStorage.getItem('profile');
+    dispatch(submitNewPost(newPostBody, profile.user_id));
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleSubmitPost(event);
+    }
+  };
+
+  return (
+    <div className={styles.u_full_width}>
+      <form>
+        <label htmlFor="body" className={styles.bodyLabel}>create a new post</label>
+        <textarea
+          ref={bodyRef}
+          type='textarea'
+          id='body'
+          rows='5'
+          className="u-full-width"
+          placeholder='share it with the world...'
+          value={newPostBody}
+          onChange={handleBodyChange}
+        ></textarea>
+        <div>
+          [<span className={styles.clickable} onClick={handleSubmitPost} onKeyDown={handleKeyDown} tabIndex={0} role="button"> post </span>]
+        </div>
+      </form>
+    </div>
+  );
 };
 
-NewPostForm.propTypes = {
-
-};
-
-const mapStateToProps = (state) => {
-  return {
-    newPostBody: state.root.post.get('newPostBody'),
-  }
-};
-
-export default connect(
-  mapStateToProps
-)(NewPostForm);
+export default NewPostForm;

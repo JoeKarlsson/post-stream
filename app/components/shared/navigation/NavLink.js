@@ -1,11 +1,9 @@
 import React from 'react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
-import styles from './NavLink.scss';
+import styles from './NavLink.module.scss';
 
-class NavLink extends React.Component {
-  render() {
-    return <RouterNavLink {...this.props} className={({ isActive }) => isActive ? styles.active : ''} />;
-  }
-}
+const NavLink = (props) => {
+  return <RouterNavLink {...props} className={({ isActive }) => isActive ? styles.active : ''} />;
+};
 
 export default NavLink;

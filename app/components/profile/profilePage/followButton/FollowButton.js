@@ -1,21 +1,18 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   followUser,
 } from '../../../../actions/profile/updateProfileActions';
 
-export class FollowButton extends React.Component {
+const FollowButton = ({ user_id }) => {
+  const dispatch = useDispatch();
+  const profile = useSelector(state => state.root.profile.get('profile').toJS());
 
-  handleClick(e){
-    e.preventDefault()
-    const {
-      profile,
-      user_id,
-      dispatch
-    } = this.props;
+  const handleClick = (e) => {
+    e.preventDefault();
     const { user_metadata } = profile;
-    const followings = user_metadata.following || []
-    if(followings.indexOf(user_id) === -1){
+    const followings = user_metadata.following || [];
+    if (followings.indexOf(user_id) === -1) {
       followings.push(user_id);
     }
     const metadata = {
@@ -27,32 +24,15 @@ export class FollowButton extends React.Component {
     dispatch(followUser(profile, metadata));
   };
 
-  render(){
-    const {
-      profile,
-      user_id,
-    } = this.props;
-
-    return (
-      <div>
-        { profile.user_id !== user_id &&
-          <div>
-            [ <span onClick={(event) => this.handleClick(event)}>follow</span> ]
-          </div>
-        }
-      </div>
-    )
-  }
+  return (
+    <div>
+      {profile.user_id !== user_id &&
+        <div>
+          [ <span onClick={handleClick}>follow</span> ]
+        </div>
+      }
+    </div>
+  );
 };
 
-const mapStateToProps = (state) => {
-  const { profile } = state.root;
-
-  return {
-    profile: profile.get('profile').toJS(),
-  }
-};
-
-export default connect(
-  mapStateToProps
-)(FollowButton);
+export default FollowButton;

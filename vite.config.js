@@ -23,28 +23,31 @@ export default defineConfig({
         },
         // Force re-bundling of dependencies to fix source map issues
         force: true,
+        include: ['twemoji'],
     },
     define: {
         __NODE_ENV__: JSON.stringify(process.env.NODE_ENV),
+        // Only expose Auth0 client ID and domain to frontend (public values)
         __AUTH0_CLIENT_ID__: JSON.stringify(process.env.AUTH0_CLIENT_ID),
-        __AUTH0_CLIENT_SECRET__: JSON.stringify(process.env.AUTH0_CLIENT_SECRET),
-        __AUTH0_TOKEN__: JSON.stringify(process.env.AUTH0_TOKEN),
         __AUTH0_DOMAIN__: JSON.stringify(process.env.AUTH0_DOMAIN),
         __AUTH0_CALLBACK_URL__: JSON.stringify(process.env.AUTH0_CALLBACK_URL),
+        // Note: AUTH0_CLIENT_SECRET and AUTH0_TOKEN should never be exposed to frontend
+        // They should only be used server-side
     },
     // Disable source maps to fix pre-bundled dependency errors
     cssCodeSplit: false,
-    sourcemap: false,
+    sourcemap: true,
     build: {
         outDir: '../server/dist',
         emptyOutDir: true,
         rollupOptions: {
             input: path.resolve(__dirname, 'app/index.html')
         },
-        sourcemap: false
+        sourcemap: true
     },
     server: {
         port: 3000,
+        strictPort: true,
         proxy: {
             '/post': {
                 target: 'http://localhost:3001',

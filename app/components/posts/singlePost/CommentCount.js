@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './CommentCount.scss';
+import styles from './CommentCount.module.scss';
 
 const CommentCount = (props) => {
   let textToDisplay;

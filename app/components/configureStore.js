@@ -1,29 +1,28 @@
-import {
-  createStore,
-  applyMiddleware,
-  combineReducers
-} from 'redux';
-import thunkMiddleware from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
 import * as reducers from '../reducers';
 import api from '../middleware/api';
 import localApi from '../middleware/localApi';
 
-const reducer = combineReducers(reducers);
 const loggerMiddleware = createLogger({
   collapsed: true,
   diff: true
 });
 
-export default function configureStore(preloadedState) {
-  return createStore(
-    reducer,
+export default function configureAppStore(preloadedState) {
+  return configureStore({
+    reducer: reducers,
     preloadedState,
-    applyMiddleware(
-      localApi,
-      api,
-      thunkMiddleware,
-      loggerMiddleware
-    )
-  )
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        },
+      }).concat(
+        localApi,
+        api,
+        loggerMiddleware
+      ),
+    devTools: process.env.NODE_ENV !== 'production',
+  });
 };

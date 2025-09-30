@@ -1,63 +1,49 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import NewPost from '../newPost/NewPost';
 import PostList from '../postList/PostList';
-import styles from './AllPosts.scss';
+import styles from './AllPosts.module.scss';
 import { fetchPosts } from '../../../actions/posts/postActions';
 
-class AllPosts extends Component {
+const AllPosts = ({ auth }) => {
+  const dispatch = useDispatch();
+  const { post, profile } = useSelector(state => state.root);
 
-  componentDidMount() {
-    const { dispatch } = this.props;
+  const posts = post.get('posts').toJS();
+  const isFetching = post.get('isFetching');
+  const lastUpdated = post.get('lastUpdated');
+  const isAuthenticated = profile.get('isAuthenticated');
+
+  useEffect(() => {
     dispatch(fetchPosts());
-  };
+  }, [dispatch]);
 
-  render() {
-    const {
-      posts,
-      lastUpdated,
-      isAuthenticated,
-    } = this.props;
+  return (
+    <div className={styles.allPosts}>
+      <h1>PostStream</h1>
 
-    return (
-      <div className={styles.allPosts}>
-        <h1>PostStream</h1>
-
-        <div className={styles.lastUpdated}>
-          stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.
-          {' '}
-        </div>
-
-        {isAuthenticated &&
-          <NewPost auth={this.props.auth} />
-        }
-        <hr />
-
-        <PostList
-          posts={posts}
-          isAuthenticated={isAuthenticated}
-        />
-
+      <div className={styles.lastUpdated}>
+        stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.
+        {' '}
       </div>
-    );
-  }
+
+      {isAuthenticated &&
+        <NewPost auth={auth} />
+      }
+      <hr />
+
+      <PostList
+        posts={posts}
+        isAuthenticated={isAuthenticated}
+      />
+
+    </div>
+  );
 };
 
 AllPosts.propTypes = {
-  posts: PropTypes.array.isRequired,
+  auth: PropTypes.object,
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const { post } = state.root;
-
-  return {
-    posts: post.get('posts').toJS(),
-    isFetching: post.get('isFetching'),
-    lastUpdated: post.get('lastUpdated'),
-  }
-};
-
-export default connect(
-  mapStateToProps
-)(AllPosts);
+export default AllPosts;

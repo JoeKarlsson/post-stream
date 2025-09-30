@@ -1,42 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { destroyPost } from '../../../actions/posts/destroyPostActions';
-import styles from './DestroyPostButton.scss';
+import styles from './DestroyPostButton.module.scss';
 
-class DestroyPostButton extends Component {
-  constructor() {
-    super();
-    this.handleDeletingPost = this.handleDeletingPost.bind(this);
-  }
+const DestroyPostButton = ({ id, index }) => {
+  const dispatch = useDispatch();
 
-  handleDeletingPost() {
-    const { dispatch, id, index } = this.props;
+  const handleDeletingPost = () => {
     dispatch(destroyPost(id, index));
-  }
+  };
 
-  render() {
-    return (
-      <div className={styles.destroyPost}>
-        [ <span
-          className={styles.destroyButton}
-          onClick={this.handleDeletingPost}
-        >destroy</span> ]
-      </div>
-    );
-  }
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleDeletingPost();
+    }
+  };
+
+  return (
+    <div className={styles.destroyPost}>
+      [ <span
+        className={styles.destroyButton}
+        onClick={handleDeletingPost}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="button"
+      >destroy</span> ]
+    </div>
+  );
 };
 
 DestroyPostButton.propTypes = {
   id: PropTypes.number,
+  index: PropTypes.number,
 };
 
-const mapStateToProps = (state) => {
-  return {
-
-  }
-};
-
-export default connect(
-  mapStateToProps
-)(DestroyPostButton);
+export default DestroyPostButton;

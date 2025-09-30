@@ -4,17 +4,17 @@ import {
   GET_USER_FAILURE
 } from '../actions/user/userActions';
 
-import { 
-  LOGIN_SUCCESS, 
-  LOGIN_FAILURE, 
-  REGISTER_SUCCESS, 
+import {
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
+  REGISTER_SUCCESS,
   REGISTER_FAILURE,
   PROFILE_SUCCESS,
   PROFILE_FAILURE
 } from '../actions/auth/localAuthActions';
 import { LOGOUT_SUCCESS } from '../actions/auth/logoutActions';
 
-import Immutable, { Map, List} from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 const initialState = Map({
   profile: Map(),
@@ -32,12 +32,13 @@ function user(state = initialState, action) {
     case GET_USER_REQUEST:
       return state;
 
-    case GET_USER_SUCCESS:
-    const parsedProfile = JSON.parse(action.response);
+    case GET_USER_SUCCESS: {
+      const parsedProfile = typeof action.response === 'string' ? JSON.parse(action.response) : action.response;
       return state.set('isFetching', false)
         .set('isAuthenticated', true)
         .set('errorMessage', '')
-        .set('profile', Immutable.fromJS(parsedProfile))
+        .set('profile', fromJS(parsedProfile))
+    }
 
     case GET_USER_FAILURE:
       return state;
@@ -48,7 +49,7 @@ function user(state = initialState, action) {
       return state.set('isFetching', false)
         .set('isAuthenticated', true)
         .set('errorMessage', '')
-        .set('profile', Immutable.fromJS(action.response.user || action.response))
+        .set('profile', fromJS(action.response.user || action.response))
 
     case LOGIN_FAILURE:
     case REGISTER_FAILURE:

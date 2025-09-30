@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
 
 function callApi(endpoint, method = 'GET', body = null, headers = {}, authenticated = false) {
   const url = API_BASE_URL + endpoint;
@@ -40,7 +40,7 @@ export const api = Symbol('Call API');
 
 export default store => next => action => {
   const callAPI = action[api];
-  
+
   if (typeof callAPI === 'undefined') {
     return next(action);
   }
@@ -80,7 +80,7 @@ export default store => next => action => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
       }
-      
+
       return next(actionWith({
         response,
         type: successType
@@ -92,7 +92,7 @@ export default store => next => action => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
-      
+
       return next(actionWith({
         type: failureType,
         error: error.error || 'Something bad happened'

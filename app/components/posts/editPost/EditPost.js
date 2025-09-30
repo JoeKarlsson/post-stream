@@ -1,73 +1,75 @@
-import React, { Component } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   submitUpdatedPost,
   handleUpdatedPostBodyChange,
   toggleEditMode,
 } from '../../../actions/posts/editPostActions';
-import styles from './EditPost.scss';
+import styles from './EditPost.module.scss';
 
-class EditPost extends Component {
-  constructor() {
-    super();
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleSubmitUpdatedPost = this.handleSubmitUpdatedPost.bind(this);
-    this.handleBodyChange = this.handleBodyChange.bind(this);
-  }
+const EditPost = ({ id, index }) => {
+  const dispatch = useDispatch();
+  const bodyRef = useRef();
 
-  handleCancel() {
-    const { dispatch, index } = this.props;
-    dispatch(toggleEditMode(index, false))
-  }
+  const updatedPostBody = useSelector(state =>
+    state.root.post.get('posts').get(index).get('updatedPostBody')
+  );
 
-  handleBodyChange(e) {
-    const { dispatch, index } = this.props;
-    dispatch(handleUpdatedPostBodyChange(e.target.value, index))
-  }
-
-  handleSubmitUpdatedPost(e) {
-    e.preventDefault();
-    const { dispatch, id, index, updatedPostBody } = this.props;
-    dispatch(submitUpdatedPost(updatedPostBody, id, index))
+  const handleCancel = () => {
+    dispatch(toggleEditMode(index, false));
   };
 
-  render() {
-    return (
-      <div className={styles.editPost} >
-        <form>
-          <textarea
-            ref='body'
-            type='text'
-            id='body'
-            rows='5'
-            className='u-full-width'
-            placeholder='edit your post'
-            value={this.props.updatedPostBody}
-            onChange={this.handleBodyChange}
-          ></textarea>
-          <div>
-            [<span className={styles.saveButton} onClick={this.handleSubmitUpdatedPost}> save </span> ]
-          </div>
-          <div>
-            [ <span className={styles.cancelButton} onClick={this.handleCancel}> cancel </span> ]
-          </div>
-        </form>
-      </div>
-    );
-  }
+  const handleBodyChange = (e) => {
+    dispatch(handleUpdatedPostBodyChange(e.target.value, index));
+  };
+
+  const handleSubmitUpdatedPost = (e) => {
+    e.preventDefault();
+    dispatch(submitUpdatedPost(updatedPostBody, id, index));
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleSubmitUpdatedPost(event);
+    }
+  };
+
+  const handleCancelKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleCancel();
+    }
+  };
+
+  return (
+    <div className={styles.editPost} >
+      <form>
+        <textarea
+          ref={bodyRef}
+          type='text'
+          id='body'
+          rows='5'
+          className='u-full-width'
+          placeholder='edit your post'
+          value={updatedPostBody}
+          onChange={handleBodyChange}
+        ></textarea>
+        <div>
+          [<span className={styles.saveButton} onClick={handleSubmitUpdatedPost} onKeyDown={handleKeyDown} tabIndex={0} role="button"> save </span> ]
+        </div>
+        <div>
+          [ <span className={styles.cancelButton} onClick={handleCancel} onKeyDown={handleCancelKeyDown} tabIndex={0} role="button"> cancel </span> ]
+        </div>
+      </form>
+    </div>
+  );
 };
 
 EditPost.propTypes = {
   id: PropTypes.number,
+  index: PropTypes.number,
 };
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    updatedPostBody: state.root.post.get('posts').get(ownProps.index).get('updatedPostBody'),
-  }
-};
-
-export default connect(
-  mapStateToProps
-)(EditPost);
+export default EditPost;

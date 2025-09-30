@@ -1,5 +1,5 @@
-# Use Node.js 10 which is compatible with bcrypt 0.8.7
-FROM node:10-alpine
+# Use Node.js 20 LTS (required by some packages)
+FROM node:20-alpine
 
 # Install PostgreSQL client tools and build dependencies for native modules
 RUN apk add --no-cache postgresql-client python3 make g++ py3-pip
@@ -10,11 +10,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json (if available)
 COPY package.json ./
 
-# Install dependencies, skipping problematic native modules
-RUN npm install --legacy-peer-deps --ignore-scripts
-
-# Try to rebuild node-sass for ARM64
-RUN npm rebuild node-sass --force || echo "node-sass rebuild failed, continuing..."
+# Install dependencies
+RUN npm install
 
 # Copy the rest of the application
 COPY . .

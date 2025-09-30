@@ -5,7 +5,7 @@ import {
 import {
   LOGOUT_SUCCESS
 } from '../actions/auth/logoutActions'
-import { isTokenExpired } from '../components/shared/auth/jwtHelper';import {
+import { isTokenExpired } from '../components/shared/auth/jwtHelper'; import {
   PROFILE_REQUEST,
   PROFILE_SUCCESS,
   PROFILE_FAILURE
@@ -15,7 +15,7 @@ import {
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE_FAILURE
 } from '../actions/profile/updateProfileActions';
-import Immutable, { Map, List} from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 // Checks if there is a saved token and it's still valid
 const token = localStorage.getItem('token');
@@ -24,7 +24,7 @@ const isTokenValid = !!token && !isTokenExpired(token);
 let userToken = JSON.parse(localStorage.getItem('user')) || {};
 
 const initialState = Map({
-  profile: Immutable.fromJS(userToken),
+  profile: fromJS(userToken),
   isFetchingPosts: false,
   didInvalidate: false,
   posts: List(),
@@ -35,12 +35,13 @@ const initialState = Map({
 function profile(state = initialState, action) {
   switch (action.type) {
     case LOGIN_SUCCESS:
-    case REGISTER_SUCCESS:
+    case REGISTER_SUCCESS: {
       let userToken = JSON.parse(localStorage.getItem('user'));
       return state.set('isFetching', false)
         .set('isAuthenticated', true)
         .set('errorMessage', '')
-        .set('profile', Immutable.fromJS(userToken))
+        .set('profile', fromJS(userToken))
+    }
 
     case LOGOUT_SUCCESS:
       return state.set('isFetching', true)
@@ -55,32 +56,32 @@ function profile(state = initialState, action) {
 
     case PROFILE_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
-        const parsedPosts = JSON.parse(action.response);
+        const parsedPosts = typeof action.response === 'string' ? JSON.parse(action.response) : action.response;
         return posts.clear().concat(
           parsedPosts.map((post) => {
             return Map(post)
-            .set('showComments', false)
-            .set('isParentPost', true)
-            .set('realName', post.nickname)
-            .set('username', post.userID)
-            .set('comments', List())
-            .set('childId', 0)
-            .set('childContext', {})
-            .set('didInvalidate', false)
-            .set('updatedPostBody', post.body)
-            .set('editMode', false)
-            .set('replyMode', false)
-            .set('replyBody', '')
+              .set('showComments', false)
+              .set('isParentPost', true)
+              .set('realName', post.nickname)
+              .set('username', post.userID)
+              .set('comments', List())
+              .set('childId', 0)
+              .set('childContext', {})
+              .set('didInvalidate', false)
+              .set('updatedPostBody', post.body)
+              .set('editMode', false)
+              .set('replyMode', false)
+              .set('replyBody', '')
           })
         )
       })
-      .set('isFetchingPosts', false)
-      .set('didInvalidate', false)
-      .set('lastUpdated', Date.now());
+        .set('isFetchingPosts', false)
+        .set('didInvalidate', false)
+        .set('lastUpdated', Date.now());
 
     case 'HANDLE_FORM_CHANGE':
       return state.updateIn(['profile'], (profile) => {
-        return profile.updateIn(['user_metadata'], (metadata) =>{
+        return profile.updateIn(['user_metadata'], (metadata) => {
           return metadata.set(action.fieldName, action.content);
         })
       });
@@ -88,9 +89,10 @@ function profile(state = initialState, action) {
     case UPDATE_PROFILE_REQUEST:
       return state;
 
-    case UPDATE_PROFILE_SUCCESS:
-      const parsedProfile = JSON.parse(action.response);
-      return state.set('profile', Immutable.fromJS(parsedProfile));
+    case UPDATE_PROFILE_SUCCESS: {
+      const parsedProfile = typeof action.response === 'string' ? JSON.parse(action.response) : action.response;
+      return state.set('profile', fromJS(parsedProfile));
+    }
 
     case UPDATE_PROFILE_FAILURE:
       return state;

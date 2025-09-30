@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login, register } from '../../../../actions/auth/localAuthActions';
-import './LoginForm.scss';
+import './LoginForm.module.scss';
 
 const LoginForm = ({ onSuccess, isRegister = false }) => {
   const dispatch = useDispatch();
@@ -65,7 +65,7 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -79,7 +79,7 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
       } else {
         await dispatch(login(formData.email, formData.password));
       }
-      
+
       if (onSuccess) {
         onSuccess();
       }
@@ -93,7 +93,7 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
   return (
     <div className="login-form">
       <h2>{isRegister ? 'Create Account' : 'Sign In'}</h2>
-      
+
       {errors.general && (
         <div className="error-message">{errors.general}</div>
       )}
@@ -197,8 +197,8 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
           </div>
         )}
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="submit-button"
           disabled={isLoading}
         >

@@ -1,30 +1,22 @@
-import { CALL_AUTH0_API } from '../../middleware/auth0api';
+import { api } from '../../middleware/localApi';
 
 export const UPDATE_PROFILE_REQUEST = 'UPDATE_PROFILE_REQUEST';
 export const UPDATE_PROFILE_SUCCESS = 'UPDATE_PROFILE_SUCCESS';
 export const UPDATE_PROFILE_FAILURE = 'UPDATE_PROFILE_FAILURE';
 
-export const updateProfile = (userId, metadata) => {
-  const data = {
-    method: 'PATCH',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(metadata),
-  };
-
+export const updateProfile = (profileData) => {
   return {
-    [CALL_AUTH0_API]: {
-      endpoint: `/users/${userId}`,
-      authenticated: true,
+    [api]: {
+      endpoint: '/auth/profile',
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+      headers: { 'Content-Type': 'application/json' },
       types: [
         UPDATE_PROFILE_REQUEST,
         UPDATE_PROFILE_SUCCESS,
         UPDATE_PROFILE_FAILURE
       ],
-      data,
-      readOnly: false,
+      authenticated: true,
     }
   }
 };
@@ -38,27 +30,18 @@ export const onFormChange = (fieldName, content) => {
 };
 
 export const followUser = (profile, metadata) => {
-
-  const data = {
-    method: 'PATCH',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(metadata),
-  };
-
   return {
-    [CALL_AUTH0_API]: {
-      endpoint: `/users/${profile.user_id}`,
-      authenticated: true,
+    [api]: {
+      endpoint: '/auth/profile',
+      method: 'PUT',
+      body: JSON.stringify(metadata),
+      headers: { 'Content-Type': 'application/json' },
       types: [
         UPDATE_PROFILE_REQUEST,
         UPDATE_PROFILE_SUCCESS,
         UPDATE_PROFILE_FAILURE
       ],
-      data,
-      readOnly: false,
+      authenticated: true,
     }
   }
 };

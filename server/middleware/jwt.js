@@ -10,13 +10,18 @@ const User = db.User;
 // Configure JWT strategy
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET || 'fallback-secret'
+  secretOrKey: process.env.JWT_SECRET
 };
+
+// Ensure JWT_SECRET is set
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 
 passport.use(new JwtStrategy(jwtOptions, async (payload, done) => {
   try {
     const user = await User.findByPk(payload.id);
-    
+
     if (user && user.isActive) {
       return done(null, user);
     } else {

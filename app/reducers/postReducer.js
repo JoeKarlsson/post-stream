@@ -37,7 +37,7 @@ const initialState = Map({
 
 const post = (state = initialState, action) => {
 
-  switch(action.type) {
+  switch (action.type) {
     case POST_FAILURE:
       return state.set('didInvalidate', true);
 
@@ -47,28 +47,41 @@ const post = (state = initialState, action) => {
 
     case POST_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
-        const parsedPosts = JSON.parse(action.response);
+        let parsedPosts;
+        try {
+          parsedPosts = typeof action.response === 'string' ? JSON.parse(action.response) : action.response;
+        } catch (error) {
+          console.error('Failed to parse posts response:', action.response);
+          parsedPosts = [];
+        }
+
+        // Ensure parsedPosts is an array before mapping
+        if (!Array.isArray(parsedPosts)) {
+          console.error('Posts response is not an array:', parsedPosts);
+          parsedPosts = [];
+        }
+
         return posts.clear().concat(
           parsedPosts.map((post) => {
             return Map(post)
-            .set('showComments', false)
-            .set('isParentPost', true)
-            .set('realName', `Joe Karlsson`)
-            .set('username', post.userID)
-            .set('comments', List())
-            .set('childId', 0)
-            .set('childContext', {})
-            .set('didInvalidate', false)
-            .set('updatedPostBody', post.body)
-            .set('editMode', false)
-            .set('replyMode', false)
-            .set('replyBody', '')
+              .set('showComments', false)
+              .set('isParentPost', true)
+              .set('realName', `Joe Karlsson`)
+              .set('username', post.userID)
+              .set('comments', List())
+              .set('childId', 0)
+              .set('childContext', {})
+              .set('didInvalidate', false)
+              .set('updatedPostBody', post.body)
+              .set('editMode', false)
+              .set('replyMode', false)
+              .set('replyBody', '')
           })
         )
       })
-      .set('isFetchingPosts', false)
-      .set('didInvalidate', false)
-      .set('lastUpdated', Date.now());
+        .set('isFetchingPosts', false)
+        .set('didInvalidate', false)
+        .set('lastUpdated', Date.now());
 
     case 'HANDLE_NEW_POST_BODY_CHANGE':
       return state.set('newPostBody', action.body);
@@ -78,7 +91,7 @@ const post = (state = initialState, action) => {
 
     case NEW_POST_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
-        let newPost = JSON.parse(action.response);
+        let newPost = typeof action.response === 'string' ? JSON.parse(action.response) : action.response;
         return posts.unshift(Map(newPost)
           .set('showComments', false)
           .set('isParentPost', true)
@@ -94,8 +107,8 @@ const post = (state = initialState, action) => {
           .set('replyBody', '')
         );
       })
-      .set('submittingNewPost', false)
-      .set('newPostBody', '');
+        .set('submittingNewPost', false)
+        .set('newPostBody', '');
 
     case NEW_POST_FAILURE:
       return state.set('didInvalidate', true)
@@ -121,7 +134,7 @@ const post = (state = initialState, action) => {
     case EDIT_POST_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.data.index, (post) => {
-          let updatedPost = JSON.parse(action.response);
+          let updatedPost = typeof action.response === 'string' ? JSON.parse(action.response) : action.response;
           return post.set('body', updatedPost.body)
             .set('editMode', false);
         })
@@ -137,7 +150,7 @@ const post = (state = initialState, action) => {
       return state.updateIn(['posts'], (posts) => {
         return posts.delete(action.data.index);
       })
-      .set('isDestroyingPost', false)
+        .set('isDestroyingPost', false)
 
     case DESTROY_POST_FAILURE:
       return state.set('didInvalidate', true)
@@ -150,7 +163,7 @@ const post = (state = initialState, action) => {
     case COMMENT_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.data.index, (post) => {
-          const parsedComments = JSON.parse(action.response);
+          const parsedComments = typeof action.response === 'string' ? JSON.parse(action.response) : action.response;
           return post.updateIn(['comments'], (comments) => {
             return comments.clear().concat(
               parsedComments.map((comment) => {
@@ -161,12 +174,12 @@ const post = (state = initialState, action) => {
               })
             );
           })
-          .set('showComments', true)
-          .set('childContext', parsedComments[0])
+            .set('showComments', true)
+            .set('childContext', parsedComments[0])
         })
       })
-      .set('isFetchingPosts', false)
-      .set('didInvalidate', false);
+        .set('isFetchingPosts', false)
+        .set('didInvalidate', false);
 
     case COMMENT_FAILURE:
       return state.set('isFetchingComments', false)
@@ -176,7 +189,7 @@ const post = (state = initialState, action) => {
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.index, (post) => {
           return post.set('childId', action.newChildId)
-          .set('childContext', post.get('comments').get(action.newChildId).toJS());
+            .set('childContext', post.get('comments').get(action.newChildId).toJS());
         })
       });
 
@@ -208,14 +221,14 @@ const post = (state = initialState, action) => {
     case REPLY_SUCCESS:
       return state.updateIn(['posts'], (posts) => {
         return posts.update(action.data.index, (post) => {
-          const comments = JSON.parse(action.response);
+          const comments = typeof action.response === 'string' ? JSON.parse(action.response) : action.response;
           return post.set('commentCount', post.get('commentCount') + 1)
             .set('replyBody', '')
             .set('comments', post.get('comments').unshift(comments))
             .set('replyMode', false)
         })
       })
-      .set('isSubmittingReply', false);
+        .set('isSubmittingReply', false);
 
     case REPLY_FAILURE:
       return state.set('isSubmittingReply', false)

@@ -3,7 +3,7 @@
     "username": "postgres",
     "password": "password",
     "database": "poststream_development",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "postgres",
     "port": 5432
   },
@@ -16,11 +16,7 @@
     "port": 5432
   },
   "production": {
-    "username": "postgres",
-    "password": "password",
-    "database": "poststream_production",
-    "host": "postgres",
-    "dialect": "postgres",
-    "port": 5432
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres"
   }
 }

@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import LoginForm from './LoginForm';
-import './Login.scss';
+import './Login.module.scss';
 
-const Login = ({ isAuthenticated, history }) => {
+const Login = ({ history }) => {
   const [isRegister, setIsRegister] = useState(false);
+  const { profile } = useSelector(state => state.root);
+
+  const isAuthenticated = profile.get('isAuthenticated');
+  const isFetching = profile.get('isFetching');
+  const errorMessage = profile.get('errorMessage');
 
   const handleSuccess = () => {
     if (history) {
@@ -47,14 +52,4 @@ const Login = ({ isAuthenticated, history }) => {
   );
 };
 
-function mapStateToProps(state) {
-  const { profile } = state.root;
-
-  return {
-    isAuthenticated: profile.get('isAuthenticated'),
-    isFetching: profile.get('isFetching'),
-    errorMessage: profile.get('errorMessage')
-  };
-}
-
-export default connect(mapStateToProps)(Login);
+export default Login;
