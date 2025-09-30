@@ -1,23 +1,24 @@
-import { handleApiError } from '../utils/errorHandler';
-import { logApiError } from '../utils/errorLogger';
-import { ApiCallConfig, ApiMiddlewareAction, RootState } from '../types';
+import { handleApiError } from "../utils/errorHandler";
+import { logApiError } from "../utils/errorLogger";
+import { ApiCallConfig, ApiMiddlewareAction, RootState } from "../types";
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001';
+const API_BASE_URL =
+  process.env.NODE_ENV === "production" ? "" : "http://localhost:3001";
 
 function callApi(
-  endpoint: string, 
-  method: string = 'GET', 
-  body: string | null = null, 
-  headers: Record<string, string> = {}, 
+  endpoint: string,
+  method: string = "GET",
+  body: string | null = null,
+  headers: Record<string, string> = {},
   authenticated: boolean = false
 ): Promise<any> {
   const url = API_BASE_URL + endpoint;
   const config: RequestInit = {
     method,
     headers: {
-      'Content-Type': 'application/json',
-      ...headers
-    }
+      "Content-Type": "application/json",
+      ...headers,
+    },
   };
 
   if (body) {
@@ -25,60 +26,71 @@ function callApi(
   }
 
   if (authenticated) {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     } else {
-      const error = new Error('No authentication token found');
+      const error = new Error("No authentication token found");
       logApiError(endpoint, error, { authenticated, method });
       return Promise.reject(error);
     }
   }
 
   return fetch(url, config)
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
-        return response.json().then(err => {
-          const error = new Error(`HTTP ${response.status}: ${response.statusText}`);
-          error.response = { status: response.status, statusText: response.statusText, data: err };
-          logApiError(endpoint, error, { authenticated, method, body, response: { status: response.status } });
+        return response.json().then((err) => {
+          const error = new Error(
+            `HTTP ${response.status}: ${response.statusText}`
+          );
+          error.response = {
+            status: response.status,
+            statusText: response.statusText,
+            data: err,
+          };
+          logApiError(endpoint, error, {
+            authenticated,
+            method,
+            body,
+            response: { status: response.status },
+          });
           return Promise.reject(error);
         });
       }
       return response.json();
     })
-    .catch(error => {
+    .catch((error) => {
       logApiError(endpoint, error, { authenticated, method, body });
       throw error;
     });
 }
 
-export const api = Symbol('Call API');
+export const api = Symbol("Call API");
 
 export default (store: any) => (next: any) => (action: any) => {
   const callAPI = action[api];
 
-  if (typeof callAPI === 'undefined') {
+  if (typeof callAPI === "undefined") {
     return next(action);
   }
 
   let { endpoint } = callAPI;
   const { method, body, headers, authenticated, types } = callAPI;
 
-  if (typeof endpoint === 'function') {
+  if (typeof endpoint === "function") {
     endpoint = endpoint(store.getState());
   }
 
-  if (typeof endpoint !== 'string') {
-    throw new Error('Specify a string endpoint URL.');
+  if (typeof endpoint !== "string") {
+    throw new Error("Specify a string endpoint URL.");
   }
 
   if (!Array.isArray(types) || types.length !== 3) {
-    throw new Error('Expected an array of three action types.');
+    throw new Error("Expected an array of three action types.");
   }
 
-  if (!types.every(type => typeof type === 'string')) {
-    throw new Error('Expected action types to be strings.');
+  if (!types.every((type) => typeof type === "string")) {
+    throw new Error("Expected action types to be strings.");
   }
 
   const [requestType, successType, failureType] = types;
@@ -89,35 +101,69 @@ export default (store: any) => (next: any) => (action: any) => {
     return finalAction;
   }
 
+  // DEBUG: Log localApi call details
+  console.log("🔍 LocalApi Middleware DEBUG:", {
+    endpoint,
+    method,
+    requestType,
+    successType,
+    failureType,
+    authenticated,
+  });
+
   next(actionWith({ type: requestType }));
 
   return callApi(endpoint, method, body, headers, authenticated).then(
-    response => {
+    (response) => {
       // Handle successful login/register
       if (response.success && response.token && response.user) {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("user", JSON.stringify(response.user));
       }
 
-      return next(actionWith({
-        response,
-        type: successType
-      }));
+      console.log("🔍 LocalApi Middleware SUCCESS:", {
+        endpoint,
+        successType,
+        response: JSON.stringify(response).substring(0, 200) + "...",
+      });
+
+      return next(
+        actionWith({
+          response,
+          type: successType,
+          data: callAPI.data || {},
+        })
+      );
     },
-    error => {
-      const errorResponse = handleApiError(error, endpoint, { method, body, authenticated });
+    (error) => {
+      console.log("🔍 LocalApi Middleware ERROR:", {
+        endpoint,
+        failureType,
+        error: error.message,
+      });
+
+      const errorResponse = handleApiError(error, endpoint, {
+        method,
+        body,
+        authenticated,
+      });
 
       // Handle authentication errors
-      if (errorResponse.error.code === 'UNAUTHORIZED' || errorResponse.error.code === 'INVALID_TOKEN') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+      if (
+        errorResponse.error.code === "UNAUTHORIZED" ||
+        errorResponse.error.code === "INVALID_TOKEN"
+      ) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       }
 
-      return next(actionWith({
-        type: failureType,
-        error: errorResponse.error.message,
-        errorCode: errorResponse.error.code
-      }));
+      return next(
+        actionWith({
+          type: failureType,
+          error: errorResponse.error.message,
+          errorCode: errorResponse.error.code,
+        })
+      );
     }
   );
 };

@@ -8,19 +8,18 @@ import { Outlet } from "react-router-dom";
 import Header from "./shared/header/Header";
 import Footer from "./shared/footer/Footer";
 import ErrorBoundary from "./shared/error/ErrorBoundary";
-import normalize from "./shared/styles/normalizer.module.scss";
 import skeleton from "./shared/styles/skeleton.module.scss";
 import styles from "./App.module.scss";
-import { RootState, AppAction, User } from "../types";
+import { RootState } from "../slices";
 
 const App: React.FC = () => {
-  const dispatch = useDispatch<React.Dispatch<AppAction>>();
+  const dispatch = useDispatch();
   const profile = useSelector((state: RootState) => state.profile);
-  const user: User = JSON.parse(localStorage.getItem("user") || "{}");
+  const user = useSelector((state: RootState) => state.user.profile);
 
-  const isAuthenticated: boolean = profile.get("isAuthenticated");
-  const errorMessage: string = profile.get("errorMessage");
-  const errorCode: string = profile.get("errorCode");
+  const isAuthenticated: boolean = profile.isAuthenticated || false;
+  const errorMessage: string = profile.errorMessage || "";
+  const errorCode: string = profile.errorCode || "";
 
   return (
     <ErrorBoundary>

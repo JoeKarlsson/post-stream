@@ -1,25 +1,30 @@
 import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  submitNewPost,
-  handleNewPostBodyChange,
-} from "../../../actions/posts/newPostActions";
+import { createPost, setNewPostBody } from "../../../slices/postSlice";
+import { RootState } from "../../../slices";
 import styles from "./NewPost.module.scss";
 
 const NewPostForm = () => {
   const dispatch = useDispatch();
   const bodyRef = useRef();
-  const newPostBody = useSelector((state) => state.post.get("newPostBody"));
+  const newPostBody = useSelector((state: RootState) => state.post.newPostBody);
+  const user = useSelector((state: RootState) => state.user.profile);
 
   const handleBodyChange = (e) => {
-    dispatch(handleNewPostBodyChange(e.target.value));
+    dispatch(setNewPostBody(e.target.value));
   };
 
   const handleSubmitPost = (e) => {
     e.preventDefault();
-    // Retrieves the profile data from localStorage
-    const profile = localStorage.getItem("profile");
-    dispatch(submitNewPost(newPostBody, profile.user_id));
+    if (user && newPostBody.trim()) {
+      dispatch(
+        createPost({
+          body: newPostBody,
+          user_id: user.id,
+          name: user.user_metadata?.name || user.nickname || "Anonymous",
+        })
+      );
+    }
   };
 
   const handleKeyDown = (event) => {

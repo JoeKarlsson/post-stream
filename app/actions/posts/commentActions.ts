@@ -1,36 +1,45 @@
-import { CALL_API } from '../../middleware/api';
+import { api } from "../../middleware/localApi";
+import { ToggleCommentAction, ToggleShowCommentAction } from "../../types";
 
-export const COMMENT_REQUEST = 'COMMENT_REQUEST';
-export const COMMENT_SUCCESS = 'COMMENT_SUCCESS';
-export const COMMENT_FAILURE = 'COMMENT_FAILURE';
+export const COMMENT_REQUEST = "COMMENT_REQUEST";
+export const COMMENT_SUCCESS = "COMMENT_SUCCESS";
+export const COMMENT_FAILURE = "COMMENT_FAILURE";
 
-export const fetchCommentsIfNeeded = (postId, index) => {
+export const fetchCommentsIfNeeded = (postId: number, index: number) => {
   const data = {
     postId,
     index,
   };
 
   return {
-    [CALL_API]: {
+    [api]: {
       endpoint: `/post/${postId}/comments`,
+      method: "GET",
       types: [COMMENT_REQUEST, COMMENT_SUCCESS, COMMENT_FAILURE],
-      data,
-    }
-  }
+      authenticated: false,
+      data: { index },
+    },
+  };
 };
 
-export const toggleComment = (index, newChildId) => {
+export const toggleComment = (
+  index: number,
+  newChildId: number
+): ToggleCommentAction => {
   return {
-    type: 'TOGGLE_COMMENT',
+    type: "TOGGLE_COMMENT",
     index,
     newChildId,
-  }
+  };
 };
 
-export const toggleShowComment = (index, showCommentState) => {
+export const toggleShowComment = (
+  index: number,
+  showCommentState: boolean
+): ToggleShowCommentAction => {
   return {
-    type: 'TOGGLE_SHOW_COMMENT',
+    type: "TOGGLE_SHOW_COMMENT",
     index,
     showCommentState,
-  }
+  };
 };

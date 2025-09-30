@@ -15,8 +15,22 @@ import DestroyPostButton from "./DestroyPostButton";
 import Reply from "./Reply";
 import EditPost from "./../editPost/EditPost";
 import styles from "./Post.module.scss";
+import { Comment, Post as PostType } from "../../../types";
 
-const Post = ({
+interface PostProps {
+  username: string | number;
+  realName: string;
+  commentCount: number;
+  id: number;
+  index: number;
+  isParentPost: boolean;
+  createdAt: string;
+  body: string;
+  comments: Comment[];
+  auth: Record<string, unknown>;
+}
+
+const Post: React.FC<PostProps> = ({
   username,
   realName,
   commentCount,
@@ -32,13 +46,21 @@ const Post = ({
   const profile = useSelector((state) => state.profile);
   const post = useSelector((state) => state.post);
 
-  const editMode = post.get("posts").get(index).get("editMode");
-  const showComments = post.get("posts").get(index).get("showComments");
-  const childId = post.get("posts").get(index).get("childId");
-  const childContext = post.get("posts").get(index).get("childContext");
-  const postUserID = post.get("posts").get(index).get("userID");
-  const isAuthenticated = profile.get("isAuthenticated");
-  const profileData = profile.get("profile").toJS();
+  const currentPost = post.posts[index];
+
+  // Safety check to ensure the post exists
+  if (!currentPost) {
+    return null;
+  }
+
+  const editMode = currentPost.editMode;
+  const showComments = currentPost.showComments;
+  const childId = currentPost.childId;
+  const childContext = currentPost.childContext;
+  const postUserID = currentPost.userID;
+  const postComments = currentPost.comments;
+  const isAuthenticated = profile.isAuthenticated;
+  const profileData = profile.profile;
 
   const rawMarkup = useMemo(() => {
     const md = new Remarkable();
@@ -50,7 +72,7 @@ const Post = ({
     return { __html: output };
   }, [body]);
 
-  const getRandomColor = () => {
+  const getRandomColor = useMemo(() => {
     const colors = [
       "teal",
       "red",
@@ -63,7 +85,7 @@ const Post = ({
 
     const color = colors[Math.floor(Math.random() * colors.length)];
     return color;
-  };
+  }, [id]); // Use post ID as dependency to ensure consistent color per post
 
   const handleToggleComments = () => {
     dispatch(toggleShowComment(index, !showComments));
@@ -74,6 +96,7 @@ const Post = ({
   };
 
   const handleShowingChild = () => {
+    console.log("🔍 handleShowingChild called:", { id, index, showComments });
     dispatch(fetchCommentsIfNeeded(id, index));
   };
 
@@ -88,12 +111,12 @@ const Post = ({
   const handleNext = () => {
     const newChildId = childId + 1;
 
-    if (newChildId < comments.length) {
+    if (newChildId < postComments.length) {
       dispatch(toggleComment(index, newChildId));
     }
   };
 
-  const color = getRandomColor();
+  const color = getRandomColor;
 
   return (
     <div className={styles.post}>
@@ -124,7 +147,11 @@ const Post = ({
             </div>
           )}
           {isAuthenticated && <Reply id={id} index={index} auth={auth} />}
-          <div className="comment-count" onClick={handleShowingChild}>
+          <div
+            className="comment-count"
+            onClick={handleShowingChild}
+            style={{ cursor: "pointer", border: "1px solid red" }}
+          >
             <CommentCount numOfComments={commentCount} />
           </div>
         </div>
@@ -135,11 +162,19 @@ const Post = ({
           <span className={styles[color]} dangerouslySetInnerHTML={rawMarkup} />
 
           {!showComments && (
-            <div className="comment-count" onClick={handleShowingChild}></div>
+            <div
+              className="comment-count"
+              onClick={handleShowingChild}
+              style={{ cursor: "pointer", border: "1px solid blue" }}
+            ></div>
           )}
 
           {showComments && (
-            <div className="comment-count" onClick={handleToggleComments}>
+            <div
+              className="comment-count"
+              onClick={handleToggleComments}
+              style={{ cursor: "pointer", border: "1px solid green" }}
+            >
               <CommentCount numOfComments={commentCount} />
             </div>
           )}
@@ -150,35 +185,30 @@ const Post = ({
 
       {showComments && (
         <div className="replies">
-          {childId !== 0 && (
-            <span>
-              [
-              <span className={styles.leftButton} onClick={handlePrev}>
-                {" "}
-                left{" "}
-              </span>
-              ]
-            </span>
+          {postComments && postComments.length > 0 && (
+            <>
+              {postComments.map((comment, commentIndex) => (
+                <Post
+                  key={comment.id}
+                  id={comment.id}
+                  body={comment.body}
+                  userID={comment.userID}
+                  createdAt={comment.createdAt}
+                  updatedAt={comment.updatedAt}
+                  commentCount={comment.commentCount || 0}
+                  username={comment.userID}
+                  realName={`User ${comment.userID}`}
+                  index={commentIndex}
+                  isParentPost={false}
+                  comments={[]}
+                  auth={auth}
+                />
+              ))}
+            </>
           )}
 
-          {childId !== commentCount - 1 && (
-            <span>
-              [
-              <span className={styles.rightButton} onClick={handleNext}>
-                {" "}
-                right{" "}
-              </span>
-              ]
-            </span>
-          )}
-
-          {childContext && childContext.id && (
-            <Post
-              {...childContext}
-              dispatch={dispatch}
-              isParentPost={false}
-              key={childContext.id}
-            />
+          {(!postComments || postComments.length === 0) && (
+            <div>No comments yet.</div>
           )}
         </div>
       )}

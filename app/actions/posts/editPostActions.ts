@@ -1,15 +1,24 @@
-import { CALL_API } from '../../middleware/api';
+import { CALL_API } from "../../middleware/api";
+import {
+  ToggleEditModeAction,
+  HandleUpdatedPostBodyChangeAction,
+} from "../../types";
 
-export const EDIT_POST_REQUEST = 'EDIT_POST_REQUEST';
-export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS';
-export const EDIT_POST_FAILURE = 'EDIT_POST_FAILURE';
-export const HANDLE_UPDATED_POST_BODY_CHANGE = 'HANDLE_UPDATED_POST_BODY_CHANGE';
+export const EDIT_POST_REQUEST = "EDIT_POST_REQUEST";
+export const EDIT_POST_SUCCESS = "EDIT_POST_SUCCESS";
+export const EDIT_POST_FAILURE = "EDIT_POST_FAILURE";
+export const HANDLE_UPDATED_POST_BODY_CHANGE =
+  "HANDLE_UPDATED_POST_BODY_CHANGE";
 
-export const submitUpdatedPost = (body, postId, index) => {
+export const submitUpdatedPost = (
+  body: string,
+  postId: number,
+  index: number
+) => {
   const data = {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     body: `body=${body}`,
     index,
@@ -21,22 +30,28 @@ export const submitUpdatedPost = (body, postId, index) => {
       authenticated: true,
       types: [EDIT_POST_REQUEST, EDIT_POST_SUCCESS, EDIT_POST_FAILURE],
       data,
-    }
-  }
+    },
+  };
 };
 
-export const toggleEditMode = (index, editState) => {
+export const toggleEditMode = (
+  index: number,
+  editState: boolean
+): ToggleEditModeAction => {
   return {
-    type: 'TOGGLE_EDIT_MODE',
+    type: "TOGGLE_EDIT_MODE",
     index,
     editState,
-  }
+  };
 };
 
-export const handleUpdatedPostBodyChange = (body, index) => {
+export const handleUpdatedPostBodyChange = (
+  body: string,
+  index: number
+): HandleUpdatedPostBodyChangeAction => {
   return {
-    type: 'HANDLE_UPDATED_POST_BODY_CHANGE',
+    type: "HANDLE_UPDATED_POST_BODY_CHANGE",
     body,
     index,
-  }
+  };
 };

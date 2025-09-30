@@ -1,33 +1,33 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { login, register } from '../../../../actions/auth/localAuthActions';
-import './LoginForm.module.scss';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginUser, registerUser } from "../../../../slices/userSlice";
+import "./LoginForm.module.scss";
 
 const LoginForm = ({ onSuccess, isRegister = false }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    username: '',
-    first_name: '',
-    last_name: '',
-    bio: ''
+    email: "",
+    password: "",
+    username: "",
+    first_name: "",
+    last_name: "",
+    bio: "",
   });
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -36,26 +36,26 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
     const newErrors = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     if (isRegister) {
       if (!formData.username) {
-        newErrors.username = 'Username is required';
+        newErrors.username = "Username is required";
       } else if (formData.username.length < 3) {
-        newErrors.username = 'Username must be at least 3 characters';
+        newErrors.username = "Username must be at least 3 characters";
       }
 
       if (confirmPassword !== formData.password) {
-        newErrors.confirmPassword = 'Passwords do not match';
+        newErrors.confirmPassword = "Passwords do not match";
       }
     }
 
@@ -75,16 +75,28 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
 
     try {
       if (isRegister) {
-        await dispatch(register(formData));
+        await dispatch(
+          registerUser({
+            email: formData.email,
+            password: formData.password,
+            nickname: formData.username,
+            name: `${formData.first_name} ${formData.last_name}`.trim(),
+          })
+        );
       } else {
-        await dispatch(login(formData.email, formData.password));
+        await dispatch(
+          loginUser({
+            email: formData.email,
+            password: formData.password,
+          })
+        );
       }
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      setErrors({ general: error.message || 'An error occurred' });
+      setErrors({ general: error.message || "An error occurred" });
     } finally {
       setIsLoading(false);
     }
@@ -92,11 +104,9 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
 
   return (
     <div className="login-form">
-      <h2>{isRegister ? 'Create Account' : 'Sign In'}</h2>
+      <h2>{isRegister ? "Create Account" : "Sign In"}</h2>
 
-      {errors.general && (
-        <div className="error-message">{errors.general}</div>
-      )}
+      {errors.general && <div className="error-message">{errors.general}</div>}
 
       <form onSubmit={handleSubmit}>
         {isRegister && (
@@ -109,10 +119,12 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className={errors.username ? 'error' : ''}
+                className={errors.username ? "error" : ""}
                 placeholder="Choose a username"
               />
-              {errors.username && <span className="error-text">{errors.username}</span>}
+              {errors.username && (
+                <span className="error-text">{errors.username}</span>
+              )}
             </div>
 
             <div className="form-group">
@@ -161,7 +173,7 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className={errors.email ? 'error' : ''}
+            className={errors.email ? "error" : ""}
             placeholder="your@email.com"
           />
           {errors.email && <span className="error-text">{errors.email}</span>}
@@ -175,10 +187,12 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className={errors.password ? 'error' : ''}
+            className={errors.password ? "error" : ""}
             placeholder="Your password"
           />
-          {errors.password && <span className="error-text">{errors.password}</span>}
+          {errors.password && (
+            <span className="error-text">{errors.password}</span>
+          )}
         </div>
 
         {isRegister && (
@@ -190,19 +204,17 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
               name="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className={errors.confirmPassword ? 'error' : ''}
+              className={errors.confirmPassword ? "error" : ""}
               placeholder="Confirm your password"
             />
-            {errors.confirmPassword && <span className="error-text">{errors.confirmPassword}</span>}
+            {errors.confirmPassword && (
+              <span className="error-text">{errors.confirmPassword}</span>
+            )}
           </div>
         )}
 
-        <button
-          type="submit"
-          className="submit-button"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Loading...' : (isRegister ? 'Create Account' : 'Sign In')}
+        <button type="submit" className="submit-button" disabled={isLoading}>
+          {isLoading ? "Loading..." : isRegister ? "Create Account" : "Sign In"}
         </button>
       </form>
     </div>

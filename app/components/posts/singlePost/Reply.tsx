@@ -12,12 +12,8 @@ const Reply = ({ index, id }) => {
   const dispatch = useDispatch();
   const replyRef = useRef();
 
-  const replyMode = useSelector((state) =>
-    state.post.get("posts").get(index).get("replyMode")
-  );
-  const replyBody = useSelector((state) =>
-    state.post.get("posts").get(index).get("replyBody")
-  );
+  const replyMode = useSelector((state) => state.post.posts[index]?.replyMode);
+  const replyBody = useSelector((state) => state.post.posts[index]?.replyBody);
 
   const handleToggleReplyMode = () => {
     dispatch(onToggleReplyMode(index));

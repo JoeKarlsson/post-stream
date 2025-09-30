@@ -7,7 +7,7 @@ import styles from "./EditProfile.module.scss";
 const EditProfile = () => {
   const dispatch = useDispatch();
   const params = useParams();
-  const profile = useSelector((state) => state.profile.get("profile").toJS());
+  const profile = useSelector((state) => state.profile.profile);
 
   const { userName } = params;
 

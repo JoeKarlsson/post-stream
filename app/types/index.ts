@@ -1,4 +1,4 @@
-import { Map, List } from "immutable";
+// Removed Immutable.js imports - using plain JavaScript objects with RTK
 
 // User and Profile Types
 export interface User {
@@ -32,10 +32,10 @@ export interface Post {
   showComments?: boolean;
   isParentPost?: boolean;
   realName?: string;
-  username?: string;
+  username?: string | number;
   comments?: Comment[];
   childId?: number;
-  childContext?: any;
+  childContext?: Comment | null;
   didInvalidate?: boolean;
   updatedPostBody?: string;
   editMode?: boolean;
@@ -55,8 +55,9 @@ export interface Comment {
   isParentPost?: boolean;
 }
 
-// Redux State Types
+// Redux State Types - Updated for RTK
 export interface PostState {
+  posts: Post[];
   isFetchingPosts: boolean;
   isFetchingComments: boolean;
   isDestroyingPost: boolean;
@@ -66,40 +67,82 @@ export interface PostState {
   lastUpdated: number | null;
   newPostBody: string;
   receivedAt: number | null;
-  posts: List<Map<string, any>>;
+  error: string | null;
 }
 
 export interface UserState {
-  profile: Map<string, any>;
+  profile: User | null;
   isFetchingPosts: boolean;
   isFetching: boolean;
   didInvalidate: boolean;
-  posts: List<Map<string, any>>;
+  posts: Post[];
   isAuthenticated: boolean;
   errorMessage: string;
   errorCode: string | null;
 }
 
 export interface ProfileState {
-  profile: Map<string, any>;
+  profile: User | null;
   isFetchingPosts: boolean;
   didInvalidate: boolean;
-  posts: List<Map<string, any>>;
+  posts: Post[];
   isFetching: boolean;
   isAuthenticated: boolean;
   errorMessage?: string;
   errorCode?: string;
 }
 
-export interface RootState {
-  post: PostState;
-  user: UserState;
-  profile: ProfileState;
-}
+// RootState is now exported from slices/index.ts
 
 // Action Types
 export interface BaseAction {
   type: string;
+}
+
+export interface ToggleEditModeAction extends BaseAction {
+  type: "TOGGLE_EDIT_MODE";
+  index: number;
+  editState: boolean;
+}
+
+export interface HandleUpdatedPostBodyChangeAction extends BaseAction {
+  type: "HANDLE_UPDATED_POST_BODY_CHANGE";
+  index: number;
+  body: string;
+}
+
+export interface ToggleCommentAction extends BaseAction {
+  type: "TOGGLE_COMMENT";
+  index: number;
+  newChildId: number;
+}
+
+export interface ToggleShowCommentAction extends BaseAction {
+  type: "TOGGLE_SHOW_COMMENT";
+  index: number;
+  showCommentState: boolean;
+}
+
+export interface ToggleReplyModeAction extends BaseAction {
+  type: "TOGGLE_REPLY_MODE";
+  index: number;
+}
+
+export interface HandleReplyBodyChangeAction extends BaseAction {
+  type: "HANDLE_REPLY_BODY_CHANGE";
+  index: number;
+  body: string;
+}
+
+export interface HandleNewPostBodyChangeAction extends BaseAction {
+  type: "HANDLE_NEW_POST_BODY_CHANGE";
+  body: string;
+}
+
+export interface HandleFormChangeAction extends BaseAction {
+  type: "HANDLE_FORM_CHANGE";
+  fieldName: string;
+  content: string;
 }
 
 export interface ApiAction extends BaseAction {
@@ -114,7 +157,7 @@ export interface ApiAction extends BaseAction {
 }
 
 export interface SuccessAction extends BaseAction {
-  response: any;
+  response: unknown;
 }
 
 export interface FailureAction extends BaseAction {
@@ -199,6 +242,14 @@ export type AppAction =
   | DestroyPostAction
   | CommentAction
   | ReplyAction
+  | ToggleEditModeAction
+  | HandleUpdatedPostBodyChangeAction
+  | ToggleCommentAction
+  | ToggleShowCommentAction
+  | ToggleReplyModeAction
+  | HandleReplyBodyChangeAction
+  | HandleNewPostBodyChangeAction
+  | HandleFormChangeAction
   | BaseAction;
 
 // Component Props Types
@@ -215,7 +266,7 @@ export interface AppProps {
 }
 
 // API Response Types
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   message?: string;

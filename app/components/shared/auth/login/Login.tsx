@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import LoginForm from "./LoginForm";
-import "./Login.module.scss";
+import { RootState } from "../../../../slices";
 
 const Login = ({ history }) => {
   const [isRegister, setIsRegister] = useState(false);
-  const profile = useSelector((state) => state.profile);
+  const profile = useSelector((state: RootState) => state.profile);
+  const user = useSelector((state: RootState) => state.user);
 
-  const isAuthenticated = profile.get("isAuthenticated");
-  const isFetching = profile.get("isFetching");
-  const errorMessage = profile.get("errorMessage");
+  const isAuthenticated = user.isAuthenticated;
+  const isFetching = user.isFetching;
+  const errorMessage = user.errorMessage;
 
   const handleSuccess = () => {
     if (history) {

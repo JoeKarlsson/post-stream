@@ -50,7 +50,10 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(limiter);
+// Only apply rate limiting in production
+if (!isDeveloping) {
+  app.use(limiter);
+}
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
@@ -83,7 +86,12 @@ app.get('/health', async (req, res) => {
 });
 
 app.use('/post', post);
-app.use('/auth', authLimiter, auth);
+// Only apply auth rate limiting in production
+if (!isDeveloping) {
+  app.use('/auth', authLimiter, auth);
+} else {
+  app.use('/auth', auth);
+}
 
 if (isDeveloping) {
   app.set('host', 'http://localhost');

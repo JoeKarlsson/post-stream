@@ -4,20 +4,24 @@ import { useSelector, useDispatch } from "react-redux";
 import NewPost from "../newPost/NewPost";
 import PostList from "../postList/PostList";
 import styles from "./AllPosts.module.scss";
-import { fetchPosts } from "../../../actions/posts/postActions";
+import { fetchPosts } from "../../../slices/postSlice";
+import { RootState } from "../../../slices";
 
-const AllPosts = ({ auth }) => {
+interface AllPostsProps {
+  auth?: unknown;
+}
+
+const AllPosts: React.FC<AllPostsProps> = ({ auth }) => {
   const dispatch = useDispatch();
-  const post = useSelector((state) => state.post);
-  const profile = useSelector((state) => state.profile);
+  const post = useSelector((state: RootState) => state.post);
+  const profile = useSelector((state: RootState) => state.profile);
 
-  const posts = post.get("posts").toJS();
-  const isFetching = post.get("isFetching");
-  const lastUpdated = post.get("lastUpdated");
-  const isAuthenticated = profile.get("isAuthenticated");
+  const posts = post.posts;
+  const lastUpdated = post.lastUpdated;
+  const isAuthenticated = profile.isAuthenticated;
 
   useEffect(() => {
-    dispatch(fetchPosts());
+    dispatch(fetchPosts() as any);
   }, [dispatch]);
 
   return (
@@ -25,13 +29,14 @@ const AllPosts = ({ auth }) => {
       <h1>PostStream</h1>
 
       <div className={styles.lastUpdated}>
-        stream was last updated at {new Date(lastUpdated).toLocaleTimeString()}.{" "}
+        stream was last updated at{" "}
+        {lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : "never"}.{" "}
       </div>
 
-      {isAuthenticated && <NewPost auth={auth} />}
+      {isAuthenticated && <NewPost />}
       <hr />
 
-      <PostList posts={posts} isAuthenticated={isAuthenticated} />
+      <PostList posts={posts} auth={auth} />
     </div>
   );
 };

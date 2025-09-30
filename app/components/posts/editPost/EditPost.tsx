@@ -12,8 +12,8 @@ const EditPost = ({ id, index }) => {
   const dispatch = useDispatch();
   const bodyRef = useRef();
 
-  const updatedPostBody = useSelector((state) =>
-    state.post.get("posts").get(index).get("updatedPostBody")
+  const updatedPostBody = useSelector(
+    (state) => state.post.posts[index]?.updatedPostBody
   );
 
   const handleCancel = () => {

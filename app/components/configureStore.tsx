@@ -1,24 +1,23 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { createLogger } from "redux-logger";
-import * as reducers from "../reducers";
+import rootReducer from "../slices";
 import api from "../middleware/api";
 import localApi from "../middleware/localApi";
-import { RootState } from "../types";
 
 const loggerMiddleware = createLogger({
   collapsed: true,
   diff: true,
 });
 
-export default function configureAppStore(preloadedState?: Partial<RootState>) {
+export default function configureAppStore(
+  preloadedState?: Record<string, unknown>
+) {
   return configureStore({
-    reducer: reducers.root,
+    reducer: rootReducer,
     preloadedState,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
-        },
+        serializableCheck: false,
       }).concat(localApi, api, loggerMiddleware),
     devTools: process.env.NODE_ENV !== "production",
   });

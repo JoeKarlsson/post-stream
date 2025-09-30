@@ -16,8 +16,10 @@ const Profile = () => {
   const user = useSelector((state) => state.user);
 
   const { userName } = params;
-  const profileData = user.get("profile").toJS();
-  const posts = profile.get("posts").toJS();
+  const userJS = user.toJS();
+  const profileJS = profile.toJS();
+  const profileData = userJS.profile;
+  const posts = profileJS.posts;
 
   useEffect(() => {
     dispatch(fetchUserPosts(userName));
@@ -31,12 +33,12 @@ const Profile = () => {
       {profileData && (
         <div>
           <ProfileDetails profile={profileData}></ProfileDetails>
-          <FollowButton user_id={profileData.user_id} />
+          <FollowButton user_id={profileData.id} />
         </div>
       )}
-      {isAuthenticated && profileData.user_id === userName && (
+      {isAuthenticated && profileData.id === userName && (
         <div>
-          [ <Link to={`/user/${profileData.user_id}/edit`}>edit profile</Link> ]
+          [ <Link to={`/user/${profileData.id}/edit`}>edit profile</Link> ]
         </div>
       )}
       <hr />

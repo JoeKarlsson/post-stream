@@ -1,17 +1,29 @@
-import { CALL_API } from '../../middleware/api';
+import { CALL_API } from "../../middleware/api";
+import {
+  ToggleReplyModeAction,
+  HandleReplyBodyChangeAction,
+} from "../../types";
 
-export const REPLY_REQUEST = 'REPLY_REQUEST';
-export const REPLY_SUCCESS = 'REPLY_SUCCESS';
-export const REPLY_FAILURE = 'REPLY_FAILURE';
+export const REPLY_REQUEST = "REPLY_REQUEST";
+export const REPLY_SUCCESS = "REPLY_SUCCESS";
+export const REPLY_FAILURE = "REPLY_FAILURE";
 
-export const submitNewReply = (info) => {
+interface ReplyInfo {
+  replyBody: string;
+  userID: string;
+  id: number;
+  commentId: number;
+  index: number;
+}
+
+export const submitNewReply = (info: ReplyInfo) => {
   const data = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     body: `body=${info.replyBody}&userID=${info.userID}`,
-    ...info
+    ...info,
   };
 
   return {
@@ -20,21 +32,24 @@ export const submitNewReply = (info) => {
       authenticated: true,
       types: [REPLY_REQUEST, REPLY_SUCCESS, REPLY_FAILURE],
       data,
-    }
-  }
+    },
+  };
 };
 
-export const onToggleReplyMode = (index) => {
+export const onToggleReplyMode = (index: number): ToggleReplyModeAction => {
   return {
-    type: 'TOGGLE_REPLY_MODE',
+    type: "TOGGLE_REPLY_MODE",
     index,
-  }
+  };
 };
 
-export const handleReplyBodyChange = (body, index) => {
+export const handleReplyBodyChange = (
+  body: string,
+  index: number
+): HandleReplyBodyChangeAction => {
   return {
-    type: 'HANDLE_REPLY_BODY_CHANGE',
+    type: "HANDLE_REPLY_BODY_CHANGE",
     index,
     body,
-  }
+  };
 };
