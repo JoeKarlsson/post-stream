@@ -99,7 +99,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.0",
     "bcrypt": "^6.0.0",
-    "body-parser": "^2.2.0",
+    "body-parser": "^2.2.1",
     "cookie": "^1.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
