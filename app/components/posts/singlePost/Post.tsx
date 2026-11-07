@@ -10,21 +10,12 @@ import {
 import { AppDispatch, RootState } from "../../../slices";
 import { Post as PostType } from "../../../types";
 import { renderPostHtml } from "../../../utils/markdown";
+import { authorColor } from "../../../utils/authorColor";
 import TextButton from "../../shared/textButton/TextButton";
 import CommentCount from "./CommentCount";
 import Reply from "./Reply";
 import EditPost from "./../editPost/EditPost";
 import styles from "./Post.module.scss";
-
-const COLORS = [
-  "teal",
-  "red",
-  "yellow",
-  "orange",
-  "pink",
-  "lightGreen",
-  "forrestGreen",
-];
 
 const renderMarkup = (body: string) => ({ __html: renderPostHtml(body) });
 
@@ -40,8 +31,6 @@ const Post = ({ id, body, userID, createdAt, commentCount = 0, index }: PostProp
   );
 
   const markup = useMemo(() => renderMarkup(body), [body]);
-  // Stable per post so colors don't shuffle on re-render
-  const color = COLORS[id % COLORS.length];
 
   if (!currentPost) {
     return null;
@@ -75,7 +64,10 @@ const Post = ({ id, body, userID, createdAt, commentCount = 0, index }: PostProp
             </span>
           </div>
 
-          <span className={styles[color]} dangerouslySetInnerHTML={markup} />
+          <div
+            className={`${styles.body} ${styles[authorColor(userID)]}`}
+            dangerouslySetInnerHTML={markup}
+          />
 
           <div className={styles.actions}>
             {isOwner && (
@@ -109,14 +101,14 @@ const Post = ({ id, body, userID, createdAt, commentCount = 0, index }: PostProp
                     {new Date(comment.createdAt).toLocaleTimeString()}
                   </span>
                 </div>
-                <span
-                  className={styles[COLORS[comment.id % COLORS.length]]}
+                <div
+                  className={`${styles.commentBody} ${styles[authorColor(comment.userID)]}`}
                   dangerouslySetInnerHTML={renderMarkup(comment.body)}
                 />
               </div>
             ))
           ) : (
-            <div>No comments yet.</div>
+            <div>no comments yet</div>
           )}
         </div>
       )}
