@@ -1,20 +1,31 @@
-// Author and time: the quiet line above each post
-.statusBar {
+// j/k focus lands on a whole post; show it like a cursor in the margin
+.post:focus-visible {
+  outline: none;
+  box-shadow: -1ch 0 0 0 var(--color-bg), -1.25ch 0 0 0 var(--color-text);
+}
+
+// [2026-11-06 19:17] <janedoe343>
+.logLine {
   margin-bottom: 0.5rem;
-  font-size: 1.6rem;
+  color: var(--color-muted);
 }
 
 .username {
   display: inline-block;
   line-height: var(--tap-target);
-  color: var(--color-link);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+  }
 }
 
 .timeStamp {
-  color: var(--color-forest-green);
+  color: var(--color-muted);
 }
 
-// The post itself is the biggest thing on the page after the masthead
+// The post is the biggest text on the page after the masthead
 .body {
   font-size: 2rem;
   line-height: 1.5;
@@ -39,17 +50,14 @@
   margin-top: 1rem;
 }
 
+// Replies are quoted like email: "> " with the text hanging after it
 .comment {
-  margin: 1.5rem 0 0 2rem;
-  padding-left: 1.5rem;
-  border-left: 1px solid var(--color-rule);
-}
+  margin: 1.5rem 0 0;
+  padding-left: 2ch;
 
-// One color per author (see app/utils/authorColor.ts)
-.teal { color: var(--color-teal); }
-.red { color: var(--color-red); }
-.purple { color: var(--color-purple); }
-.orange { color: var(--color-orange); }
-.pink { color: var(--color-pink); }
-.lightGreen { color: var(--color-light-green); }
-.forrestGreen { color: var(--color-forest-green); }
+  .commentBody p:first-child::before {
+    content: "> " / "";
+    margin-left: -2ch;
+    color: var(--color-muted);
+  }
+}

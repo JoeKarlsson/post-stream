@@ -1,23 +1,24 @@
-// PostStream base styles. The concept is an "undesigned", text-only social
-// network, which is why everything is set in Courier and posts are split by rules.
+// PostStream base styles. The spec: an undesigned, text-only, ASCII social
+// network. The interface itself is monochrome; the only color on the page is
+// each author's color on their own posts. Structure is drawn with characters.
 
 :global {
   :root {
     color-scheme: only dark;
 
-    // Colors: every text color clears WCAG AA (4.5:1) on --color-bg and --color-bar
+    // Every text color clears WCAG AA (4.5:1) on --color-bg, --color-bar and --color-field
     --color-bg: #2a2937;
     --color-bar: #232230;
     --color-field: #353445;
-    --color-rule: #5c5a76;
     --color-text: #ffffff;
-    --color-link: #1eaedb;
-    --color-link-hover: #8fdcf5;
+    --color-muted: #a8a8b3;
+
+    // Author colors: the original 2016 palette, lightened only where needed for contrast
     --color-teal: #00b8a9;
-    --color-red: #ff5a5a;
-    --color-purple: #a58bcc; // the original #9373c1, lightened just enough for AA
+    --color-red: #fb5c5c;
+    --color-purple: #a58bcc;
     --color-orange: #e6834a;
-    --color-pink: #ff4fd8;
+    --color-pink: #e661ba;
     --color-light-green: #61d76b;
     --color-forest-green: #00ce58;
 
@@ -53,11 +54,12 @@
     margin: 0 0 2rem;
     font-weight: 400;
     line-height: 1.25;
+    letter-spacing: -0.1rem;
   }
 
-  h1 { font-size: 3.6rem; letter-spacing: -0.1rem; color: var(--color-light-green); }
-  h2 { font-size: 2.8rem; letter-spacing: -0.1rem; color: var(--color-purple); }
-  h3 { font-size: 2.2rem; letter-spacing: -0.1rem; color: var(--color-pink); }
+  h1 { font-size: 3.6rem; }
+  h2 { font-size: 2.2rem; }
+  h3 { font-size: 1.8rem; }
 
   @media (min-width: 550px) {
     h1 { font-size: 4.8rem; }
@@ -67,42 +69,47 @@
     margin: 0 0 2rem;
   }
 
+  // Links look like links: underlined, the text color. Hover and keyboard
+  // focus invert, like a selection in a terminal.
   a {
-    color: var(--color-link);
-    text-decoration: none;
-  }
-
-  // Links inside sentences need more than color to stand out (WCAG 1.4.1)
-  p a {
+    color: inherit;
     text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   a:hover,
   a:focus-visible {
-    color: var(--color-link-hover);
-    text-decoration: underline;
+    color: var(--color-bg);
+    background-color: var(--color-text);
+    text-decoration: none;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-link-hover);
+    outline: 2px solid var(--color-text);
     outline-offset: 2px;
   }
 
   label {
     display: block;
     margin-bottom: 0.5rem;
+    color: var(--color-muted);
   }
 
   input,
   textarea {
     width: 100%;
-    margin-bottom: 1.5rem;
-    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1ch;
     font: inherit; // 16px, so iOS doesn't zoom on focus
     color: var(--color-text);
     background-color: var(--color-field);
-    border: 1px solid var(--color-rule);
-    border-radius: 4px;
+    border: 1px solid var(--color-muted);
+    border-radius: 0;
+  }
+
+  ::placeholder {
+    color: var(--color-muted);
+    opacity: 1;
   }
 
   textarea {
@@ -111,30 +118,47 @@
   }
 
   ul {
-    padding-left: 2rem;
-    list-style: circle;
+    padding-left: 2ch;
+    list-style-type: "- ";
   }
 
   li {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 
+  // Dividers are a line of dashes, like a plain-text document. The "/ ''"
+  // gives the dashes empty alt text so screen readers just say "separator".
   hr {
-    margin: 3.5rem 0;
+    margin: 3rem 0;
     border: 0;
-    border-top: 1px solid var(--color-rule);
+    overflow: hidden;
+    white-space: nowrap;
+    color: var(--color-muted);
+    line-height: 1;
+
+    &::before {
+      content: "------------------------------------------------------------------------------------------------------------------------" / "";
+    }
   }
 
   code {
-    padding: 0.2rem 0.5rem;
-    font-size: 90%;
+    padding: 0 0.5ch;
     background: var(--color-field);
-    border-radius: 4px;
   }
 
   [role="alert"] {
     color: var(--color-red);
   }
+}
+
+// Visually hidden but read by screen readers: className="sr-only"
+:global(.sr-only) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .container {

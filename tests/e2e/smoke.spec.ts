@@ -16,11 +16,11 @@ test("the nav reaches every top-level page", async ({ page }) => {
   const nav = page.getByRole("navigation", { name: "main" });
 
   await nav.getByRole("link", { name: "about" }).click();
-  await expect(page.locator("h1")).toHaveText("what is PostStream?");
+  await expect(page.locator("h1")).toHaveText("about PostStream");
 
   await nav.getByRole("link", { name: "login" }).click();
   await expect(page.locator("h1")).toHaveText("sign in");
 
   await page.getByRole("link", { name: "PostStream" }).first().click();
-  await expect(page.locator("h1")).toHaveText("PostStream");
+  await expect(page.getByRole("heading", { level: 1, name: "PostStream" })).toBeVisible();
 });

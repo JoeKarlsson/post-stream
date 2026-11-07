@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updatePost, updatePostBody, toggleEditMode } from "../../../slices/postSlice";
 import { AppDispatch, RootState } from "../../../slices";
 import TextButton from "../../shared/textButton/TextButton";
+import CharCounter from "../charCounter/CharCounter";
 import { MAX_POST_LENGTH } from "../../../slices/postSlice";
 import styles from "../newPost/NewPost.module.scss";
 
@@ -21,11 +22,13 @@ const EditPost = ({ id, index }: { id: number; index: number }) => {
       <label htmlFor={fieldId}>edit your post</label>
       <textarea
         maxLength={MAX_POST_LENGTH}
+        aria-describedby={`${fieldId}-count`}
         id={fieldId}
         rows={5}
         value={body}
         onChange={(e) => dispatch(updatePostBody({ index, body: e.target.value }))}
       />
+      <CharCounter id={`${fieldId}-count`} length={(body ?? "").length} />
       <TextButton type="submit">save</TextButton>
       <TextButton onClick={() => dispatch(toggleEditMode({ index, editState: false }))}>
         cancel

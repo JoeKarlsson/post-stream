@@ -37,7 +37,7 @@ test("404 page", async ({ page }) => {
 test("the production build runs under the CSP with no errors", async ({ page }) => {
   const errors = watchForErrors(page);
   await page.goto("/");
-  await expect(page.locator("h1")).toHaveText("PostStream");
+  await expect(page.getByRole("heading", { level: 1, name: "PostStream" })).toBeVisible();
   await page.waitForLoadState("networkidle");
   expect(errors).toEqual([]);
 });

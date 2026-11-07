@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleReplyMode, updateReplyBody, createReply } from "../../../slices/postSlice";
 import { AppDispatch, RootState } from "../../../slices";
 import TextButton from "../../shared/textButton/TextButton";
+import CharCounter from "../charCounter/CharCounter";
 import { MAX_POST_LENGTH } from "../../../slices/postSlice";
 import styles from "../newPost/NewPost.module.scss";
 
@@ -27,12 +28,14 @@ const Reply = ({ index, id }: { index: number; id: number }) => {
       <label htmlFor={fieldId}>reply</label>
       <textarea
         maxLength={MAX_POST_LENGTH}
+        aria-describedby={`${fieldId}-count`}
         id={fieldId}
         rows={3}
         placeholder="say something nice..."
         value={post.replyBody}
         onChange={(e) => dispatch(updateReplyBody({ index, body: e.target.value }))}
       />
+      <CharCounter id={`${fieldId}-count`} length={(post.replyBody ?? "").length} />
       <TextButton type="submit">reply</TextButton>
       <TextButton onClick={() => dispatch(toggleReplyMode(index))}>cancel</TextButton>
     </form>

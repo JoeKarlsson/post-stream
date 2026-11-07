@@ -1,7 +1,30 @@
-.teal { color: var(--color-teal); }
-.red { color: var(--color-red); }
-.purple { color: var(--color-purple); }
-.orange { color: var(--color-orange); }
-.pink { color: var(--color-pink); }
-.lightGreen { color: var(--color-light-green); }
-.forrestGreen { color: var(--color-forest-green); }
+// Man page layout: section names flush left, everything else indented
+.man {
+  h2 {
+    margin: 2.5rem 0 0.5rem;
+    font-size: 1.6rem;
+    letter-spacing: normal;
+  }
+
+  h2 ~ p,
+  h2 ~ ul,
+  h2 ~ dl {
+    margin-left: 4ch;
+  }
+}
+
+// POSTSTREAM(7)            PostStream Manual
+.manHeader {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-muted);
+}
+
+.keys {
+  display: grid;
+  grid-template-columns: 6ch 1fr;
+
+  dd {
+    margin: 0;
+  }
+}

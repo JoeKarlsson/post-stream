@@ -11,13 +11,29 @@ import { AppDispatch, RootState } from "../../../slices";
 import { Post as PostType } from "../../../types";
 import { renderPostHtml } from "../../../utils/markdown";
 import { authorColor } from "../../../utils/authorColor";
+import { formatTimestamp } from "../../../utils/plainText";
 import TextButton from "../../shared/textButton/TextButton";
 import CommentCount from "./CommentCount";
 import Reply from "./Reply";
 import EditPost from "./../editPost/EditPost";
 import styles from "./Post.module.scss";
+import colors from "../../shared/styles/authorColors.module.scss";
 
 const renderMarkup = (body: string) => ({ __html: renderPostHtml(body) });
+
+// An IRC-style log line: [2026-11-06 19:17] <janedoe343>
+const LogLine = ({ userID, createdAt }: { userID: string; createdAt: string }) => (
+  <div className={styles.logLine}>
+    <time dateTime={createdAt} className={styles.timeStamp}>
+      [{formatTimestamp(createdAt)}]
+    </time>{" "}
+    &lt;
+    <Link to={`/user/${userID}`} className={`${styles.username} ${colors[authorColor(userID)]}`}>
+      {userID}
+    </Link>
+    &gt;
+  </div>
+);
 
 type PostProps = Pick<PostType, "id" | "body" | "userID" | "createdAt" | "commentCount"> & {
   index: number;
@@ -48,24 +64,16 @@ const Post = ({ id, body, userID, createdAt, commentCount = 0, index }: PostProp
   };
 
   return (
-    <article>
+    // tabIndex -1: the j/k shortcuts move focus between posts
+    <article tabIndex={-1} className={styles.post}>
       {editMode ? (
         <EditPost id={id} index={index} />
       ) : (
         <div>
-          <div className={styles.statusBar}>
-            [{" "}
-            <Link to={`/user/${userID}`} className={styles.username}>
-              {userID}
-            </Link>{" "}
-            ] |{" "}
-            <span className={styles.timeStamp}>
-              {new Date(createdAt).toLocaleTimeString()}
-            </span>
-          </div>
+          <LogLine userID={userID} createdAt={createdAt} />
 
           <div
-            className={`${styles.body} ${styles[authorColor(userID)]}`}
+            className={`${styles.body} ${colors[authorColor(userID)]}`}
             dangerouslySetInnerHTML={markup}
           />
 
@@ -91,18 +99,9 @@ const Post = ({ id, body, userID, createdAt, commentCount = 0, index }: PostProp
           {comments && comments.length > 0 ? (
             comments.map((comment) => (
               <div key={comment.id} className={styles.comment}>
-                <div className={styles.statusBar}>
-                  [{" "}
-                  <Link to={`/user/${comment.userID}`} className={styles.username}>
-                    {comment.userID}
-                  </Link>{" "}
-                  ] |{" "}
-                  <span className={styles.timeStamp}>
-                    {new Date(comment.createdAt).toLocaleTimeString()}
-                  </span>
-                </div>
+                <LogLine userID={comment.userID} createdAt={comment.createdAt} />
                 <div
-                  className={`${styles.commentBody} ${styles[authorColor(comment.userID)]}`}
+                  className={`${styles.commentBody} ${colors[authorColor(comment.userID)]}`}
                   dangerouslySetInnerHTML={renderMarkup(comment.body)}
                 />
               </div>

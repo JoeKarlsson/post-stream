@@ -1,7 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { PublicProfile } from "../../../types";
+import { authorColor } from "../../../utils/authorColor";
+import { formatTimestamp } from "../../../utils/plainText";
 import styles from "./ProfileDetails.module.scss";
+import colors from "../../shared/styles/authorColors.module.scss";
 
 const UserLinks = ({ usernames }: { usernames: string[] }) =>
   usernames.length === 0 ? (
@@ -17,28 +20,25 @@ const UserLinks = ({ usernames }: { usernames: string[] }) =>
     </>
   );
 
+// Laid out like the output of the Unix `finger` command
 const ProfileDetails = ({ profile }: { profile: PublicProfile }) => {
   const realName = [profile.first_name, profile.last_name].filter(Boolean).join(" ");
 
   return (
-    <dl className={styles.details}>
-      {realName && (
-        <>
-          <dt>name</dt>
-          <dd className={styles.teal}>{realName}</dd>
-        </>
-      )}
-      <dt>bio</dt>
-      <dd className={styles.orange}>{profile.bio || "no bio yet"}</dd>
-      <dt>joined</dt>
-      <dd className={styles.lightGreen}>
-        {new Date(profile.createdAt).toLocaleDateString()}
-      </dd>
+    <dl className={styles.finger}>
+      <dt>Login:</dt>
+      <dd className={colors[authorColor(profile.username)]}>{profile.username}</dd>
+      <dt>Name:</dt>
+      <dd>{realName || "-"}</dd>
+      <dt>Joined:</dt>
+      <dd>{formatTimestamp(profile.createdAt).slice(0, 10)}</dd>
       {/* PostStream shows who people follow, never follower counts */}
-      <dt>follows</dt>
-      <dd className={styles.forrestGreen}>
+      <dt>Follows:</dt>
+      <dd>
         <UserLinks usernames={profile.following} />
       </dd>
+      <dt className={styles.plan}>Plan:</dt>
+      <dd className={styles.plan}>{profile.bio || "No Plan."}</dd>
     </dl>
   );
 };

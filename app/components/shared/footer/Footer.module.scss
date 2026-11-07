@@ -1,10 +1,14 @@
 .footer {
-  padding: 1rem var(--page-padding);
-  text-align: center;
+  padding: 1rem var(--page-padding) 2rem;
+  color: var(--color-muted);
   background-color: var(--color-bar);
 
   p {
     margin: 0;
-    color: var(--color-forest-green);
   }
+}
+
+// The "-- " signature delimiter keeps its trailing space
+.delimiter {
+  white-space: pre;
 }

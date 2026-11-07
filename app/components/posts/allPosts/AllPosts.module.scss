@@ -1,3 +1,17 @@
+// The figlet wordmark: 56 columns wide (WORDMARK_COLUMNS in wordmark.ts).
+// Courier's characters are 0.6em wide, so 56 * 0.6 = 33.6em; shrink the font
+// on narrow screens so the art always fits the column without wrapping.
+// Bold, because Courier New's regular strokes are too thin for ASCII art.
+.wordmark {
+  display: block;
+  font-size: min(1.6rem, calc((100vw - 2 * var(--gutter)) / 33.6));
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: normal;
+  white-space: pre;
+}
+
+
 .lastUpdated {
-  color: var(--color-purple);
+  color: var(--color-muted);
 }

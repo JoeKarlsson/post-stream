@@ -1,3 +1,5 @@
-.active {
-  color: var(--color-orange);
+// The current page is marked with a star, not just a color: [ *about ]
+// aria-current="page" (set by the router) tells screen readers the same thing.
+.active::before {
+  content: "*" / "";
 }

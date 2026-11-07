@@ -10,7 +10,7 @@ test("signing in: wrong password shows an error, right password logs in", async 
 
   await page.getByLabel("password").fill("password123");
   await page.getByRole("button", { name: "sign in" }).click();
-  await expect(page.locator("h1")).toHaveText("PostStream");
+  await expect(page.getByRole("heading", { level: 1, name: "PostStream" })).toBeVisible();
   await expect(page.getByRole("button", { name: "logout" })).toBeVisible();
 
   await page.getByRole("button", { name: "logout" }).click();
@@ -121,7 +121,7 @@ test("creating an account logs you in", async ({ page }) => {
     await page.getByLabel("confirm password").fill("testpass99");
     await page.getByRole("button", { name: "create account" }).click();
 
-    await expect(page.locator("h1")).toHaveText("PostStream");
+    await expect(page.getByRole("heading", { level: 1, name: "PostStream" })).toBeVisible();
     await page.getByRole("link", { name: "profile" }).click();
     await expect(page.locator("h1")).toHaveText(username);
   } finally {

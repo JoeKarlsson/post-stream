@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import NavLink from "../navigation/NavLink";
 import TextButton from "../textButton/TextButton";
 import { logout } from "../../../slices/userSlice";
@@ -12,9 +13,9 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <NavLink to="/" end className={styles.logo}>
+      <Link to="/" className={styles.logo}>
         PostStream
-      </NavLink>
+      </Link>
       <nav aria-label="main">
         <ul className={styles.nav}>
           <li>

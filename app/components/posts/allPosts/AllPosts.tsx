@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import NewPost from "../newPost/NewPost";
 import PostList from "../postList/PostList";
 import styles from "./AllPosts.module.scss";
+import { WORDMARK } from "./wordmark";
 import { fetchPosts } from "../../../slices/postSlice";
 import { AppDispatch, RootState } from "../../../slices";
 
@@ -18,7 +19,12 @@ const AllPosts = () => {
   return (
     <div>
       <title>PostStream</title>
-      <h1>PostStream</h1>
+      <h1>
+        <span className={styles.wordmark} aria-hidden="true">
+          {WORDMARK}
+        </span>
+        <span className="sr-only">PostStream</span>
+      </h1>
 
       <p className={styles.lastUpdated}>
         stream was last updated at{" "}
