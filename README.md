@@ -6,9 +6,9 @@ PostStream is an undesigned social network. It is a text-based response to the m
 
 ## Recording (November 2026)
 
-![PostStream: typing a post into a plain text box, the post showing up at the top of the stream in pink monospace, scrolling past other posts in different colors, then the about page listing what PostStream leaves out](.github/readme/2026-11-recording.gif)
+![PostStream: typing a post into a plain text box while a character counter fills in, the post showing up at the top of the feed under an IRC-style log line, replying to someone with "agree, because it is always the third one" picked from a list, scrolling past posts colored by author, then the about page laid out like a man page](.github/readme/2026-11-recording.gif)
 
-What PostStream looked like in November 2026, recorded for [its page on joekarlsson.com](https://www.joekarlsson.com/work/poststream/). The full-quality video is [2026-11-recording.mp4](.github/readme/2026-11-recording.mp4).
+The static demo in November 2026, recorded with `scripts/record-demo.mjs` for [its page on joekarlsson.com](https://www.joekarlsson.com/work/poststream/). The full-quality video is [2026-11-recording.mp4](.github/readme/2026-11-recording.mp4).
 
 ## Text-Based Social Network
 
