@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('./../models');
 const { authenticateJWT } = require('./../middleware/jwt');
+const { composeResponse } = require('../../shared/contextualResponses.mjs');
 
 const { Post, Comment } = db;
 const FEED_LIMIT = 10;
@@ -31,8 +32,12 @@ const loadRecord = (Model, paramName, { ownerOnly = false } = {}) =>
     next();
   };
 
-router.get('/', async (req, res) => {
-  const posts = await Post.findAll(pageOf(req));
+// Your feed: posts from the people you follow, plus your own. PostStream has
+// no global public feed.
+router.get('/feed', authenticateJWT, async (req, res) => {
+  const following = await req.user.getFollowing({ attributes: ['username'] });
+  const authors = [req.user.username, ...following.map((user) => user.username)];
+  const posts = await Post.findAll({ where: { userID: authors }, ...pageOf(req) });
   res.json(posts);
 });
 
@@ -56,7 +61,7 @@ router.delete('/:id', authenticateJWT, loadRecord(Post, 'id', { ownerOnly: true 
 });
 
 router.put('/:id/edit', authenticateJWT, loadRecord(Post, 'id', { ownerOnly: true }), async (req, res) => {
-  res.json(await req.found.update({ body: req.body.body }));
+  res.json(await req.found.update({ body: req.body.body, editedAt: new Date() }));
 });
 
 router.get('/:id/comments', async (req, res) => {
@@ -68,9 +73,15 @@ router.get('/:id/comments', async (req, res) => {
 });
 
 // :CommentId is kept in the URL for older clients; replies are flat (always 0)
+// Replies are contextual responses: { kind, detail } from shared/contextualResponses.mjs
 router.post('/:id/comments/:CommentId/new', authenticateJWT, loadRecord(Post, 'id'), async (req, res) => {
+  const { body, error } = composeResponse(req.body.kind, req.body.detail);
+  if (error) {
+    return res.status(400).json({ error });
+  }
   const comment = await Comment.create({
-    body: req.body.body,
+    body,
+    kind: req.body.kind,
     userID: req.user.username,
     PostId: req.found.id
   });
@@ -79,7 +90,11 @@ router.post('/:id/comments/:CommentId/new', authenticateJWT, loadRecord(Post, 'i
 });
 
 router.put('/:id/comments/:CommentId/edit', authenticateJWT, loadRecord(Comment, 'CommentId', { ownerOnly: true }), async (req, res) => {
-  res.json(await req.found.update({ body: req.body.body }));
+  const { body, error } = composeResponse(req.body.kind, req.body.detail);
+  if (error) {
+    return res.status(400).json({ error });
+  }
+  res.json(await req.found.update({ body, kind: req.body.kind }));
 });
 
 module.exports = router;

@@ -147,6 +147,16 @@ router.get('/user/:username', async (req, res) => {
     });
 });
 
+// Everyone on PostStream, alphabetically: the way to find people now that
+// there's no global feed. Names only, no counts.
+router.get('/users', async (req, res) => {
+    const users = await User.findAll({
+        attributes: ['username', 'first_name', 'last_name'],
+        order: [['username', 'ASC']]
+    });
+    res.json(users);
+});
+
 router.post('/user/:username/follow', passport.authenticate('jwt', { session: false }), async (req, res) => {
     const target = await findUserByUsername(req.params.username);
     if (!target) {

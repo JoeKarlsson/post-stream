@@ -32,11 +32,16 @@ test("posting, editing, replying to and destroying your own post", async ({ page
   await post.getByLabel("edit your post").fill(`${body} (edited)`);
   await post.getByRole("button", { name: "save" }).click();
   await expect(post).toContainText(`${body} (edited)`);
+  // The log line marks it edited too
+  await expect(post.locator("[class*=logLine]").first()).toContainText("(edited)");
 
+  // Replies are contextual responses picked from a list
   await post.getByRole("button", { name: "reply" }).click();
-  await post.getByLabel("reply").fill("e2e reply");
-  await post.getByRole("button", { name: "reply" }).click();
-  await expect(post.locator(".replies")).toContainText("e2e reply");
+  await expect(post.getByRole("button", { name: "send reply" })).toBeDisabled();
+  await post.getByRole("radio", { name: "agree, because ...", exact: true }).check();
+  await post.getByRole("textbox", { name: "agree, because ..." }).fill("the e2e tests said so");
+  await post.getByRole("button", { name: "send reply" }).click();
+  await expect(post.locator(".replies")).toContainText("agree, because the e2e tests said so");
   await expect(post.getByRole("button", { name: "1 comment" })).toBeVisible();
 
   await post.getByRole("button", { name: "destroy" }).click();
@@ -45,12 +50,12 @@ test("posting, editing, replying to and destroying your own post", async ({ page
   expect(errors).toEqual([]);
 });
 
-test("posts stop at 255 characters", async ({ page }) => {
+test("posts stop at 2048 characters", async ({ page }) => {
   await loginAs(page, SEED_USERS.jane.email);
   await page.goto("/");
   const field = page.getByLabel("create a new post");
-  await field.fill("x".repeat(300));
-  await expect(field).toHaveValue("x".repeat(255));
+  await field.fill("x".repeat(2100));
+  await expect(field).toHaveValue("x".repeat(2048));
 });
 
 test("comments open and close from the comment count", async ({ page }) => {
@@ -142,6 +147,7 @@ test("show more loads the next page of posts", async ({ page }) => {
     });
   }
 
+  await loginAs(page, SEED_USERS.jane.email);
   try {
     await page.goto("/");
     await expect(page.locator("article")).toHaveCount(10);
@@ -152,4 +158,58 @@ test("show more loads the next page of posts", async ({ page }) => {
   } finally {
     await query('DELETE FROM "Posts" WHERE body LIKE $1', [`${marker}%`]);
   }
+});
+
+test("long posts show 256 characters until you read more", async ({ page }) => {
+  const words = `e2e long post ${Date.now()} ` + "lorem ipsum dolor sit amet ".repeat(30);
+  await loginAs(page, SEED_USERS.jane.email);
+  await page.goto("/");
+  await page.getByLabel("create a new post").fill(words);
+  await page.getByRole("button", { name: "post", exact: true }).click();
+  const post = page.locator("article", { hasText: "e2e long post" }).first();
+
+  try {
+    await expect(post.getByRole("button", { name: "read more" })).toBeVisible();
+    await expect(post).not.toContainText(words.trim());
+    await post.getByRole("button", { name: "read more" }).click();
+    await expect(post).toContainText(words.trim());
+    await post.getByRole("button", { name: "show less" }).click();
+    await expect(post).not.toContainText(words.trim());
+  } finally {
+    await query('DELETE FROM "Posts" WHERE body LIKE $1', ["e2e long post%"]);
+  }
+});
+
+test("the home feed shows the people you follow, and nobody else", async ({ page }) => {
+  // Seeds: john follows jane and joe
+  await loginAs(page, SEED_USERS.john.email);
+  await page.goto("/");
+  await expect(page.locator("article").first()).toBeVisible();
+  const authors = await page.locator("article [class*=logLine] a[href^='/user/']").allTextContents();
+  expect(new Set(authors)).toEqual(new Set(["johndoe131", "janedoe343", "joejoebinks131"]));
+});
+
+test("logged out, the home page explains there is no public feed", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByText("there is no public feed")).toBeVisible();
+  await expect(page.locator("article")).toHaveCount(0);
+});
+
+test("a timestamp is a permalink that opens the post with its replies", async ({ page }) => {
+  await page.goto(`/user/${SEED_USERS.jane.username}`);
+  const post = page.locator("article", { hasText: "Designing a new user interface" });
+  await post.locator("time").click();
+  await expect(page).toHaveURL(/\/p\/\d+$/);
+  await expect(page.locator("h1")).toHaveText(`post ${page.url().split("/").pop()} by ${SEED_USERS.jane.username}`);
+  await expect(page.locator(".replies > div")).toHaveCount(3);
+
+  // Each reply's timestamp links to its own anchor
+  const replyLink = page.locator(".replies time").first().locator("xpath=..");
+  await expect(replyLink).toHaveAttribute("href", /\/p\/\d+#c\d+$/);
+});
+
+test("the people page lists everyone and links to their profiles", async ({ page }) => {
+  await page.goto("/people");
+  await page.getByRole("link", { name: SEED_USERS.jane.username }).click();
+  await expect(page.locator("h1")).toHaveText(SEED_USERS.jane.username);
 });

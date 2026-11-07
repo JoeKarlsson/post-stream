@@ -1,0 +1,32 @@
+.reply {
+  margin: 1.5rem 0;
+
+  fieldset {
+    margin: 0 0 1rem;
+    padding: 0;
+    border: 0;
+  }
+
+  legend {
+    margin-bottom: 0.5rem;
+    padding: 0;
+    color: var(--color-muted);
+  }
+}
+
+// ( ) agree   -- one response per line, the whole line is clickable
+.choice {
+  display: flex;
+  gap: 1ch;
+  align-items: center;
+  min-height: var(--tap-target);
+  margin: 0;
+  color: var(--color-text);
+  cursor: pointer;
+
+  input {
+    width: auto;
+    margin: 0;
+    accent-color: var(--color-text);
+  }
+}

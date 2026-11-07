@@ -3,11 +3,16 @@
 module.exports = function (sequelize, DataTypes) {
   const Post = sequelize.define('Post', {
     body: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        len: { args: [1, 255], msg: 'Posts must be 1 to 255 characters' }
+        len: { args: [1, 2048], msg: 'Posts must be 1 to 2048 characters' }
       }
+    },
+    // Set only when the author edits the post (shown as "(edited)")
+    editedAt: {
+      type: DataTypes.DATE,
+      allowNull: true
     },
     commentCount: {
       type: DataTypes.INTEGER,

@@ -28,6 +28,8 @@ export interface Post {
   commentCount?: number;
   createdAt: string;
   updatedAt: string;
+  // Set when the author edited the post
+  editedAt?: string | null;
 }
 
 export interface Comment {
@@ -35,6 +37,8 @@ export interface Comment {
   body: string;
   userID: string;
   PostId: number;
+  // Which contextual response (null for older free-form replies)
+  kind?: string | null;
   createdAt: string;
   updatedAt: string;
 }

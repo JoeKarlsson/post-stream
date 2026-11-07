@@ -5,8 +5,14 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: { args: [1, 255], msg: 'Posts must be 1 to 255 characters' }
+        len: { args: [1, 255], msg: 'Replies must be 1 to 255 characters' }
       }
+    },
+    // Which contextual response this is (shared/contextualResponses.mjs);
+    // null for older free-form replies
+    kind: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     commentCount: {
       type: DataTypes.INTEGER,

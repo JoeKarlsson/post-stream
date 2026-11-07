@@ -19,7 +19,9 @@ export default defineConfig({
         strictPort: true,
         proxy: {
             '/post': apiServer,
-            '/auth': apiServer
+            '/auth': apiServer,
+            // Plain-text feeds; /user/:name without .txt is the app's own page
+            '^/user/[^/]+\\.txt$': apiServer
         }
     },
     css: {

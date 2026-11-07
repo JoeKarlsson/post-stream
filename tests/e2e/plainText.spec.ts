@@ -20,9 +20,9 @@ test("the post box counts characters as you type", async ({ page }) => {
   await page.goto("/");
   const field = page.getByLabel("create a new post");
   await field.fill("x".repeat(128));
-  await expect(page.locator("#new-post-count")).toContainText("128/255");
+  await expect(page.locator("#new-post-count")).toContainText("128/2048");
   // Screen readers get the count as the field's description
-  await expect(field).toHaveAccessibleDescription(/128\/255 characters/);
+  await expect(field).toHaveAccessibleDescription(/128\/2048 characters/);
 });
 
 test("j/k move between posts and n jumps to the post box, until keys are turned off", async ({ page }) => {

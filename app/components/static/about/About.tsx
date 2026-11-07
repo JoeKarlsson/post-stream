@@ -27,13 +27,18 @@ const About = () => (
       <li>no public metrics</li>
       <li>no visible follower/following numbers</li>
       <li>no visible like/dislike numbers</li>
+      <li>no global public feed: you see the people you follow</li>
       <li>no &lsquo;moments&rsquo; or news-related feeds</li>
       <li>no trending topics to browse</li>
       <li>markdown support</li>
-      <li>brevity: posts top out at 255 characters</li>
+      <li>brevity: the stream shows 256 characters, &lsquo;read more&rsquo; shows up to 2048</li>
       <li>accessibility</li>
       <li>no video/images/gifs</li>
       <li>unicode support 🆗</li>
+      <li>
+        contextual responses: reply with agree, disagree (with or without a reason), tell me
+        more, thank you for sharing, or brilliant
+      </li>
     </ul>
 
     <h2>KEYS</h2>
@@ -54,6 +59,13 @@ const About = () => (
         on GitHub
       </a>
       .
+    </p>
+
+    <h2>FILES</h2>
+    <p>
+      every profile is also plain text: <code>/user/&lt;name&gt;.txt</code>, for example{" "}
+      <a href="/user/janedoe343.txt">/user/janedoe343.txt</a>. every post has a permalink: its
+      timestamp.
     </p>
 
     <h2>SEE ALSO</h2>

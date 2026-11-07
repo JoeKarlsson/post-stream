@@ -79,42 +79,45 @@ Routes marked *auth* need an `Authorization: Bearer <token>` header from `/auth/
 | POST | `/auth/login` | `{ email, password }`, returns `{ token, user }` |
 | GET | `/auth/profile` | *auth*, the logged-in user |
 | PUT | `/auth/profile` | *auth*, `{ first_name, last_name, bio }` |
+| GET | `/auth/users` | everyone, by username (names only) |
 | GET | `/auth/user/:username` | public profile, with follower and following usernames |
+| GET | `/user/:username.txt` | a user's posts as plain text |
 | POST / DELETE | `/auth/user/:username/follow` | *auth*, follow or unfollow |
-| GET | `/post` | the 10 newest posts |
-| GET | `/post/user/:username` | a user's 10 newest posts |
+| GET | `/post/feed` | *auth*, your feed: you and the people you follow, 10 at a time (`?offset=10` for more) |
+| GET | `/post/user/:username` | a user's posts, 10 at a time (`?offset=`) |
 | GET | `/post/:id` | one post |
-| POST | `/post/new` | *auth*, `{ body }` (1 to 255 characters) |
+| POST | `/post/new` | *auth*, `{ body }` (1 to 2048 characters) |
 | PUT | `/post/:id/edit` | *auth*, `{ body }` |
 | DELETE | `/post/:id` | *auth*, also deletes its comments |
 | GET | `/post/:id/comments` | a post's comments, oldest first |
-| POST | `/post/:id/comments/0/new` | *auth*, `{ body }` |
-| PUT | `/post/:id/comments/:commentId/edit` | *auth*, `{ body }` |
+| POST | `/post/:id/comments/0/new` | *auth*, a contextual response: `{ kind, detail }` (see `shared/contextualResponses.mjs`) |
+| PUT | `/post/:id/comments/:commentId/edit` | *auth*, `{ kind, detail }` |
 
 ## Important concepts
 
 - No public metrics
   - No visible follower/following numbers
   - No visible like/dislike numbers
+- No global public feed: your home page shows you and the people you follow; find people on `/people`
 - No "moments" or news-related feeds
 - No trending topics to browse
-- Brevity: posts top out at 255 characters
+- Brevity: the stream shows the first 256 characters of a post, "read more" shows the rest (up to 2048)
 - Accessibility
 - No video/images/gifs (markdown image syntax renders as a plain link)
   - Unicode support 🆗
+- Contextual responses instead of free-form replies
+  - agree
+  - agree, because $reason
+  - disagree
+  - disagree, because $reason
+  - tell me more about $thought / $opinion
+  - thank you for sharing
+  - brilliant
+- Plain text everywhere: every profile is also `/user/<name>.txt`, and every post has a permalink (`/p/<id>`)
 - No ads or sponsored posts
 
 ## Stretch Goals
 
-- Contextual responses instead of free-form replies
-  - agree
-  - agree for $reason
-  - disagree
-  - disagree for $reason
-  - tell me more about $thought / $opinion
-  - thank you for sharing
-  - brilliant
-- A longer post limit (2048 characters) with the stream showing the first 256 and "read more"
 - Possible fuzzy metrics (Your engagement is {very high} {high} {average})
 - SMS-support
 - Filtering of topics

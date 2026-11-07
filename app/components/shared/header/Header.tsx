@@ -19,6 +19,9 @@ const Header = () => {
       <nav aria-label="main">
         <ul className={styles.nav}>
           <li>
+            [ <NavLink to="/people">people</NavLink> ]
+          </li>
+          <li>
             [ <NavLink to="/about">about</NavLink> ]
           </li>
           {isAuthenticated && profile ? (

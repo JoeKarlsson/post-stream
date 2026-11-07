@@ -9,6 +9,8 @@ import { Provider } from "react-redux";
 import configureStore from "./configureStore";
 import App from "./App";
 import AllPosts from "./posts/allPosts/AllPosts";
+import PostPage from "./posts/postPage/PostPage";
+import People from "./people/People";
 import Profile from "./profile/profilePage/Profile";
 import EditProfile from "./profile/editProfile/EditProfile";
 import Login from "./shared/auth/login/Login";
@@ -30,6 +32,8 @@ root.render(
         <Route path="/" element={<App />}>
           <Route index element={<AllPosts />} />
           <Route path="/about" element={<About />} />
+          <Route path="/people" element={<People />} />
+          <Route path="/p/:postId" element={<PostPage />} />
           <Route path="/user/:userName" element={<Profile />} />
           <Route path="/user/:userName/edit" element={<EditProfile />} />
           <Route path="/login" element={<Login />} />

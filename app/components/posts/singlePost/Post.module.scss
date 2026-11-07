@@ -21,7 +21,10 @@
   }
 }
 
+// The timestamp is the post's permalink
 .timeStamp {
+  display: inline-block;
+  line-height: var(--tap-target);
   color: var(--color-muted);
 }
 

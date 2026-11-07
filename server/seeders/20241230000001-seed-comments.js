@@ -29,7 +29,8 @@ module.exports = {
         // Create comments
         await queryInterface.bulkInsert('Comments', [
             {
-                body: 'Great work! The architecture looks solid.',
+                kind: 'agree_because',
+                body: 'agree, because the architecture looks solid',
                 commentCount: 0,
                 userID: 'janedoe343',
                 PostId: posts[0].id,
@@ -37,7 +38,8 @@ module.exports = {
                 updatedAt: date
             },
             {
-                body: 'I agree! This will make the codebase much more maintainable.',
+                kind: 'agree',
+                body: 'agree',
                 commentCount: 0,
                 userID: 'joejoebinks131',
                 PostId: posts[0].id,
@@ -45,7 +47,8 @@ module.exports = {
                 updatedAt: date
             },
             {
-                body: 'The new design system looks fantastic!',
+                kind: 'brilliant',
+                body: 'brilliant',
                 commentCount: 0,
                 userID: 'janedoe343',
                 PostId: posts[1].id,
@@ -53,7 +56,8 @@ module.exports = {
                 updatedAt: date
             },
             {
-                body: 'I love the new mobile interface design!',
+                kind: 'thanks',
+                body: 'thank you for sharing',
                 commentCount: 0,
                 userID: 'johndoe131',
                 PostId: posts[3].id,
@@ -61,7 +65,8 @@ module.exports = {
                 updatedAt: date
             },
             {
-                body: 'The user flow is so intuitive now.',
+                kind: 'agree_because',
+                body: 'agree, because the user flow is so intuitive now',
                 commentCount: 0,
                 userID: 'joejoebinks131',
                 PostId: posts[3].id,
@@ -69,7 +74,8 @@ module.exports = {
                 updatedAt: date
             },
             {
-                body: 'This will definitely improve user engagement.',
+                kind: 'brilliant',
+                body: 'brilliant',
                 commentCount: 0,
                 userID: 'johndoe131',
                 PostId: posts[3].id,
@@ -77,7 +83,8 @@ module.exports = {
                 updatedAt: date
             },
             {
-                body: 'Which CSS technique are you referring to?',
+                kind: 'tell_me_more',
+                body: 'tell me more about which CSS technique you mean',
                 commentCount: 0,
                 userID: 'johndoe131',
                 PostId: posts[4].id,
@@ -85,7 +92,8 @@ module.exports = {
                 updatedAt: date
             },
             {
-                body: 'Amazing performance improvements!',
+                kind: 'brilliant',
+                body: 'brilliant',
                 commentCount: 0,
                 userID: 'janedoe343',
                 PostId: posts[6].id,
@@ -93,7 +101,8 @@ module.exports = {
                 updatedAt: date
             },
             {
-                body: 'The API response times are much better now.',
+                kind: 'agree_because',
+                body: 'agree, because the API response times are much better',
                 commentCount: 0,
                 userID: 'johndoe131',
                 PostId: posts[6].id,
@@ -101,7 +110,8 @@ module.exports = {
                 updatedAt: date
             },
             {
-                body: '60% improvement is incredible!',
+                kind: 'thanks',
+                body: 'thank you for sharing',
                 commentCount: 0,
                 userID: 'janedoe343',
                 PostId: posts[7].id,

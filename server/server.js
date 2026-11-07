@@ -16,6 +16,7 @@ const db = require('./models');
 const post = require('./routes/post');
 const auth = require('./routes/auth');
 const { securityHeaders } = require('./middleware/securityHeaders');
+const { postsAsText } = require('./plainText');
 const port = isDeveloping ? 3001 : process.env.PORT;
 const host = '0.0.0.0';
 
@@ -87,6 +88,24 @@ app.get('/health', async (req, res) => {
 // Rate limits cover the API only (not static files), and only in production
 const noLimit = (req, res, next) => next();
 app.use('/post', isDeveloping ? noLimit : limiter, post);
+
+// A user's posts as plain text: curl http://localhost:3000/user/janedoe343.txt
+app.get('/user/:file', async (req, res, next) => {
+  const match = /^([a-zA-Z0-9]+)\.txt$/.exec(req.params.file);
+  if (!match) {
+    return next(); // not a .txt request: the app's own /user/:name page
+  }
+  const username = match[1];
+  if (!(await db.User.count({ where: { username } }))) {
+    return res.status(404).type('text/plain').send(`no user named ${username}\n`);
+  }
+  const posts = await db.Post.findAll({
+    where: { userID: username },
+    order: [['createdAt', 'DESC'], ['id', 'DESC']],
+    limit: 100
+  });
+  res.type('text/plain').send(postsAsText(username, posts));
+});
 app.use('/auth', isDeveloping ? noLimit : limiter, isDeveloping ? noLimit : authLimiter, auth);
 
 // Bad input from any route (model validation) is the client's fault, not a 500

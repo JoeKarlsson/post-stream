@@ -16,8 +16,13 @@ test("every link on every page goes somewhere real", async ({ page, request }) =
     }
   }
 
-  // The app is a single-page app, so a broken internal link shows the 404 page
+  // The app is a single-page app, so a broken internal link shows the 404 page.
+  // Plain-text files (/user/<name>.txt) aren't app pages: check their status.
   for (const href of internal) {
+    if (href.endsWith(".txt")) {
+      expect((await request.get(href)).status(), href).toBe(200);
+      continue;
+    }
     await page.goto(href);
     await expect(page.locator("h1"), href).not.toHaveText("404");
   }

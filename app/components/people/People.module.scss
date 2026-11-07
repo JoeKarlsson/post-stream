@@ -1,0 +1,13 @@
+.people {
+  padding: 0;
+  list-style: none;
+
+  li {
+    min-height: var(--tap-target);
+  }
+
+  a {
+    display: inline-block;
+    line-height: var(--tap-target);
+  }
+}

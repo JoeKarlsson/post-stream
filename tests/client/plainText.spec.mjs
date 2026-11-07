@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { formatTimestamp, counterBar } from '../../app/utils/plainText.ts';
+import { formatTimestamp, counterBar, previewText } from '../../app/utils/plainText.ts';
 
 describe('formatTimestamp', () => {
   it('prints a date and time like a log line, zero-padded', () => {
@@ -18,5 +18,19 @@ describe('counterBar', () => {
   it('fills in proportion and never overflows', () => {
     expect(counterBar(128, 256, 10)).to.equal('[#####.....]');
     expect(counterBar(999, 255, 10)).to.equal('[##########]');
+  });
+});
+
+describe('previewText', () => {
+  it('leaves short text alone', () => {
+    expect(previewText('short post', 256)).to.equal('short post');
+  });
+
+  it('cuts long text at a word boundary and adds "..."', () => {
+    expect(previewText('one two three four', 10)).to.equal('one two...');
+  });
+
+  it('cuts mid-word when there is no space in the second half', () => {
+    expect(previewText('x'.repeat(20), 10)).to.equal(`${'x'.repeat(10)}...`);
   });
 });

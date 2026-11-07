@@ -6,9 +6,11 @@ const dbConfig = serverConfig.development;
 
 // Every page type, as a logged-out visitor sees it
 export const PAGES = [
-  { path: "/", name: "feed" },
+  { path: "/", name: "home" },
   { path: "/user/johndoe131", name: "profile" },
   { path: "/about", name: "about" },
+  { path: "/people", name: "people" },
+  { path: "/p/4", name: "permalink" },
   { path: "/login", name: "login" },
   { path: "/no-such-page", name: "404" },
 ];

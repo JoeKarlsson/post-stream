@@ -16,6 +16,11 @@
     overflow-wrap: anywhere;
   }
 
+  dd a {
+    display: inline-block;
+    line-height: var(--tap-target);
+  }
+
   @media (min-width: 60ch) {
     grid-template-columns: max-content 1fr max-content 1fr;
   }
