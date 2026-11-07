@@ -1,45 +1,47 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useParams, useOutletContext } from "react-router-dom";
-import { fetchUserPosts } from "../../../actions/profile/profileActions";
-import { getUserProfile } from "../../../actions/user/userActions";
-import PostList from "./postList/PostList";
+import { Link, useParams } from "react-router-dom";
+import { fetchProfile } from "../../../slices/profileSlice";
+import { fetchPosts } from "../../../slices/postSlice";
+import { AppDispatch, RootState } from "../../../slices";
+import PostList from "../../posts/postList/PostList";
 import ProfileDetails from "./ProfileDetails";
 import FollowButton from "./followButton/FollowButton";
-import styles from "./Profile.module.scss";
 
 const Profile = () => {
-  const dispatch = useDispatch();
-  const params = useParams();
-  const { isAuthenticated } = useOutletContext();
-  const profile = useSelector((state) => state.profile);
-  const user = useSelector((state) => state.user);
-
-  const { userName } = params;
-  const userJS = user.toJS();
-  const profileJS = profile.toJS();
-  const profileData = userJS.profile;
-  const posts = profileJS.posts;
+  const dispatch = useDispatch<AppDispatch>();
+  const { userName = "" } = useParams();
+  const { profile, isFetching, errorMessage } = useSelector(
+    (state: RootState) => state.profile
+  );
+  const me = useSelector((state: RootState) => state.user.profile);
+  const posts = useSelector((state: RootState) => state.post.posts);
 
   useEffect(() => {
-    dispatch(fetchUserPosts(userName));
-    dispatch(getUserProfile(userName));
+    dispatch(fetchProfile(userName));
+    dispatch(fetchPosts(userName));
   }, [dispatch, userName]);
 
-  return (
-    <div className={styles.Profile}>
-      <h1>{userName}'s PostStream</h1>
+  const isMe = me?.username === userName;
+  const isLoaded = profile?.username === userName;
 
-      {profileData && (
-        <div>
-          <ProfileDetails profile={profileData}></ProfileDetails>
-          <FollowButton user_id={profileData.id} />
-        </div>
-      )}
-      {isAuthenticated && profileData.id === userName && (
-        <div>
-          [ <Link to={`/user/${profileData.id}/edit`}>edit profile</Link> ]
-        </div>
+  return (
+    <div>
+      <h1>{userName}</h1>
+
+      {errorMessage && !isLoaded && <p role="alert">{errorMessage}</p>}
+      {isFetching && !isLoaded && <p>Loading profile...</p>}
+
+      {isLoaded && (
+        <>
+          <ProfileDetails profile={profile} />
+          {me && !isMe && <FollowButton profile={profile} myUsername={me.username} />}
+          {isMe && (
+            <p>
+              [ <Link to={`/user/${userName}/edit`}>edit profile</Link> ]
+            </p>
+          )}
+        </>
       )}
       <hr />
 

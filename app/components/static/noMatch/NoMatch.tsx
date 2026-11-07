@@ -1,12 +1,10 @@
-import React from 'react';
-import styles from './NoMatch.module.scss';
+import { Link } from "react-router-dom";
 
-const NoMatch = () => {
-  return (
-    <div className={styles.noMatch}>
-      404 - sry no page found
-    </div>
-  );
-};
+const NoMatch = () => (
+  <div>
+    <h1>404</h1>
+    <p>sry, no page here. [ <Link to="/">back to the stream</Link> ]</p>
+  </div>
+);
 
 export default NoMatch;

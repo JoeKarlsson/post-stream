@@ -1,172 +1,127 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { User, Post } from "../types";
-import { isTokenExpired } from "../components/shared/auth/jwtHelper";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { PublicProfile, User } from "../types";
+import { authJsonHeaders, readJsonOrThrow } from "./http";
 
-// Async thunks for API calls
+// The profile page's user, as anyone can see it (no email)
 export const fetchProfile = createAsyncThunk(
   "profile/fetchProfile",
-  async (_, { rejectWithValue }) => {
+  async (username: string, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("/auth/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch profile");
-      }
-      const data = await response.json();
-      return data;
+      const response = await fetch(`/auth/user/${encodeURIComponent(username)}`);
+      const data = await readJsonOrThrow(response);
+      return data.user as PublicProfile;
     } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
+      return rejectWithValue((error as Error).message);
     }
   }
 );
 
-export const updateProfile = createAsyncThunk(
-  "profile/updateProfile",
+export const setFollowing = createAsyncThunk(
+  "profile/setFollowing",
   async (
-    profileData: {
-      name?: string;
-      bio?: string;
-      location?: string;
-      website?: string;
-    },
+    {
+      username,
+      follow,
+    }: { username: string; follow: boolean; myUsername: string },
     { rejectWithValue }
   ) => {
     try {
-      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `/auth/user/${encodeURIComponent(username)}/follow`,
+        { method: follow ? "POST" : "DELETE", headers: authJsonHeaders() }
+      );
+      await readJsonOrThrow(response);
+      return { follow };
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+// Edits the logged-in user's own profile
+export const updateProfile = createAsyncThunk(
+  "profile/updateProfile",
+  async (
+    fields: { first_name: string; last_name: string; bio: string },
+    { rejectWithValue }
+  ) => {
+    try {
       const response = await fetch("/auth/profile", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${token}`,
-        },
-        body: new URLSearchParams(profileData).toString(),
+        headers: authJsonHeaders(),
+        body: JSON.stringify(fields),
       });
-      if (!response.ok) {
-        throw new Error("Failed to update profile");
-      }
-      const data = await response.json();
-      return data;
+      const data = await readJsonOrThrow(response);
+      return data.user as User;
     } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
+      return rejectWithValue((error as Error).message);
     }
   }
 );
 
 interface ProfileState {
-  profile: User | null;
-  isFetchingPosts: boolean;
-  didInvalidate: boolean;
-  posts: Post[];
+  profile: PublicProfile | null;
   isFetching: boolean;
-  isAuthenticated: boolean;
-  errorMessage?: string;
-  errorCode?: string;
+  isSaving: boolean;
+  errorMessage: string | null;
 }
 
-// Check if there's a valid token on initialization
-const token = localStorage.getItem("token");
-const isTokenValid = !!token && !isTokenExpired(token);
-const userToken = JSON.parse(localStorage.getItem("user") || "null");
-
 const initialState: ProfileState = {
-  profile: userToken,
-  isFetchingPosts: false,
-  didInvalidate: false,
-  posts: [],
+  profile: null,
   isFetching: false,
-  isAuthenticated: isTokenValid,
+  isSaving: false,
+  errorMessage: null,
 };
 
 const profileSlice = createSlice({
   name: "profile",
   initialState,
-  reducers: {
-    handleFormChange: (
-      state,
-      action: PayloadAction<{ fieldName: string; content: string }>
-    ) => {
-      if (state.profile && state.profile.user_metadata) {
-        state.profile.user_metadata = {
-          ...state.profile.user_metadata,
-          [action.payload.fieldName]: action.payload.content,
-        };
-      }
-    },
-    clearError: (state) => {
-      state.errorMessage = undefined;
-      state.errorCode = undefined;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    // Fetch profile
     builder
       .addCase(fetchProfile.pending, (state) => {
-        state.isFetchingPosts = true;
-        state.didInvalidate = false;
-        state.errorMessage = undefined;
-        state.errorCode = undefined;
+        state.isFetching = true;
+        state.errorMessage = null;
       })
       .addCase(fetchProfile.fulfilled, (state, action) => {
-        state.isFetchingPosts = false;
-        state.didInvalidate = false;
-
-        try {
-          const parsedPosts = Array.isArray(action.payload)
-            ? action.payload
-            : [];
-          state.posts = parsedPosts.map((post: Post) => ({
-            ...post,
-            showComments: false,
-            isParentPost: true,
-            realName: post.userID,
-            username: post.userID,
-            comments: [],
-            childId: 0,
-            childContext: null,
-            didInvalidate: false,
-            updatedPostBody: post.body,
-            editMode: false,
-            replyMode: false,
-            replyBody: "",
-          }));
-        } catch (error) {
-          state.posts = [];
-        }
-      })
-      .addCase(fetchProfile.rejected, (state, action) => {
-        state.isFetchingPosts = false;
-        state.didInvalidate = true;
-        state.errorMessage = action.payload as string;
-        state.errorCode = "PROFILE_FETCH_FAILED";
-      });
-
-    // Update profile
-    builder
-      .addCase(updateProfile.pending, (state) => {
-        state.isFetching = true;
-        state.errorMessage = undefined;
-        state.errorCode = undefined;
-      })
-      .addCase(updateProfile.fulfilled, (state, action) => {
         state.isFetching = false;
         state.profile = action.payload;
       })
-      .addCase(updateProfile.rejected, (state, action) => {
+      .addCase(fetchProfile.rejected, (state, action) => {
         state.isFetching = false;
+        state.profile = null;
         state.errorMessage = action.payload as string;
-        state.errorCode = "PROFILE_UPDATE_FAILED";
+      });
+
+    builder
+      .addCase(setFollowing.fulfilled, (state, action) => {
+        const me = action.meta.arg.myUsername;
+        if (!state.profile) return;
+        state.profile.followers = action.payload.follow
+          ? [...state.profile.followers, me]
+          : state.profile.followers.filter((name) => name !== me);
+      })
+      .addCase(setFollowing.rejected, (state, action) => {
+        state.errorMessage = action.payload as string;
+      });
+
+    builder
+      .addCase(updateProfile.pending, (state) => {
+        state.isSaving = true;
+        state.errorMessage = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.isSaving = false;
+        if (state.profile?.username === action.payload.username) {
+          const { first_name, last_name, bio } = action.payload;
+          Object.assign(state.profile, { first_name, last_name, bio });
+        }
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.isSaving = false;
+        state.errorMessage = action.payload as string;
       });
   },
 });
-
-export const { handleFormChange, clearError } = profileSlice.actions;
 
 export default profileSlice.reducer;

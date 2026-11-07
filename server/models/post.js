@@ -5,8 +5,9 @@ module.exports = function (sequelize, DataTypes) {
     body: {
       type: DataTypes.STRING,
       allowNull: false,
-      notEmpty: true,
-      required: true
+      validate: {
+        len: { args: [1, 255], msg: 'Posts must be 1 to 255 characters' }
+      }
     },
     commentCount: {
       type: DataTypes.INTEGER,

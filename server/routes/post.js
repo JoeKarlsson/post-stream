@@ -3,213 +3,79 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./../models');
-const Post = db.Post;
-const Comment = db.Comment;
-const { authenticateJWT, handleUnauthorized } = require('./../middleware/jwt');
+const { authenticateJWT } = require('./../middleware/jwt');
 
-const authenticate = authenticateJWT;
-const handleUnauth = handleUnauthorized;
+const { Post, Comment } = db;
+const FEED_LIMIT = 10;
 
-const exists = (req) => {
-  if (typeof parseInt(req.params.id) === 'number') {
-    Post.findByPk(req.params.id)
-      .then((post) => {
-        if (post) {
-          return true;
-        };
-        return false;
-      })
-      .catch((err) => {
-        return false;
-      })
-  } else {
-    return false;
-  }
-};
-
-router.route('/')
-  // GET all of the posts
-  .get((req, res) => {
-    Post.findAll({
-      limit: 10,
-      order: [
-        ['createdAt', 'DESC']
-      ]
-    })
-      .then((posts) => {
-        res.json(posts);
-      })
-      .catch((err) => {
-        res.status(500).json({ error: err.message });
-      });
-  })
-
-router.route('/:id')
-  // GET one post by ID
-  .get((req, res) => {
-    if (exists) {
-      Post.findOne({
-        id: req.params.id
-      })
-        .then((post) => {
-          res.json(post);
-        })
-        .catch((err) => {
-          res.status(500).json({ error: err.message });
-        })
-    } else {
-      res.json({ success: false });
+// Loads req.params[paramName] from Model into req.found, or answers 404.
+// With ownerOnly, answers 403 unless the logged-in user wrote it.
+const loadRecord = (Model, paramName, { ownerOnly = false } = {}) =>
+  async (req, res, next) => {
+    const record = await Model.findByPk(req.params[paramName]);
+    if (!record) {
+      return res.status(404).json({ error: `${Model.name} not found` });
     }
-  })
-  // DELETE post from database by ID
-  .delete(authenticate, handleUnauth, (req, res) => {
-    if (exists) {
-      Post.destroy({
-        where: {
-          id: req.params.id
-        }
-      })
-        .then((data) => {
-          res.json({ success: true });
-        })
-        .catch((err) => {
-          res.status(500).json({ error: err.message });
-        })
-    } else {
-      res.json({ success: false });
+    if (ownerOnly && record.userID !== req.user.username) {
+      return res.status(403).json({ error: `You can only change your own ${Model.name.toLowerCase()}s` });
     }
+    req.found = record;
+    next();
+  };
+
+router.get('/', async (req, res) => {
+  const posts = await Post.findAll({ limit: FEED_LIMIT, order: [['createdAt', 'DESC']] });
+  res.json(posts);
+});
+
+router.post('/new', authenticateJWT, async (req, res) => {
+  const post = await Post.create({ body: req.body.body, userID: req.user.username });
+  res.json(post);
+});
+
+router.get('/user/:username', async (req, res) => {
+  const posts = await Post.findAll({
+    where: { userID: req.params.username },
+    limit: FEED_LIMIT,
+    order: [['createdAt', 'DESC']]
   });
+  res.json(posts);
+});
 
-router.route('/:id/edit')
-  // find by id and update the post
-  .put(authenticate, handleUnauth, (req, res) => {
-    if (exists) {
-      Post.findByPk(req.params.id)
-        .then((foundPost) => {
-          // then update
-          foundPost.update({
-            body: req.body.body,
-          })
-            .then((newPost) => {
-              res.json(newPost);
-            })
-            .catch((err) => {
-              res.status(500).json({ error: err.message });
-            })
-        })
-        .catch((err) => {
-          res.status(500).json({ error: err.message });
-        })
-    } else {
-      res.json({ success: false });
-    }
-  })
+router.get('/:id', loadRecord(Post, 'id'), (req, res) => {
+  res.json(req.found);
+});
 
-router.route('/user/:username')
-  // get an array of all the users posts
-  .get((req, res) => {
-    Post.findAll({
-      limit: 10,
-      order: [
-        ['createdAt', 'DESC']
-      ],
-      where: {
-        userID: req.params.username
-      }
-    })
-      .then((userPosts) => {
-        res.json(userPosts);
-      })
-      .catch((err) => {
-        res.status(500).json({ error: err.message });
-      })
-  })
+router.delete('/:id', authenticateJWT, loadRecord(Post, 'id', { ownerOnly: true }), async (req, res) => {
+  await req.found.destroy();
+  res.json({ success: true });
+});
 
-router.route('/new')
-  // create a new post
-  .post(authenticate, handleUnauth, (req, res) => {
-    Post.create({
-      body: req.body.body,
-      userID: req.user.username
-    })
-      .then((post) => {
-        res.json(post);
-      })
-      .catch((err) => {
-        res.status(500).json({ error: err.message });
-      })
-  })
+router.put('/:id/edit', authenticateJWT, loadRecord(Post, 'id', { ownerOnly: true }), async (req, res) => {
+  res.json(await req.found.update({ body: req.body.body }));
+});
 
-// Commments on a Post
-router.route('/:id/comments')
-  // GETs the comments on a post
-  .get((req, res) => {
-    Comment.findAll({
-      hierarchy: true,
-      where: {
-        PostId: req.params.id
-      }
-    })
-      .then((comments) => {
-        res.json(comments);
-      })
-  })
+router.get('/:id/comments', async (req, res) => {
+  const comments = await Comment.findAll({
+    where: { PostId: req.params.id },
+    order: [['createdAt', 'ASC']]
+  });
+  res.json(comments);
+});
 
-router.route('/:PostId/comments/:CommentId/new')
-  // create a new comment on a post
-  .post(authenticate, handleUnauth, (req, res) => {
-    let parentId = null;
-    if (req.params.CommentId != 0) {
-      parentId = req.params.CommentId;
-    }
-    Comment.create({
-      body: req.body.body,
-      userID: req.user.username,
-      PostId: req.params.PostId,
-      parentId
-    })
-      .then((comment) => {
-        res.json(comment);
+// :CommentId is kept in the URL for older clients; replies are flat (always 0)
+router.post('/:id/comments/:CommentId/new', authenticateJWT, loadRecord(Post, 'id'), async (req, res) => {
+  const comment = await Comment.create({
+    body: req.body.body,
+    userID: req.user.username,
+    PostId: req.found.id
+  });
+  await req.found.increment('commentCount');
+  res.json(comment);
+});
 
-        Post.findByPk(req.params.PostId)
-          .then((foundPost) => {
-            // then update
-            foundPost.update({
-              commentCount: ++foundPost.commentCount,
-            })
-              .catch((err) => {
-                console.error(err)
-              })
-          })
-      })
-      .catch((err) => {
-        res.status(500).json({ error: err.message });
-      })
-  })
-
-router.route('/:PostId/comments/:CommentId/edit')
-  // find comment by id and update the comment
-  .put(authenticate, handleUnauth, (req, res) => {
-    if (exists) {
-      Comment.findByPk(req.params.CommentId)
-        .then((foundComment) => {
-          // then update
-          foundComment.update({
-            body: req.body.body,
-          })
-            .then((updatedComment) => {
-              res.json(updatedComment);
-            })
-            .catch((err) => {
-              res.status(500).json({ error: err.message });
-            })
-        })
-        .catch((err) => {
-          res.status(500).json({ error: err.message });
-        })
-    } else {
-      res.json({ success: false });
-    }
-  })
+router.put('/:id/comments/:CommentId/edit', authenticateJWT, loadRecord(Comment, 'CommentId', { ownerOnly: true }), async (req, res) => {
+  res.json(await req.found.update({ body: req.body.body }));
+});
 
 module.exports = router;

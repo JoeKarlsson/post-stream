@@ -1,47 +1,25 @@
-/*
-  eslint no-unused-vars: 0
-*/
-
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 import Header from "./shared/header/Header";
 import Footer from "./shared/footer/Footer";
 import ErrorBoundary from "./shared/error/ErrorBoundary";
-import skeleton from "./shared/styles/skeleton.module.scss";
+import base from "./shared/styles/base.module.scss";
 import styles from "./App.module.scss";
-import { RootState } from "../slices";
 
-const App: React.FC = () => {
-  const dispatch = useDispatch();
-  const {
-    profile: user,
-    isAuthenticated,
-    errorMessage,
-    errorCode,
-  } = useSelector((state: RootState) => state.user);
-
-  return (
-    <ErrorBoundary>
-      <div className={styles.app}>
-        <Header
-          isAuthenticated={isAuthenticated}
-          errorMessage={errorMessage}
-          errorCode={errorCode || ""}
-          dispatch={dispatch}
-          user={user}
-        />
-
-        <div className={styles.content}>
-          <div className={skeleton.container}>
-            <Outlet context={{ isAuthenticated }} />
-          </div>
+const App = () => (
+  <ErrorBoundary>
+    <div className={styles.app}>
+      <a className={styles.skipLink} href="#main">
+        skip to content
+      </a>
+      <Header />
+      <main id="main" className={styles.content}>
+        <div className={base.container}>
+          <Outlet />
         </div>
-
-        <Footer />
-      </div>
-    </ErrorBoundary>
-  );
-};
+      </main>
+      <Footer />
+    </div>
+  </ErrorBoundary>
+);
 
 export default App;

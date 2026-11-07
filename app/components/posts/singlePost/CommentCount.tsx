@@ -1,22 +1,7 @@
-import React from 'react';
-import styles from './CommentCount.module.scss';
-
-const CommentCount = (props) => {
-  let textToDisplay;
-
-  if (props.numOfComments === 0) {
-    textToDisplay = `No Comments`;
-  } else if (props.numOfComments === 1) {
-    textToDisplay = `${props.numOfComments} Comment`;
-  } else {
-    textToDisplay = `${props.numOfComments} Comments`;
-  }
-
-  return (
-    <span>
-      [ <span className={ styles.commentCount }>{textToDisplay}</span> ]
-    </span>
-  );
+const CommentCount = ({ numOfComments }: { numOfComments: number }) => {
+  if (numOfComments === 0) return <>no comments</>;
+  if (numOfComments === 1) return <>1 comment</>;
+  return <>{numOfComments} comments</>;
 };
 
 export default CommentCount;

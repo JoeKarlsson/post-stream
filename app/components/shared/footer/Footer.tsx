@@ -1,32 +1,14 @@
-import React from "react";
 import styles from "./Footer.module.scss";
 
-interface FooterProps {
-  item?: any;
-}
-
-const Footer: React.FC<FooterProps> = ({ item }) => (
-  <div>
-    <footer className={styles.footer}>
-      <div className={styles.footer_content}>
-        <p>
-          /* site by{" "}
-          <a target="_blank" href="http://www.rayfarias.com">
-            ray
-          </a>
-          ,{" "}
-          <a target="_blank" href="http://jacobyyoung.com/">
-            jacoby
-          </a>{" "}
-          and{" "}
-          <a target="_blank" href="http://www.callmejoe.net/">
-            joe
-          </a>{" "}
-          */
-        </p>
-      </div>
-    </footer>
-  </div>
+const Footer = () => (
+  <footer className={styles.footer}>
+    <p>
+      site by ray farias, jacoby young and{" "}
+      <a href="https://www.joekarlsson.com/" target="_blank" rel="noopener noreferrer">
+        joe karlsson
+      </a>
+    </p>
+  </footer>
 );
 
 export default Footer;

@@ -1,12 +1,26 @@
 .app {
   display: flex;
-  min-height: 100vh;
+  min-height: 100svh;
   flex-direction: column;
 }
 
 .content {
   flex: 1;
 }
+
+// Hidden until a keyboard user tabs to it
+.skipLink {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  padding: 0.5rem 1rem;
+  background: var(--color-bar);
+
+  &:focus {
+    top: 0.5rem;
+  }
+}
+
 // twemoji renders <img class="emoji">; keep it inline at text size
 :global(img.emoji) {
   height: 1em;

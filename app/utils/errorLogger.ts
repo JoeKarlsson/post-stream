@@ -41,7 +41,7 @@ class ErrorLogger {
     }
 
     // Console logging in development
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
       console.group(`🚨 Error in ${source}`);
       // eslint-disable-next-line no-console
@@ -55,7 +55,7 @@ class ErrorLogger {
     }
 
     // Send to external logging service in production
-    if (process.env.NODE_ENV === "production") {
+    if (import.meta.env.PROD) {
       this.sendToExternalService(errorEntry);
     }
 

@@ -12,127 +12,72 @@ Tentative example post:
     Bill Atkinson billatkinson 2016.07.24 10:27:29
     I invented the double-click.
 
-## Prerequisites
+## Running it
 
-### Option 1: Docker (Recommended)
+You need [Docker](https://docs.docker.com/get-docker/), or Node.js 22+ and PostgreSQL.
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+### With Docker
 
-### Option 2: Local Development
+    docker compose up --build
 
-- [Node.js](https://nodejs.org/en/download/) (>=18.0.0)
-- [PostgreSQL](https://www.postgresql.org/download/)
+This builds the production bundle, runs migrations and seeds, and serves everything at [http://localhost:3002](http://localhost:3002).
 
-## Setup Your Project
-
-Download and unpack [PostStream](https://github.com/JoeKarlsson/post-stream). Or alternatively checkout from source:
-
-    git clone git@github.com:JoeKarlsson/post-stream.git
-    cd post-stream
-
-### Quick Start with Docker
-
-1. **Start the application:**
-
-   `docker-compose up --build`
-
-2. **Access the application:**
-   - Open [http://localhost:3002](http://localhost:3002) in your browser
-
-The Docker setup automatically handles:
-
-- PostgreSQL database setup
-- Database migrations
-- Database seeding
-- All dependencies
-
-### Local Development Setup
-
-1. **Install dependencies:**
+### Local development
 
     npm install
+    docker compose up -d postgres        # or point server/config/config.json at your own Postgres
+    echo "JWT_SECRET=$(openssl rand -hex 32)" > .env
+    npm run db:migrate
+    npm run db:seed
+    npm run dev
 
-1. **Setup PostgreSQL:**
-   - Easiest: `docker compose up -d postgres` (matches the credentials already in `server/config/config.json`)
-   - Or create a new database called `poststream_development`
-   - Update `server/config/config.json` with your database credentials:
+- Frontend (Vite, with hot reload): [http://localhost:3000](http://localhost:3000)
+- API (Express): [http://localhost:3001](http://localhost:3001), proxied by Vite under `/post` and `/auth`
 
-   {
-     "development": {
-       "username": "your_username",
-       "password": "your_password",
-       "database": "poststream_development",
-       "host": "127.0.0.1",
-       "dialect": "postgres",
-       "port": 5432
-     }
-   }
+### Sample accounts
 
-1. **Run database migrations and seeders:**
+The seeders create three users, all with the password `password123`:
 
-   npm run db:migrate
-   npm run db:seed
+- `john@example.com` (johndoe131)
+- `jane@example.com` (janedoe343)
+- `joe@example.com` (joejoebinks131)
 
-1. **Set a JWT secret** (login is local email/password, no Auth0 needed):
+## Scripts
 
-   echo "JWT_SECRET=$(openssl rand -hex 32)" >> .env
+- `npm run dev`: Vite and the API together
+- `npm run build`: production build into `server/dist`
+- `npm start`: serve the API and the built frontend (`NODE_ENV=production`, `PORT`, `DATABASE_URL`)
+- `npm test`: API and unit tests (needs the dev database, migrated and seeded)
+- `npm run lint` / `npm run type-check`
+- `npm run db:migrate`, `npm run db:seed`, `npm run db:reset`
 
-   Seeded accounts: `john@example.com`, `jane@example.com`, `joe@example.com`, all with password `password123`.
+## Stack
 
-1. **Start the development server:**
+React 19, Redux Toolkit, React Router 7, Vite 8 and Sass modules on the front; Express 5, Sequelize 6, PostgreSQL and JWT auth (Passport) on the back.
 
-   npm run dev
+## API
 
-   This will start:
-   - Vite dev server on [http://localhost:3000](http://localhost:3000) (frontend)
-   - Express API server on [http://localhost:3001](http://localhost:3001) (backend)
+Routes marked *auth* need an `Authorization: Bearer <token>` header from `/auth/login` or `/auth/register`. Only the author can edit or delete a post or comment.
 
-1. **Access the application:**
-   - Navigate to [http://localhost:3000](http://localhost:3000) in your browser
+| Method | Path | |
+|---|---|---|
+| POST | `/auth/register` | `{ username, email, password, first_name, last_name, bio }` |
+| POST | `/auth/login` | `{ email, password }`, returns `{ token, user }` |
+| GET | `/auth/profile` | *auth*, the logged-in user |
+| PUT | `/auth/profile` | *auth*, `{ first_name, last_name, bio }` |
+| GET | `/auth/user/:username` | public profile, with follower and following usernames |
+| POST / DELETE | `/auth/user/:username/follow` | *auth*, follow or unfollow |
+| GET | `/post` | the 10 newest posts |
+| GET | `/post/user/:username` | a user's 10 newest posts |
+| GET | `/post/:id` | one post |
+| POST | `/post/new` | *auth*, `{ body }` (1 to 255 characters) |
+| PUT | `/post/:id/edit` | *auth*, `{ body }` |
+| DELETE | `/post/:id` | *auth*, also deletes its comments |
+| GET | `/post/:id/comments` | a post's comments, oldest first |
+| POST | `/post/:id/comments/0/new` | *auth*, `{ body }` |
+| PUT | `/post/:id/comments/:commentId/edit` | *auth*, `{ body }` |
 
-## Build Tools & Technology Stack
-
-PostStream now uses modern build tools for improved performance:
-
-- **Vite**: Lightning-fast build tool with instant HMR (Hot Module Replacement)
-- **React 18.3**: Latest React with modern features
-- **Redux 5**: State management with improved TypeScript support
-- **React Router DOM 6**: Modern routing solution
-- **SCSS Modules**: Scoped styling with CSS modules
-- **ESLint 8**: Modern linting with React hooks support
-
-### Available Scripts
-
-- `npm run dev` - Start development (both Vite and Express concurrently)
-- `npm run dev:client` - Start Vite dev server only
-- `npm run dev:server` - Start Express server only
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm test` - Run server tests
-- `npm run db:migrate` - Run database migrations
-- `npm run db:seed` - Seed database with sample data
-- `npm run db:seed:undo` - Remove all seeded data
-- `npm run db:reset` - Reset database by undoing and re-running seeders
-
-## Update Your Project
-
-In order to get an update from this repo, open your directory and type this command:
-
-    git pull
-
-If you're using Docker, rebuild the containers after pulling updates:
-
-    docker-compose down
-    docker-compose up --build
-
-For major updates, you may need to:
-
-    rm -rf node_modules package-lock.json
-    npm install
-    npm run build
-
-### Important concepts
+## Important concepts
 
 - No public metrics
   - No visible follower/following numbers
@@ -142,7 +87,7 @@ For major updates, you may need to:
   - No trending topics to browse
 - Character limit
   - Brevity
-  - Accessibilty
+  - Accessibility
   - Stream shows 256 characters with "read more" expandable to 2048 character limit
 - No video/images/gifs
   - Unicode support 🆗
@@ -177,242 +122,14 @@ For major updates, you may need to:
 
 ## Contributing
 
-1. Fork it!
+1. Fork it
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
-
-## Docker Development
-
-This project includes Docker support for easier development and deployment. The Docker setup includes:
-
-- **PostgreSQL Database**: Pre-configured with the correct schema
-- **Automatic Setup**: Database migrations and seeders run on startup
-- **Hot Reloading**: Code changes are reflected immediately
-- **Isolated Environment**: No need to install dependencies locally
-
-### Docker Commands
-
-- **Start services**: `docker-compose up`
-- **Start in background**: `docker-compose up -d`
-- **Stop services**: `docker-compose down`
-- **Rebuild and start**: `docker-compose up --build`
-- **View logs**: `docker-compose logs -f app`
-- **Reset database**: `docker-compose down -v && docker-compose up --build`
-
-### Docker Configuration
-
-The application runs on port 3002 (mapped from container port 3000) to avoid conflicts with other services. The database runs on the standard PostgreSQL port 5432.
-
-For detailed Docker setup instructions, see [DOCKER_README.md](DOCKER_README.md).
-
-## Database Management
-
-PostStream uses PostgreSQL with Sequelize ORM for database management. The application includes comprehensive seeders that populate the database with realistic test data.
-
-### Database Scripts
-
-- **`npm run db:migrate`** - Run database migrations to set up the schema
-- **`npm run db:seed`** - Populate database with sample users, posts, and comments
-- **`npm run db:seed:undo`** - Remove all seeded data (keeps schema intact)
-- **`npm run db:reset`** - Reset database by undoing and re-running all seeders
-
-### Sample Data
-
-The seeders create:
-
-- **3 Users** with complete profiles and authentication:
-  - `johndoe131` - Software developer and tech enthusiast
-  - `janedoe343` - Designer and creative thinker  
-  - `joejoebinks131` - Full-stack developer and coffee lover
-
-- **9 Posts** with realistic content covering various topics
-- **10 Comments** with proper relationships and conversation flow
-
-All user passwords are set to `password123` for testing purposes.
-
-### Database Schema
-
-- **Users**: Authentication, profile information, and user preferences
-- **Posts**: User-generated content with comment counts and timestamps
-- **Comments**: Threaded comments with parent-child relationships
-- **Foreign Keys**: Proper relationships between all entities
+5. Open a pull request
 
 ## Credits
 
 - Ray Farias
 - Jacoby Young
 - Joe Karlsson
-
---------------------
-
-## API Documentation
-
-### Posts
-
-#### Get All Posts
-
-**Request:**
-
-    GET /post
-
-**Response:**
-
-    [
-      {
-        "id": 1,
-        "body": "JohnDoe131 post 1",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 1
-      },
-      {
-        "id": 2,
-        "body": "JohnDoe131 post 2",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 1
-      }
-    ]
-
-#### Get Single Post
-
-**Request:**
-
-    GET /post/:id
-
-**Response:**
-
-    {
-      "id": 1,
-      "body": "JohnDoe131 post 1",
-      "createdAt": "2016-07-28T01:37:36.809Z",
-      "updatedAt": "2016-07-28T01:37:36.809Z",
-      "UserId": 1
-    }
-
-#### Create New Post
-
-**Request:**
-
-    POST /post/new
-    Content-Type: application/json
-
-    {
-      "body": "Your post content here"
-    }
-
-**Response:**
-
-    {
-      "id": 1,
-      "body": "Your post content here",
-      "createdAt": "2016-07-28T01:37:36.809Z",
-      "updatedAt": "2016-07-28T01:37:36.809Z",
-      "UserId": 1
-    }
-
-#### Edit Post
-
-**Request:**
-
-    PUT /post/:id/edit
-    Content-Type: application/json
-
-    {
-      "body": "Updated post content"
-    }
-
-**Response:**
-
-    {
-      "id": 1,
-      "body": "Updated post content",
-      "createdAt": "2016-07-28T01:37:36.809Z",
-      "updatedAt": "2016-07-28T01:37:36.809Z",
-      "UserId": 1
-    }
-
-#### Delete Post
-
-**Request:**
-
-    DELETE /post/:id
-
-**Response:**
-
-    {
-      "success": true
-    }
-
-### Comments
-
-#### Get Post Comments
-
-**Request:**
-
-    GET /post/:id/comments
-
-**Response:**
-
-    [
-      {
-        "id": 2,
-        "body": "JohnDoe131 comment 1 post 2",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 1,
-        "PostId": 2
-      },
-      {
-        "id": 5,
-        "body": "JaneDoe343 comment 2 post 2",
-        "createdAt": "2016-07-28T01:37:36.809Z",
-        "updatedAt": "2016-07-28T01:37:36.809Z",
-        "UserId": 2,
-        "PostId": 2
-      }
-    ]
-
-#### Create New Comment
-
-**Request:**
-
-    POST /:PostId/comments/:CommentId/newPost
-    Content-Type: application/json
-
-    {
-      "body": "Your comment content here"
-    }
-
-**Response:**
-
-    {
-      "id": 1,
-      "body": "Your comment content here",
-      "createdAt": "2016-07-28T01:37:36.809Z",
-      "updatedAt": "2016-07-28T01:37:36.809Z",
-      "UserId": 1
-    }
-
-#### Edit Comment
-
-**Request:**
-
-    PUT /:PostId/comments/:CommentId/edit
-    Content-Type: application/json
-
-    {
-      "body": "Updated comment content"
-    }
-
-**Response:**
-
-    {
-      "id": 1,
-      "body": "Updated comment content",
-      "createdAt": "2016-07-28T01:37:36.809Z",
-      "updatedAt": "2016-07-28T01:37:36.809Z",
-      "UserId": 1
-    }

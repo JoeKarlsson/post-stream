@@ -4,10 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
-const fs = require('fs');
 const bodyParser = require('body-parser');
-const methodOverride = require('method-override');
-const favicon = require('express-favicon');
 const logger = require('morgan');
 const errorhandler = require('errorhandler');
 const passport = require('passport');
@@ -50,15 +47,16 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+if (isDeveloping && require.main === module) {
+  app.use(logger('dev'));
+}
 // Only apply rate limiting in production
 if (!isDeveloping) {
   app.use(limiter);
 }
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(methodOverride());
 app.use(passport.initialize());
-// app.use(favicon(`${__dirname}/favicon.ico`));
 
 // Health check endpoint
 app.get('/health', async (req, res) => {
@@ -93,19 +91,21 @@ if (!isDeveloping) {
   app.use('/auth', auth);
 }
 
+// Bad input from any route (model validation) is the client's fault, not a 500
+app.use((err, req, res, next) => {
+  if (err.name === 'SequelizeValidationError') {
+    return res.status(400).json({ error: err.errors.map((e) => e.message).join('; ') });
+  }
+  next(err);
+});
+
 if (isDeveloping) {
-  app.set('host', 'http://localhost');
-  app.use(logger('dev'));
+  // In development, Vite serves the frontend on port 3000; this server only handles the API
   app.use(errorhandler());
-  // In development, Vite serves the frontend on port 3000
-  // The server only handles API routes
 } else {
-  app.use(express.static(`${__dirname}/dist`));
-  app.get('*', (req, res) => {
-    res.write(
-      fs.readFileSync(path.resolve(__dirname, 'dist/index.html'))
-    );
-    res.end();
+  app.use(express.static(path.join(__dirname, 'dist')));
+  app.get('/{*splat}', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
   });
 }
 
@@ -117,12 +117,9 @@ const onStart = (err) => {
     `==> 🌎 Listening on port ${port}. ` +
     `Open up http://${host}:${port}/ in your browser.`
   );
-  db.sequelize.sync(
-    // {force: true}
-  );
 };
 
-if (!module.parent) {
+if (require.main === module) {
   app.listen(port, host, onStart);
 }
 

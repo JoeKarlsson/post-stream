@@ -1,54 +1,28 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { followUser } from "../../../../actions/profile/updateProfileActions";
-import { RootState } from "../../../../slices";
+import { useDispatch } from "react-redux";
+import { setFollowing } from "../../../../slices/profileSlice";
+import { AppDispatch } from "../../../../slices";
+import { PublicProfile } from "../../../../types";
+import TextButton from "../../../shared/textButton/TextButton";
 
 interface FollowButtonProps {
-  user_id: number;
+  profile: PublicProfile;
+  myUsername: string;
 }
 
-const FollowButton: React.FC<FollowButtonProps> = ({ user_id }) => {
-  const dispatch = useDispatch();
-  const profile = useSelector((state: RootState) => state.profile.profile);
-
-  const handleClick = (e: React.MouseEvent<HTMLSpanElement>) => {
-    e.preventDefault();
-    if (!profile) return;
-
-    const user_metadata = profile.user_metadata || {};
-    const followings = ((user_metadata as any).following as number[]) || [];
-    if (followings.indexOf(user_id) === -1) {
-      followings.push(user_id);
-    }
-    const metadata = {
-      user_metadata: {
-        following: followings,
-        ...user_metadata,
-      },
-    };
-    dispatch(followUser(profile, metadata) as any);
-  };
+const FollowButton = ({ profile, myUsername }: FollowButtonProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const isFollowing = profile.followers.includes(myUsername);
 
   return (
-    <div>
-      {profile?.id !== user_id && (
-        <div>
-          [{" "}
-          <span
-            onClick={handleClick}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) =>
-              e.key === "Enter" &&
-              handleClick(e as unknown as React.MouseEvent<HTMLSpanElement>)
-            }
-          >
-            follow
-          </span>{" "}
-          ]
-        </div>
-      )}
-    </div>
+    <p>
+      <TextButton
+        onClick={() =>
+          dispatch(setFollowing({ username: profile.username, follow: !isFollowing, myUsername }))
+        }
+      >
+        {isFollowing ? "unfollow" : "follow"}
+      </TextButton>
+    </p>
   );
 };
 

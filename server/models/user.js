@@ -59,18 +59,13 @@ module.exports = function (sequelize, DataTypes) {
           user.password = await bcrypt.hash(user.password, saltRounds);
         }
       }
-    },
-    associate: function (models) {
-      User.hasMany(models.Post, {
-        foreignKey: 'userID',
-        sourceKey: 'username'
-      });
-      User.hasMany(models.Comment, {
-        foreignKey: 'userID',
-        sourceKey: 'username'
-      });
     }
   });
+
+  User.associate = function (models) {
+    User.belongsToMany(User, { as: 'followers', through: models.Follow, foreignKey: 'followingId', otherKey: 'followerId' });
+    User.belongsToMany(User, { as: 'following', through: models.Follow, foreignKey: 'followerId', otherKey: 'followingId' });
+  };
 
   // Instance method to check password
   User.prototype.validatePassword = async function(password) {

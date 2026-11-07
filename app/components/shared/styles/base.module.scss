@@ -1,0 +1,142 @@
+// PostStream base styles. The concept is an "undesigned", text-only social
+// network, which is why everything is set in Courier and posts are split by rules.
+
+:global {
+  :root {
+    color-scheme: only dark;
+
+    // Colors: every text color clears WCAG AA (4.5:1) on --color-bg and --color-bar
+    --color-bg: #2a2937;
+    --color-bar: #232230;
+    --color-field: #353445;
+    --color-rule: #5c5a76;
+    --color-text: #ffffff;
+    --color-link: #1eaedb;
+    --color-link-hover: #8fdcf5;
+    --color-teal: #00b8a9;
+    --color-red: #ff5a5a;
+    --color-yellow: #f2c94c;
+    --color-orange: #e6834a;
+    --color-pink: #ff4fd8;
+    --color-light-green: #61d76b;
+    --color-forest-green: #00ce58;
+
+    --font-body: "Courier New", Courier, monospace;
+    --gutter: 1.6rem;
+    --content-width: 96rem;
+    --tap-target: 2.4rem; // WCAG 2.2 minimum target size (24px)
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 62.5%; // 1rem = 10px
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 1.6rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+  }
+
+  h1, h2, h3 {
+    margin: 0 0 2rem;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  h1 { font-size: 3.6rem; color: var(--color-light-green); }
+  h2 { font-size: 2.8rem; color: var(--color-yellow); }
+  h3 { font-size: 2.2rem; color: var(--color-pink); }
+
+  @media (min-width: 550px) {
+    h1 { font-size: 4.8rem; }
+  }
+
+  p, ul, ol, dl, form {
+    margin: 0 0 2rem;
+  }
+
+  a {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+
+  // Links inside sentences need more than color to stand out (WCAG 1.4.1)
+  p a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:focus-visible {
+    color: var(--color-link-hover);
+    text-decoration: underline;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-link-hover);
+    outline-offset: 2px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 0.8rem 1rem;
+    font: inherit; // 16px, so iOS doesn't zoom on focus
+    color: var(--color-text);
+    background-color: var(--color-field);
+    border: 1px solid var(--color-rule);
+    border-radius: 4px;
+  }
+
+  textarea {
+    min-height: 6.5rem;
+    resize: vertical;
+  }
+
+  ul {
+    padding-left: 2rem;
+    list-style: circle;
+  }
+
+  li {
+    margin-bottom: 1rem;
+  }
+
+  hr {
+    margin: 3.5rem 0;
+    border: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  code {
+    padding: 0.2rem 0.5rem;
+    font-size: 90%;
+    background: var(--color-field);
+    border-radius: 4px;
+  }
+
+  [role="alert"] {
+    color: var(--color-red);
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 2rem var(--gutter) 4rem;
+}

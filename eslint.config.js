@@ -6,9 +6,10 @@ const typescriptEslint = require('@typescript-eslint/eslint-plugin');
 const typescriptParser = require('@typescript-eslint/parser');
 
 module.exports = [
+    { ignores: ['server/dist/**', 'node_modules/**'] },
     js.configs.recommended,
     {
-        files: ['**/*.{js,jsx}'],
+        files: ['**/*.{js,jsx,mjs}'],
         languageOptions: {
             ecmaVersion: 2022,
             sourceType: 'module',

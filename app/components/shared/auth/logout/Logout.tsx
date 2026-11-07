@@ -1,12 +1,10 @@
-import React from 'react';
-import styles from './Logout.module.scss';
+import { Link } from "react-router-dom";
 
-const Logout = () => {
-  return (
-    <div className={styles.Logout}>
-      <h2 className="section-heading">You are now logged out</h2>
-    </div>
-  );
-};
+const Logout = () => (
+  <div>
+    <h1>you are now logged out</h1>
+    <p>[ <Link to="/">back to the stream</Link> ]</p>
+  </div>
+);
 
 export default Logout;

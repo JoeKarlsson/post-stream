@@ -7,17 +7,10 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const db = {};
 
-let sequelize;
-if (process.env.HEROKU_POSTGRESQL_PURPLE_URL) {
-  // the application is executed on Heroku ... use the postgres database
-  sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_PURPLE_URL, {
-    dialect: 'postgres',
-    protocol: 'postgres'
-  });
-} else {
-  const config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+const config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
+const sequelize = config.use_env_variable
+  ? new Sequelize(process.env[config.use_env_variable], config)
+  : new Sequelize(config.database, config.username, config.password, config);
 
 fs
   .readdirSync(__dirname)

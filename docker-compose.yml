@@ -1,5 +1,4 @@
 services:
-  # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
     environment:
@@ -12,11 +11,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
-  # PostStream Application
+  # The production build: Express serves the API and the built frontend on one port
   app:
     build: .
     ports:
@@ -24,32 +23,11 @@ services:
     env_file:
       - .env.docker
     environment:
-      NODE_ENV: development
       DATABASE_URL: postgres://postgres:password@postgres:5432/poststream_development
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - ./.env.docker:/app/.env
-    command: >
-      sh -c "
-        # Wait for database to be ready
-        until pg_isready -h postgres -p 5432 -U postgres; do
-          echo 'Waiting for PostgreSQL...'
-          sleep 2
-        done
-        
-        # Run database migrations
-        npx sequelize db:migrate
-        
-        # Run database seeders
-        npx sequelize db:seed:all
-        
-        # Start the application
-        npm start
-      "
+    command: sh -c "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all && npm start"
 
 volumes:
   postgres_data:

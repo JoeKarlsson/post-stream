@@ -1,81 +1,41 @@
-@use 'sass:color';
-
-$blue: #1EAEDB;
-$darkerBlue: #11657F;
-$teal: #00B8A9;
-$red: #F90000;
-$purple: #9373C1;
-$orange: #E6834A;
-$pink: #D70090;
-$lightGreen: #61D76B;
-$forrestGreen: #00CE58;
+.statusBar {
+  margin-bottom: 1rem;
+}
 
 .username {
-  color: color.adjust($blue, $lightness: -20%);
+  display: inline-block;
+  line-height: var(--tap-target);
+  color: var(--color-link);
 }
+
 .timeStamp {
-  color: color.adjust($forrestGreen, $lightness: -20%);
+  color: var(--color-forest-green);
 }
 
-.postContent {
-
-}
-
-.statusBar {
-  margin-bottom: 1.5rem;
-}
-
-.editButton:hover {
-  color: $darkerBlue;
-}
-
-.leftButton, .editButton, .rightButton {
-  color: $blue;
-}
-.leftButton:hover {
-  color: $darkerBlue;
-}
-
-.rightButton:hover {
-  color: $darkerBlue;
-}
-
-.teal {
-  p {
-    color: $teal;
-  }
-}
-.red {
-  p {
-    color: $red;
-  }
-}
-.purple {
-  p {
-    color: $purple;
-  }
-}
-.orange {
-    color: $orange;
-}
-.pink {
-  p {
-    color: $pink;
-  }
-}
-.lightGreen {
-  p {
-    color: $lightGreen;
-  }
-}
-.forrestGreen {
-  p {
-    color: $forrestGreen;
-  }
+.actions {
+  margin-top: 1rem;
 }
 
 .comment {
-  margin: 1rem 0 0 2rem;
-  padding-left: 1rem;
-  border-left: 1px solid color.adjust($blue, $lightness: -30%);
+  margin: 1.5rem 0 0 2rem;
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--color-rule);
+}
+
+// Each post gets one color from this rotation (see COLORS in Post.tsx)
+.teal { color: var(--color-teal); }
+.red { color: var(--color-red); }
+.yellow { color: var(--color-yellow); }
+.orange { color: var(--color-orange); }
+.pink { color: var(--color-pink); }
+.lightGreen { color: var(--color-light-green); }
+.forrestGreen { color: var(--color-forest-green); }
+
+.teal, .red, .yellow, .orange, .pink, .lightGreen, .forrestGreen {
+  // Long words and URLs wrap instead of pushing the page sideways on phones
+  overflow-wrap: anywhere;
+
+  p {
+    margin-bottom: 1rem;
+  }
 }

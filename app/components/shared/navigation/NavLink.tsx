@@ -1,9 +1,12 @@
-import React from 'react';
-import { NavLink as RouterNavLink } from 'react-router-dom';
-import styles from './NavLink.module.scss';
+import { NavLink as RouterNavLink, NavLinkProps } from "react-router-dom";
+import styles from "./NavLink.module.scss";
 
-const NavLink = (props) => {
-  return <RouterNavLink {...props} className={({ isActive }) => isActive ? styles.active : ''} />;
-};
+// Router NavLink that marks the current page; keeps any className passed in
+const NavLink = ({ className, ...props }: NavLinkProps & { className?: string }) => (
+  <RouterNavLink
+    {...props}
+    className={({ isActive }) => [className, isActive && styles.active].filter(Boolean).join(" ")}
+  />
+);
 
 export default NavLink;

@@ -1,54 +1,43 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import NavLink from '../navigation/NavLink';
-import LogoutButton from '../auth/logout/LogoutButton';
-import ErrorDisplay from '../error/ErrorDisplay';
-import { logout, clearError } from '../../../slices/userSlice';
-import styles from './Header.module.scss';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import NavLink from "../navigation/NavLink";
+import TextButton from "../textButton/TextButton";
+import { logout } from "../../../slices/userSlice";
+import { AppDispatch, RootState } from "../../../slices";
+import styles from "./Header.module.scss";
 
-const Header = ({ dispatch, isAuthenticated, user, errorMessage, errorCode }) => {
-  const handleErrorDismiss = () => {
-    // Dispatch action to clear error message
-    dispatch(clearError());
-  };
+const Header = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { isAuthenticated, profile } = useSelector((state: RootState) => state.user);
 
   return (
-    <div>
-      <header className={styles.header_bar}>
-        <NavLink to='/' end className={styles.header_logo}>PostStream</NavLink>
-        <ul className={styles.header_nav}>
-          <li>[ <NavLink to='/about'>?</NavLink> ]</li>
-          {!isAuthenticated &&
-            <li>[ <NavLink to='/login'>login</NavLink> ]</li>
-          }
-          {isAuthenticated &&
-            <li>[ <NavLink to={`/user/${user.username}`}>profile</NavLink> ]</li>
-          }
-          {isAuthenticated &&
-            <LogoutButton onLogoutClick={() => dispatch(logout())} />
-          }
+    <header className={styles.header}>
+      <NavLink to="/" end className={styles.logo}>
+        PostStream
+      </NavLink>
+      <nav aria-label="main">
+        <ul className={styles.nav}>
+          <li>
+            [ <NavLink to="/about">about</NavLink> ]
+          </li>
+          {isAuthenticated && profile ? (
+            <>
+              <li>
+                [ <NavLink to={`/user/${profile.username}`}>profile</NavLink> ]
+              </li>
+              <li>
+                <TextButton onClick={() => dispatch(logout())}>logout</TextButton>
+              </li>
+            </>
+          ) : (
+            <li>
+              [ <NavLink to="/login">login</NavLink> ]
+            </li>
+          )}
         </ul>
-      </header>
-
-      {errorMessage && (
-        <ErrorDisplay
-          error={{ error: { message: errorMessage, code: errorCode } }}
-          onDismiss={handleErrorDismiss}
-          showRetry={false}
-          size="small"
-          className={styles.headerError}
-        />
-      )}
-    </div>
+      </nav>
+    </header>
   );
-};
-
-Header.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object,
-  errorMessage: PropTypes.string,
-  errorCode: PropTypes.string,
 };
 
 export default Header;

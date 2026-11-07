@@ -1,63 +1,42 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../types";
+import { isTokenExpired } from "../components/shared/auth/jwtHelper";
+import { readJsonOrThrow } from "./http";
+import { updateProfile } from "./profileSlice";
 
-// Async thunks for API calls
-export const fetchUser = createAsyncThunk(
-  "user/fetchUser",
-  async (_, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("/auth/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch user");
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
-    }
-  }
-);
+interface AuthResponse {
+  token: string;
+  user: User;
+}
+
+const storeSession = ({ token, user }: AuthResponse) => {
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(user));
+};
+
+const clearSession = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+};
+
+const postAuth = async (path: string, body: object): Promise<AuthResponse> => {
+  const response = await fetch(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await readJsonOrThrow(response);
+  storeSession(data);
+  return data;
+};
 
 export const loginUser = createAsyncThunk(
   "user/loginUser",
-  async (
-    credentials: { email: string; password: string },
-    { rejectWithValue }
-  ) => {
+  async (credentials: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await fetch("/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || errorData.message || "Login failed");
-      }
-      const data = await response.json();
-
-      // Store token and user data
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
-      if (data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-      }
-
-      return data;
+      return await postAuth("/auth/login", credentials);
     } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
+      return rejectWithValue((error as Error).message);
     }
   }
 );
@@ -65,93 +44,70 @@ export const loginUser = createAsyncThunk(
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (
-    userData: {
+    newUser: {
       email: string;
       password: string;
-      nickname: string;
-      name?: string;
+      username: string;
+      first_name: string;
+      last_name: string;
+      bio: string;
     },
     { rejectWithValue }
   ) => {
     try {
-      const response = await fetch("/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || errorData.message || "Registration failed");
-      }
-      const data = await response.json();
-
-      // Store token and user data
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
-      if (data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-      }
-
-      return data;
+      return await postAuth("/auth/register", newUser);
     } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
-    }
-  }
-);
-
-export const getProfile = createAsyncThunk(
-  "user/getProfile",
-  async (_, { rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("/auth/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch profile");
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
+      return rejectWithValue((error as Error).message);
     }
   }
 );
 
 interface UserState {
   profile: User | null;
-  isFetchingPosts: boolean;
   isFetching: boolean;
-  didInvalidate: boolean;
-  posts: any[];
   isAuthenticated: boolean;
   errorMessage: string;
   errorCode: string | null;
 }
 
-// Check if there's a valid token on initialization
-const token = localStorage.getItem("token");
-const userToken = JSON.parse(localStorage.getItem("user") || "null");
-const isTokenValid = !!token && !!userToken;
+// Restore a session from a previous visit, unless the token has expired
+const loadSession = (): User | null => {
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  if (token && user && !isTokenExpired(token)) {
+    return user;
+  }
+  clearSession();
+  return null;
+};
+
+const savedUser = loadSession();
 
 const initialState: UserState = {
-  profile: userToken,
-  isFetchingPosts: false,
+  profile: savedUser,
   isFetching: false,
-  didInvalidate: false,
-  posts: [],
-  isAuthenticated: isTokenValid,
+  isAuthenticated: savedUser !== null,
   errorMessage: "",
   errorCode: null,
+};
+
+const authPending = (state: UserState) => {
+  state.isFetching = true;
+  state.errorMessage = "";
+  state.errorCode = null;
+};
+
+const authFulfilled = (state: UserState, action: PayloadAction<AuthResponse>) => {
+  state.isFetching = false;
+  state.isAuthenticated = true;
+  state.profile = action.payload.user;
+};
+
+const authRejected = (code: string) => (state: UserState, action: { payload: unknown }) => {
+  state.isFetching = false;
+  state.isAuthenticated = false;
+  state.errorMessage = action.payload as string;
+  state.errorCode = code;
 };
 
 const userSlice = createSlice({
@@ -159,11 +115,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      // Clear localStorage
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-
-      // Reset state
+      clearSession();
       state.isAuthenticated = false;
       state.profile = null;
       state.errorMessage = "";
@@ -175,81 +127,16 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Fetch user
     builder
-      .addCase(fetchUser.fulfilled, (state, action) => {
-        state.isFetching = false;
-        state.isAuthenticated = true;
-        state.errorMessage = "";
-        state.errorCode = null;
-        state.profile = action.payload.user;
-      })
-      .addCase(fetchUser.rejected, (state) => {
-        state.isFetching = false;
-        state.isAuthenticated = false;
-      });
-
-    // Login user
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.isFetching = true;
-        state.errorMessage = "";
-        state.errorCode = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.isFetching = false;
-        state.isAuthenticated = true;
-        state.errorMessage = "";
-        state.errorCode = null;
-        state.profile = action.payload.user || action.payload;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.isFetching = false;
-        state.isAuthenticated = false;
-        state.errorMessage = action.payload as string;
-        state.errorCode = "LOGIN_FAILED";
-      });
-
-    // Register user
-    builder
-      .addCase(registerUser.pending, (state) => {
-        state.isFetching = true;
-        state.errorMessage = "";
-        state.errorCode = null;
-      })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.isFetching = false;
-        state.isAuthenticated = true;
-        state.errorMessage = "";
-        state.errorCode = null;
-        state.profile = action.payload.user || action.payload;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.isFetching = false;
-        state.isAuthenticated = false;
-        state.errorMessage = action.payload as string;
-        state.errorCode = "REGISTER_FAILED";
-      });
-
-    // Get profile
-    builder
-      .addCase(getProfile.pending, (state) => {
-        state.isFetching = true;
-        state.errorMessage = "";
-        state.errorCode = null;
-      })
-      .addCase(getProfile.fulfilled, (state, action) => {
-        state.isFetching = false;
-        state.isAuthenticated = true;
-        state.errorMessage = "";
-        state.errorCode = null;
-        state.profile = action.payload.user || action.payload;
-      })
-      .addCase(getProfile.rejected, (state, action) => {
-        state.isFetching = false;
-        state.isAuthenticated = false;
-        state.errorMessage = action.payload as string;
-        state.errorCode = "PROFILE_FAILED";
+      .addCase(loginUser.pending, authPending)
+      .addCase(loginUser.fulfilled, authFulfilled)
+      .addCase(loginUser.rejected, authRejected("LOGIN_FAILED"))
+      .addCase(registerUser.pending, authPending)
+      .addCase(registerUser.fulfilled, authFulfilled)
+      .addCase(registerUser.rejected, authRejected("REGISTER_FAILED"))
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.profile = action.payload;
+        localStorage.setItem("user", JSON.stringify(action.payload));
       });
   },
 });

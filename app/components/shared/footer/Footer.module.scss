@@ -1,17 +1,10 @@
-@use 'sass:color';
-
-$charade: #2A2937;
-$forrestGreen: #00CE58;
-
 .footer {
-  width: 100%;
-  padding-top: 1%;
-  padding-bottom: 1%;
-  background-color: color.adjust($charade, $lightness: -3%);
-  .footer_content {
-    text-align: center;
-  }
+  padding: 1rem var(--gutter);
+  text-align: center;
+  background-color: var(--color-bar);
+
   p {
-    color: $forrestGreen;
+    margin: 0;
+    color: var(--color-forest-green);
   }
 }

@@ -5,7 +5,9 @@
     "database": "poststream_development",
     "host": "localhost",
     "dialect": "postgres",
-    "port": 5432
+    "port": 5432,
+    "logging": false,
+    "seederStorage": "sequelize"
   },
   "test": {
     "username": "postgres",
@@ -17,6 +19,7 @@
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "seederStorage": "sequelize"
   }
 }

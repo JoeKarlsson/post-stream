@@ -1,39 +1,46 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { PublicProfile } from "../../../types";
 import styles from "./ProfileDetails.module.scss";
-import { User } from "../../../types";
 
-const ProfileDetails = ({ profile }: { profile: User | null }) => {
-  if (!profile) {
-    return <div>Loading profile...</div>;
-  }
+const UserLinks = ({ usernames }: { usernames: string[] }) =>
+  usernames.length === 0 ? (
+    <>nobody yet</>
+  ) : (
+    <>
+      {usernames.map((name, i) => (
+        <React.Fragment key={name}>
+          {i > 0 && ", "}
+          <Link to={`/user/${name}`}>{name}</Link>
+        </React.Fragment>
+      ))}
+    </>
+  );
+
+const ProfileDetails = ({ profile }: { profile: PublicProfile }) => {
+  const realName = [profile.first_name, profile.last_name].filter(Boolean).join(" ");
 
   return (
-    <div>
-      <div>
-        <h3>Profile</h3>
-        <p className={styles.teal}>
-          <strong>Name: </strong> {profile.user_metadata?.name || "N/A"}
-        </p>
-        <p className={styles.pink}>
-          <strong>Email: </strong> {profile.email}
-        </p>
-        <p className={styles.lightGreen}>
-          <strong>Nickname: </strong> {profile.nickname}
-        </p>
-        <p className={styles.orange}>
-          <strong>Bio: </strong> {profile.user_metadata?.bio || "N/A"}
-        </p>
-        <p className={styles.forrestGreen}>
-          <strong>Created At: </strong> {profile.created_at || "N/A"}
-        </p>
-      </div>
-    </div>
+    <dl className={styles.details}>
+      {realName && (
+        <>
+          <dt>name</dt>
+          <dd className={styles.teal}>{realName}</dd>
+        </>
+      )}
+      <dt>bio</dt>
+      <dd className={styles.orange}>{profile.bio || "no bio yet"}</dd>
+      <dt>joined</dt>
+      <dd className={styles.lightGreen}>
+        {new Date(profile.createdAt).toLocaleDateString()}
+      </dd>
+      {/* PostStream shows who people follow, never follower counts */}
+      <dt>follows</dt>
+      <dd className={styles.forrestGreen}>
+        <UserLinks usernames={profile.following} />
+      </dd>
+    </dl>
   );
-};
-
-ProfileDetails.propTypes = {
-  profile: PropTypes.object,
 };
 
 export default ProfileDetails;

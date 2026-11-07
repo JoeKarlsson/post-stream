@@ -1,17 +1,18 @@
 import React, { useMemo } from "react";
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Remarkable } from "remarkable";
 import twemoji from "twemoji";
 import {
+  deletePost,
   fetchComments,
   toggleShowComment,
   toggleEditMode,
 } from "../../../slices/postSlice";
-import { RootState } from "../../../slices";
+import { AppDispatch, RootState } from "../../../slices";
+import { Post as PostType } from "../../../types";
+import TextButton from "../../shared/textButton/TextButton";
 import CommentCount from "./CommentCount";
-import DestroyPostButton from "./DestroyPostButton";
 import Reply from "./Reply";
 import EditPost from "./../editPost/EditPost";
 import styles from "./Post.module.scss";
@@ -19,7 +20,7 @@ import styles from "./Post.module.scss";
 const COLORS = [
   "teal",
   "red",
-  "purple",
+  "yellow",
   "orange",
   "pink",
   "lightGreen",
@@ -31,26 +32,12 @@ const renderMarkup = (body: string) => {
   return { __html: twemoji.parse(html, { folder: "svg", ext: ".svg" }) };
 };
 
-interface PostProps {
-  username: string;
-  realName: string;
-  commentCount: number;
-  id: number;
+type PostProps = Pick<PostType, "id" | "body" | "userID" | "createdAt" | "commentCount"> & {
   index: number;
-  createdAt: string;
-  body: string;
-}
+};
 
-const Post: React.FC<PostProps> = ({
-  username,
-  realName,
-  commentCount,
-  id,
-  index,
-  createdAt,
-  body,
-}) => {
-  const dispatch = useDispatch();
+const Post = ({ id, body, userID, createdAt, commentCount = 0, index }: PostProps) => {
+  const dispatch = useDispatch<AppDispatch>();
   const currentPost = useSelector((state: RootState) => state.post.posts[index]);
   const { isAuthenticated, profile } = useSelector(
     (state: RootState) => state.user
@@ -65,7 +52,7 @@ const Post: React.FC<PostProps> = ({
   }
 
   const { editMode, showComments, comments } = currentPost;
-  const isOwner = isAuthenticated && profile?.username === username;
+  const isOwner = isAuthenticated && profile?.username === userID;
 
   const handleCommentCountClick = () => {
     if (showComments) {
@@ -82,11 +69,10 @@ const Post: React.FC<PostProps> = ({
       ) : (
         <div>
           <div className={styles.statusBar}>
-            [
-            <Link to={`/user/${username}`} className={styles.username}>
-              {" "}
-              {realName}{" "}
-            </Link>
+            [{" "}
+            <Link to={`/user/${userID}`} className={styles.username}>
+              {userID}
+            </Link>{" "}
             ] |{" "}
             <span className={styles.timeStamp}>
               {new Date(createdAt).toLocaleTimeString()}
@@ -95,28 +81,19 @@ const Post: React.FC<PostProps> = ({
 
           <span className={styles[color]} dangerouslySetInnerHTML={markup} />
 
-          {isOwner && (
-            <div>
-              [{" "}
-              <span
-                className={styles.editButton}
-                onClick={() =>
-                  dispatch(toggleEditMode({ index, editState: true }))
-                }
-              >
-                edit
-              </span>{" "}
-              ]
-              <DestroyPostButton id={id} />
-            </div>
-          )}
-          {isAuthenticated && <Reply id={id} index={index} />}
-          <div
-            className="comment-count"
-            onClick={handleCommentCountClick}
-            style={{ cursor: "pointer" }}
-          >
-            <CommentCount numOfComments={commentCount} />
+          <div className={styles.actions}>
+            {isOwner && (
+              <>
+                <TextButton onClick={() => dispatch(toggleEditMode({ index, editState: true }))}>
+                  edit
+                </TextButton>
+                <TextButton onClick={() => dispatch(deletePost(id))}>destroy</TextButton>
+              </>
+            )}
+            {isAuthenticated && <Reply id={id} index={index} />}
+            <TextButton onClick={handleCommentCountClick}>
+              <CommentCount numOfComments={commentCount} />
+            </TextButton>
           </div>
         </div>
       )}
@@ -127,14 +104,10 @@ const Post: React.FC<PostProps> = ({
             comments.map((comment) => (
               <div key={comment.id} className={styles.comment}>
                 <div className={styles.statusBar}>
-                  [
-                  <Link
-                    to={`/user/${comment.userID}`}
-                    className={styles.username}
-                  >
-                    {" "}
-                    {comment.userID}{" "}
-                  </Link>
+                  [{" "}
+                  <Link to={`/user/${comment.userID}`} className={styles.username}>
+                    {comment.userID}
+                  </Link>{" "}
                   ] |{" "}
                   <span className={styles.timeStamp}>
                     {new Date(comment.createdAt).toLocaleTimeString()}
@@ -155,16 +128,6 @@ const Post: React.FC<PostProps> = ({
       <hr />
     </div>
   );
-};
-
-Post.propTypes = {
-  id: PropTypes.number,
-  realName: PropTypes.string,
-  username: PropTypes.string,
-  body: PropTypes.string,
-  createdAt: PropTypes.string,
-  commentCount: PropTypes.number,
-  index: PropTypes.number,
 };
 
 export default Post;

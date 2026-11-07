@@ -1,23 +1,18 @@
-# Use Node.js 20 LTS (required by some packages)
-FROM node:20-alpine
+FROM node:22-alpine
 
-# Install PostgreSQL client tools and build dependencies for native modules
-RUN apk add --no-cache postgresql-client python3 make g++ py3-pip
+# Build tools for bcrypt's native module; pg_isready for the startup wait
+RUN apk add --no-cache postgresql-client python3 make g++
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
-COPY package.json ./
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application
 COPY . .
+RUN npm run build
 
-# Expose port 3000
+ENV NODE_ENV=production
+ENV PORT=3000
 EXPOSE 3000
 
-# Start the application
 CMD ["npm", "start"]

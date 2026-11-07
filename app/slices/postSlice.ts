@@ -1,167 +1,105 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Post, Comment } from "../types";
-import { logError } from "../utils/errorLogger";
+import { authJsonHeaders, readJsonOrThrow } from "./http";
 
-const authJsonHeaders = () => ({
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("token")}`,
+// Matches the VARCHAR(255) body column and the server-side validation
+export const MAX_POST_LENGTH = 255;
+
+// Each thunk turns a failed request into a rejected action carrying the server's message
+const request = async (url: string, init?: RequestInit) =>
+  readJsonOrThrow(await fetch(url, init));
+
+const thunk = <Arg, Result>(type: string, run: (arg: Arg) => Promise<Result>) =>
+  createAsyncThunk<Result, Arg, { rejectValue: string }>(type, async (arg, { rejectWithValue }) => {
+    try {
+      return await run(arg);
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  });
+
+// No username: the main feed. With one: that user's posts (profile page).
+export const fetchPosts = thunk("posts/fetchPosts", (username: string | undefined) =>
+  request(username ? `/post/user/${encodeURIComponent(username)}` : "/post") as Promise<Post[]>
+);
+
+export const createPost = thunk("posts/createPost", ({ body }: { body: string }) =>
+  request("/post/new", {
+    method: "POST",
+    headers: authJsonHeaders(),
+    body: JSON.stringify({ body }),
+  }) as Promise<Post>
+);
+
+export const updatePost = thunk("posts/updatePost", ({ id, body }: { id: number; body: string }) =>
+  request(`/post/${id}/edit`, {
+    method: "PUT",
+    headers: authJsonHeaders(),
+    body: JSON.stringify({ body }),
+  }) as Promise<Post>
+);
+
+export const deletePost = thunk("posts/deletePost", async (id: number) => {
+  await request(`/post/${id}`, { method: "DELETE", headers: authJsonHeaders() });
+  return id;
 });
 
-// Async thunks for API calls
-export const fetchPosts = createAsyncThunk(
-  "posts/fetchPosts",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await fetch("/post");
-      if (!response.ok) {
-        throw new Error("Failed to fetch posts");
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
-    }
-  }
-);
+export const fetchComments = thunk("posts/fetchComments", async (postId: number) => ({
+  postId,
+  comments: (await request(`/post/${postId}/comments`)) as Comment[],
+}));
 
-export const createPost = createAsyncThunk(
-  "posts/createPost",
-  async (
-    postData: { body: string },
-    { rejectWithValue }
-  ) => {
-    try {
-      const response = await fetch("/post/new", {
-        method: "POST",
-        headers: authJsonHeaders(),
-        body: JSON.stringify({ body: postData.body }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to create post");
-      }
-      return await response.json();
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
-    }
-  }
-);
-
-export const updatePost = createAsyncThunk(
-  "posts/updatePost",
-  async ({ id, body }: { id: number; body: string }, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/post/${id}/edit`, {
-        method: "PUT",
-        headers: authJsonHeaders(),
-        body: JSON.stringify({ body }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update post");
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
-    }
-  }
-);
-
-export const deletePost = createAsyncThunk(
-  "posts/deletePost",
-  async (id: number, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/post/${id}`, {
-        method: "DELETE",
-        headers: authJsonHeaders(),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete post");
-      }
-      return id;
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
-    }
-  }
-);
-
-export const fetchComments = createAsyncThunk(
-  "posts/fetchComments",
-  async (postId: number, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/post/${postId}/comments`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch comments");
-      }
-      const data = await response.json();
-      return { comments: data, postId };
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
-    }
-  }
-);
-
-export const createReply = createAsyncThunk(
+export const createReply = thunk(
   "posts/createReply",
-  async (
-    { postId, body }: { postId: number; body: string },
-    { rejectWithValue }
-  ) => {
-    try {
-      const response = await fetch(`/post/${postId}/comments/0/new`, {
-        method: "POST",
-        headers: authJsonHeaders(),
-        body: JSON.stringify({ body }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to create reply");
-      }
-      const data = await response.json();
-      return { comment: data, postId };
-    } catch (error) {
-      return rejectWithValue(
-        error instanceof Error ? error.message : "Unknown error"
-      );
-    }
-  }
+  async ({ postId, body }: { postId: number; body: string }) => ({
+    postId,
+    comment: (await request(`/post/${postId}/comments/0/new`, {
+      method: "POST",
+      headers: authJsonHeaders(),
+      body: JSON.stringify({ body }),
+    })) as Comment,
+  })
 );
+
+// A post plus the UI state the feed keeps for it
+export interface FeedPost extends Post {
+  comments: Comment[];
+  showComments: boolean;
+  editMode: boolean;
+  updatedPostBody: string;
+  replyMode: boolean;
+  replyBody: string;
+}
+
+const toFeedPost = (post: Post): FeedPost => ({
+  ...post,
+  comments: [],
+  showComments: false,
+  editMode: false,
+  updatedPostBody: post.body,
+  replyMode: false,
+  replyBody: "",
+});
 
 interface PostState {
-  posts: Post[];
+  posts: FeedPost[];
   isFetchingPosts: boolean;
-  isFetchingComments: boolean;
-  isDestroyingPost: boolean;
   submittingNewPost: boolean;
-  isSubmittingReply: boolean;
-  didInvalidate: boolean;
   lastUpdated: number | null;
   newPostBody: string;
-  receivedAt: number | null;
   error: string | null;
 }
 
 const initialState: PostState = {
   posts: [],
   isFetchingPosts: false,
-  isFetchingComments: false,
-  isDestroyingPost: false,
   submittingNewPost: false,
-  isSubmittingReply: false,
-  didInvalidate: false,
   lastUpdated: null,
   newPostBody: "",
-  receivedAt: null,
   error: null,
 };
+
+const findPost = (state: PostState, id: number) => state.posts.find((post) => post.id === id);
 
 const postSlice = createSlice({
   name: "posts",
@@ -170,233 +108,103 @@ const postSlice = createSlice({
     setNewPostBody: (state, action: PayloadAction<string>) => {
       state.newPostBody = action.payload;
     },
-    toggleEditMode: (
-      state,
-      action: PayloadAction<{ index: number; editState: boolean }>
-    ) => {
+    toggleEditMode: (state, action: PayloadAction<{ index: number; editState: boolean }>) => {
       const post = state.posts[action.payload.index];
       if (post) {
         post.editMode = action.payload.editState;
+        post.updatedPostBody = post.body;
       }
     },
-    updatePostBody: (
-      state,
-      action: PayloadAction<{ index: number; body: string }>
-    ) => {
+    updatePostBody: (state, action: PayloadAction<{ index: number; body: string }>) => {
       const post = state.posts[action.payload.index];
-      if (post) {
-        post.updatedPostBody = action.payload.body;
-      }
-    },
-    toggleComment: (
-      state,
-      action: PayloadAction<{ index: number; newChildId: number }>
-    ) => {
-      const post = state.posts[action.payload.index];
-      if (post) {
-        post.childId = action.payload.newChildId;
-        post.childContext = post.comments?.[action.payload.newChildId] || null;
-      }
+      if (post) post.updatedPostBody = action.payload.body;
     },
     toggleShowComment: (
       state,
       action: PayloadAction<{ index: number; showCommentState: boolean }>
     ) => {
       const post = state.posts[action.payload.index];
-      if (post) {
-        post.showComments = action.payload.showCommentState;
-      }
+      if (post) post.showComments = action.payload.showCommentState;
     },
     toggleReplyMode: (state, action: PayloadAction<number>) => {
       const post = state.posts[action.payload];
-      if (post) {
-        post.replyMode = !post.replyMode;
-      }
+      if (post) post.replyMode = !post.replyMode;
     },
-    updateReplyBody: (
-      state,
-      action: PayloadAction<{ index: number; body: string }>
-    ) => {
+    updateReplyBody: (state, action: PayloadAction<{ index: number; body: string }>) => {
       const post = state.posts[action.payload.index];
-      if (post) {
-        post.replyBody = action.payload.body;
-      }
+      if (post) post.replyBody = action.payload.body;
     },
     clearError: (state) => {
       state.error = null;
-      state.didInvalidate = false;
     },
   },
   extraReducers: (builder) => {
-    // Fetch posts
     builder
       .addCase(fetchPosts.pending, (state) => {
         state.isFetchingPosts = true;
-        state.didInvalidate = false;
+        state.posts = [];
         state.error = null;
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.isFetchingPosts = false;
-        state.didInvalidate = false;
         state.lastUpdated = Date.now();
-        state.receivedAt = Date.now();
-
-        try {
-          const parsedPosts = Array.isArray(action.payload)
-            ? action.payload
-            : [];
-          state.posts = parsedPosts.map((post: Post) => ({
-            ...post,
-            showComments: false,
-            isParentPost: true,
-            realName: post.userID,
-            username: post.userID,
-            comments: [],
-            childId: 0,
-            childContext: null,
-            didInvalidate: false,
-            updatedPostBody: post.body,
-            editMode: false,
-            replyMode: false,
-            replyBody: "",
-          }));
-        } catch (error) {
-          logError("PostSlice", error, {
-            action: "fetchPosts.fulfilled",
-            payload: action.payload,
-          });
-          state.posts = [];
-        }
+        state.posts = action.payload.map(toFeedPost);
       })
-      .addCase(fetchPosts.rejected, (state, action) => {
+      .addCase(fetchPosts.rejected, (state) => {
         state.isFetchingPosts = false;
-        state.didInvalidate = true;
-        state.error = action.payload as string;
-      });
+      })
 
-    // Create post
-    builder
       .addCase(createPost.pending, (state) => {
         state.submittingNewPost = true;
-        state.error = null;
       })
       .addCase(createPost.fulfilled, (state, action) => {
         state.submittingNewPost = false;
         state.newPostBody = "";
-
-        const newPost = {
-          ...action.payload,
-          showComments: false,
-          isParentPost: true,
-          realName: action.payload.userID,
-          username: action.payload.userID,
-          comments: [],
-          childId: 0,
-          childContext: null,
-          didInvalidate: false,
-          updatedPostBody: action.payload.body,
-          editMode: false,
-          replyMode: false,
-          replyBody: "",
-        };
-
-        state.posts.unshift(newPost);
+        state.posts.unshift(toFeedPost(action.payload));
       })
-      .addCase(createPost.rejected, (state, action) => {
+      .addCase(createPost.rejected, (state) => {
         state.submittingNewPost = false;
-        state.didInvalidate = true;
-        state.error = action.payload as string;
-      });
-
-    // Update post
-    builder.addCase(updatePost.fulfilled, (state, action) => {
-      const index = state.posts.findIndex(
-        (post) => post.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.posts[index].body = action.payload.body;
-        state.posts[index].editMode = false;
-      }
-    });
-
-    // Delete post
-    builder
-      .addCase(deletePost.pending, (state) => {
-        state.isDestroyingPost = true;
-        state.error = null;
       })
-      .addCase(deletePost.fulfilled, (state, action) => {
-        state.isDestroyingPost = false;
-        state.posts = state.posts.filter((post) => post.id !== action.payload);
-      })
-      .addCase(deletePost.rejected, (state, action) => {
-        state.isDestroyingPost = false;
-        state.didInvalidate = true;
-        state.error = action.payload as string;
-      });
 
-    // Fetch comments
-    builder
-      .addCase(fetchComments.pending, (state) => {
-        state.isFetchingComments = true;
-        state.didInvalidate = false;
-        state.error = null;
-      })
-      .addCase(fetchComments.fulfilled, (state, action) => {
-        state.isFetchingComments = false;
-        state.didInvalidate = false;
-
-        const postIndex = state.posts.findIndex(
-          (post) => post.id === action.payload.postId
-        );
-        if (postIndex !== -1) {
-          const post = state.posts[postIndex];
-          post.comments = action.payload.comments.map((comment: Comment) => ({
-            ...comment,
-            childId: 0,
-            showComments: false,
-            isParentPost: false,
-          }));
-          post.showComments = true;
-          post.childContext =
-            action.payload.comments.length > 0
-              ? action.payload.comments[0]
-              : null;
+      .addCase(updatePost.fulfilled, (state, action) => {
+        const post = findPost(state, action.payload.id);
+        if (post) {
+          post.body = action.payload.body;
+          post.editMode = false;
         }
       })
-      .addCase(fetchComments.rejected, (state, action) => {
-        state.isFetchingComments = false;
-        state.didInvalidate = true;
-        state.error = action.payload as string;
-      });
 
-    // Create reply
-    builder
-      .addCase(createReply.pending, (state) => {
-        state.isSubmittingReply = true;
-        state.didInvalidate = false;
-        state.error = null;
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.posts = state.posts.filter((post) => post.id !== action.payload);
       })
-      .addCase(createReply.fulfilled, (state, action) => {
-        state.isSubmittingReply = false;
 
-        const postIndex = state.posts.findIndex(
-          (post) => post.id === action.payload.postId
-        );
-        if (postIndex !== -1) {
-          const post = state.posts[postIndex];
-          post.commentCount = (post.commentCount || 0) + 1;
+      .addCase(fetchComments.fulfilled, (state, action) => {
+        const post = findPost(state, action.payload.postId);
+        if (post) {
+          post.comments = action.payload.comments;
+          post.showComments = true;
+        }
+      })
+
+      .addCase(createReply.fulfilled, (state, action) => {
+        const post = findPost(state, action.payload.postId);
+        if (post) {
+          post.commentCount = (post.commentCount ?? 0) + 1;
+          post.comments = [...post.comments, action.payload.comment];
           post.replyBody = "";
-          post.comments = [action.payload.comment, ...(post.comments || [])];
           post.replyMode = false;
           post.showComments = true;
         }
       })
-      .addCase(createReply.rejected, (state, action) => {
-        state.isSubmittingReply = false;
-        state.didInvalidate = true;
-        state.error = action.payload as string;
-      });
+
+      // Any failed request shows its message above the post list
+      .addMatcher(
+        (action): action is PayloadAction<string> =>
+          action.type.startsWith("posts/") && action.type.endsWith("/rejected"),
+        (state, action) => {
+          state.error = action.payload ?? "Something went wrong";
+        }
+      );
   },
 });
 
@@ -404,7 +212,6 @@ export const {
   setNewPostBody,
   toggleEditMode,
   updatePostBody,
-  toggleComment,
   toggleShowComment,
   toggleReplyMode,
   updateReplyBody,

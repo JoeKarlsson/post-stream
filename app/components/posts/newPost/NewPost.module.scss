@@ -1,23 +1,14 @@
-$blue: #1EAEDB;
-$darkerBlue: #11657F;
-$orange: #E6834A;
+// Shared by the new-post, reply and edit forms
+.form {
+  margin: 1.5rem 0;
 
-.newPost {
+  label {
+    color: var(--color-orange);
+  }
 
-}
-
-.u_full_width {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.clickable {
-  color: $blue;
-}
-.clickable:hover {
-  color: $darkerBlue;
-}
-
-.bodyLabel {
-  color: $orange;
+  textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
 }

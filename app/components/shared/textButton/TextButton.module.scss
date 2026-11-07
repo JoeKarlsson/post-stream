@@ -1,0 +1,27 @@
+// The "[ action ]" controls: a real <button> that looks like a link
+.textButton {
+  font: inherit;
+  color: var(--color-link);
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  // WCAG 2.2 minimum target size
+  display: inline-block;
+  min-height: var(--tap-target);
+  line-height: var(--tap-target);
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-link-hover);
+  }
+}
+
+.wrapper {
+  display: inline-block;
+  margin-right: 1.5rem;
+  white-space: nowrap;
+}

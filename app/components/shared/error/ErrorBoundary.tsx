@@ -1,88 +1,61 @@
 import React from "react";
 import { logError } from "../../../utils/errorLogger";
+import TextButton from "../textButton/TextButton";
 import styles from "./ErrorBoundary.module.scss";
 
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      hasError: false,
-      error: null,
-      errorInfo: null,
-    };
+interface ErrorBoundaryState {
+  error: Error | null;
+  componentStack: string | null;
+}
+
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  ErrorBoundaryState
+> {
+  state: ErrorBoundaryState = { error: null, componentStack: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
   }
 
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // Log error details
-    const errorDetails = {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    logError("React Error Boundary", {
       error: error.toString(),
-      errorInfo: errorInfo.componentStack,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
+      componentStack: errorInfo.componentStack,
       url: window.location.href,
-    };
-
-    logError("React Error Boundary", errorDetails);
-
-    this.setState({
-      error: error,
-      errorInfo: errorInfo,
     });
+    this.setState({ componentStack: errorInfo.componentStack ?? null });
   }
-
-  handleRetry = () => {
-    this.setState({
-      hasError: false,
-      error: null,
-      errorInfo: null,
-    });
-  };
 
   render() {
-    if (this.state.hasError) {
-      // Fallback UI
-      return (
-        <div className={styles.errorBoundary}>
-          <div className={styles.errorContainer}>
-            <h2 className={styles.errorTitle}>Something went wrong</h2>
-            <p className={styles.errorMessage}>
-              We're sorry, but something unexpected happened. Please try
-              refreshing the page.
-            </p>
-
-            {process.env.NODE_ENV === "development" && (
-              <details className={styles.errorDetails}>
-                <summary>Error Details (Development Only)</summary>
-                <pre className={styles.errorStack}>
-                  {this.state.error && this.state.error.toString()}
-                  <br />
-                  {this.state.errorInfo && this.state.errorInfo.componentStack}
-                </pre>
-              </details>
-            )}
-
-            <div className={styles.errorActions}>
-              <button className={styles.retryButton} onClick={this.handleRetry}>
-                Try Again
-              </button>
-              <button
-                className={styles.refreshButton}
-                onClick={() => window.location.reload()}
-              >
-                Refresh Page
-              </button>
-            </div>
-          </div>
-        </div>
-      );
+    const { error, componentStack } = this.state;
+    if (!error) {
+      return this.props.children;
     }
 
-    return this.props.children;
+    return (
+      <main className={styles.errorBoundary}>
+        <h1>something broke</h1>
+        <p>PostStream hit an error it couldn&rsquo;t recover from. reloading usually fixes it.</p>
+
+        {import.meta.env.DEV && (
+          <details>
+            <summary>error details (only shown in development)</summary>
+            <pre className={styles.errorStack}>
+              {error.toString()}
+              {componentStack}
+            </pre>
+          </details>
+        )}
+
+        <p>
+          <TextButton onClick={() => this.setState({ error: null, componentStack: null })}>
+            try again
+          </TextButton>
+          <TextButton onClick={() => window.location.reload()}>reload the page</TextButton>
+        </p>
+      </main>
+    );
   }
 }
 

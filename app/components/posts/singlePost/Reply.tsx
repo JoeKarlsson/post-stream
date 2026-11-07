@@ -1,120 +1,42 @@
-import React, { useRef } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  toggleReplyMode,
-  updateReplyBody,
-  createReply,
-} from "../../../slices/postSlice";
-import styles from "./Reply.module.scss";
+import { toggleReplyMode, updateReplyBody, createReply } from "../../../slices/postSlice";
+import { AppDispatch, RootState } from "../../../slices";
+import TextButton from "../../shared/textButton/TextButton";
+import { MAX_POST_LENGTH } from "../../../slices/postSlice";
+import styles from "../newPost/NewPost.module.scss";
 
-const Reply = ({ index, id }) => {
-  const dispatch = useDispatch();
-  const replyRef = useRef();
+const Reply = ({ index, id }: { index: number; id: number }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const post = useSelector((state: RootState) => state.post.posts[index]);
+  const fieldId = `reply-${id}`;
 
-  const replyMode = useSelector((state) => state.post.posts[index]?.replyMode);
-  const replyBody = useSelector((state) => state.post.posts[index]?.replyBody);
+  if (!post?.replyMode) {
+    return <TextButton onClick={() => dispatch(toggleReplyMode(index))}>reply</TextButton>;
+  }
 
-  const handleToggleReplyMode = () => {
-    dispatch(toggleReplyMode(index));
-  };
-
-  const handleBodyChange = (e) => {
-    dispatch(updateReplyBody({ index, body: e.target.value }));
-  };
-
-  const handleSubmitReply = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (replyBody?.trim()) {
-      dispatch(createReply({ postId: id, body: replyBody }));
-    }
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      handleSubmitReply(event);
-    }
-  };
-
-  const handleCancelKeyDown = (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      handleToggleReplyMode();
+    if (post.replyBody?.trim()) {
+      dispatch(createReply({ postId: id, body: post.replyBody }));
     }
   };
 
   return (
-    <div className={styles.destroyPost}>
-      {replyMode && (
-        <div className={styles.u_full_width}>
-          <form>
-            <label className={styles.replyLabel} htmlFor="reply">
-              reply
-            </label>
-            <textarea
-              ref={replyRef}
-              type="text"
-              id="reply"
-              rows="3"
-              className="u-full-width"
-              placeholder="say something nice..."
-              value={replyBody}
-              onChange={handleBodyChange}
-            ></textarea>
-            <div>
-              [
-              <span
-                className={styles.postReplyBotton}
-                onClick={handleSubmitReply}
-                onKeyDown={handleKeyDown}
-                tabIndex={0}
-                role="button"
-              >
-                {" "}
-                reply{" "}
-              </span>
-              ]
-            </div>
-            <div>
-              [
-              <span
-                className={styles.cancelReplyButton}
-                onClick={handleToggleReplyMode}
-                onKeyDown={handleCancelKeyDown}
-                tabIndex={0}
-                role="button"
-              >
-                {" "}
-                cancel{" "}
-              </span>
-              ]
-            </div>
-          </form>
-        </div>
-      )}
-      {!replyMode && (
-        <div>
-          [{" "}
-          <span
-            className={styles.replyButton}
-            onClick={handleToggleReplyMode}
-            onKeyDown={handleCancelKeyDown}
-            tabIndex={0}
-            role="button"
-          >
-            reply
-          </span>{" "}
-          ]
-        </div>
-      )}
-    </div>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <label htmlFor={fieldId}>reply</label>
+      <textarea
+        maxLength={MAX_POST_LENGTH}
+        id={fieldId}
+        rows={3}
+        placeholder="say something nice..."
+        value={post.replyBody}
+        onChange={(e) => dispatch(updateReplyBody({ index, body: e.target.value }))}
+      />
+      <TextButton type="submit">reply</TextButton>
+      <TextButton onClick={() => dispatch(toggleReplyMode(index))}>cancel</TextButton>
+    </form>
   );
-};
-
-Reply.propTypes = {
-  id: PropTypes.number,
-  index: PropTypes.number,
 };
 
 export default Reply;

@@ -94,6 +94,9 @@ router.post('/register', async (req, res) => {
             user: user.toJSON()
         });
     } catch (error) {
+        if (error.name === 'SequelizeValidationError') {
+            return res.status(400).json({ error: error.errors.map((e) => e.message).join('; ') });
+        }
         console.error('Registration error:', error);
         res.status(500).json({ error: 'Registration failed' });
     }
@@ -172,28 +175,56 @@ router.put('/change-password', passport.authenticate('jwt', { session: false }),
     }
 });
 
-// Get user profile by username
+const PUBLIC_USER_FIELDS = ['id', 'username', 'first_name', 'last_name', 'bio', 'createdAt'];
+
+const findUserByUsername = (username) =>
+    User.findOne({ where: { username }, attributes: PUBLIC_USER_FIELDS });
+
+// Public profile: no email; follower/following usernames so the client can show counts and follow state
 router.get('/user/:username', async (req, res) => {
-    try {
-        const { username } = req.params;
+    const user = await User.findOne({
+        where: { username: req.params.username },
+        attributes: PUBLIC_USER_FIELDS,
+        include: [
+            { model: User, as: 'followers', attributes: ['username'], through: { attributes: [] } },
+            { model: User, as: 'following', attributes: ['username'], through: { attributes: [] } }
+        ]
+    });
 
-        const user = await User.findOne({
-            where: { username: username },
-            attributes: ['id', 'username', 'email', 'first_name', 'last_name', 'bio', 'createdAt']
-        });
-
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        res.json({
-            success: true,
-            user: user.toJSON()
-        });
-    } catch (error) {
-        console.error('Get user profile error:', error);
-        res.status(500).json({ error: 'Failed to get user profile' });
+    if (!user) {
+        return res.status(404).json({ error: 'User not found' });
     }
+
+    const { followers, following, ...profile } = user.toJSON();
+    res.json({
+        success: true,
+        user: {
+            ...profile,
+            followers: followers.map((f) => f.username),
+            following: following.map((f) => f.username)
+        }
+    });
+});
+
+router.post('/user/:username/follow', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    const target = await findUserByUsername(req.params.username);
+    if (!target) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+    if (target.id === req.user.id) {
+        return res.status(400).json({ error: 'You cannot follow yourself' });
+    }
+    await db.Follow.findOrCreate({ where: { followerId: req.user.id, followingId: target.id } });
+    res.json({ success: true });
+});
+
+router.delete('/user/:username/follow', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    const target = await findUserByUsername(req.params.username);
+    if (!target) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+    await db.Follow.destroy({ where: { followerId: req.user.id, followingId: target.id } });
+    res.json({ success: true });
 });
 
 module.exports = router;

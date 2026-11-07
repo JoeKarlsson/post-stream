@@ -1,66 +1,36 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createPost, setNewPostBody } from "../../../slices/postSlice";
-import { RootState } from "../../../slices";
+import { AppDispatch, RootState } from "../../../slices";
+import TextButton from "../../shared/textButton/TextButton";
+import { MAX_POST_LENGTH } from "../../../slices/postSlice";
 import styles from "./NewPost.module.scss";
 
-const NewPostForm = () => {
-  const dispatch = useDispatch();
-  const bodyRef = useRef();
-  const newPostBody = useSelector((state: RootState) => state.post.newPostBody);
-  const user = useSelector((state: RootState) => state.user.profile);
+const NewPost = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { newPostBody, submittingNewPost } = useSelector((state: RootState) => state.post);
 
-  const handleBodyChange = (e) => {
-    dispatch(setNewPostBody(e.target.value));
-  };
-
-  const handleSubmitPost = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (user && newPostBody.trim()) {
+    if (newPostBody.trim()) {
       dispatch(createPost({ body: newPostBody }));
     }
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      handleSubmitPost(event);
-    }
-  };
-
   return (
-    <div className={styles.u_full_width}>
-      <form>
-        <label htmlFor="body" className={styles.bodyLabel}>
-          create a new post
-        </label>
-        <textarea
-          ref={bodyRef}
-          type="textarea"
-          id="body"
-          rows="5"
-          className="u-full-width"
-          placeholder="share it with the world..."
-          value={newPostBody}
-          onChange={handleBodyChange}
-        ></textarea>
-        <div>
-          [
-          <span
-            className={styles.clickable}
-            onClick={handleSubmitPost}
-            onKeyDown={handleKeyDown}
-            tabIndex={0}
-            role="button"
-          >
-            {" "}
-            post{" "}
-          </span>
-          ]
-        </div>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <label htmlFor="new-post">create a new post</label>
+      <textarea
+        maxLength={MAX_POST_LENGTH}
+        id="new-post"
+        rows={5}
+        placeholder="share it with the world..."
+        value={newPostBody}
+        onChange={(e) => dispatch(setNewPostBody(e.target.value))}
+      />
+      <TextButton type="submit" disabled={submittingNewPost}>post</TextButton>
+    </form>
   );
 };
 
-export default NewPostForm;
+export default NewPost;
