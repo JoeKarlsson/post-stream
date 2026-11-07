@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:25-alpine
 
 # Build tools for bcrypt's native module; pg_isready for the startup wait
 RUN apk add --no-cache postgresql-client python3 make g++
