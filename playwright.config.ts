@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const DEV_URL = "http://localhost:3000";
 const PROD_URL = "http://localhost:4173";
+const DEMO_URL = "http://localhost:4174";
 
 // Screenshot baselines only match the browser and fonts they were made with,
 // so visual tests run only inside the pinned Playwright container (CI, or
@@ -21,16 +22,22 @@ export default defineConfig({
     toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: "disabled" },
   },
   projects: [
-    { name: "desktop", use: { ...devices["Desktop Chrome"] }, testIgnore: /visual|forcedDark/ },
+    { name: "desktop", use: { ...devices["Desktop Chrome"] }, testIgnore: /visual|forcedDark|demo/ },
     {
       name: "iphone",
       use: { ...devices["iPhone 15"] },
-      testIgnore: /visual|forcedDark|metadata|links|header/,
+      testIgnore: /visual|forcedDark|metadata|links|header|demo/,
     },
     {
       name: "pixel",
       use: { ...devices["Pixel 7"] },
-      testIgnore: /visual|forcedDark|metadata|links|header/,
+      testIgnore: /visual|forcedDark|metadata|links|header|demo/,
+    },
+    {
+      // The static GitHub Pages demo: the app with an in-browser API
+      name: "demo",
+      testMatch: /demo/,
+      use: { ...devices["Pixel 7"], baseURL: DEMO_URL },
     },
     {
       // Chromium's forced dark mode, as some phone browsers apply to every site
@@ -54,6 +61,12 @@ export default defineConfig({
       url: DEV_URL,
       reuseExistingServer: !process.env.CI,
       timeout: 60_000,
+    },
+    {
+      command: "npm run build:demo && npx vite preview --mode demo --port 4174 --strictPort",
+      url: DEMO_URL,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
     },
     ...(runVisual
       ? [

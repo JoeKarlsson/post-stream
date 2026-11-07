@@ -2,6 +2,8 @@
 
 PostStream is an undesigned social network. It is a text-based response to the majority of modern social media platforms. This is certainly not for everyone as you will be interacting with others exclusively through text posts. You will notice several features intentionally left out in order to promote meaningful engagement. We hope you enjoy something a little different.
 
+**Try it: [poststream.joekarlsson.com](https://poststream.joekarlsson.com)**, an archived demo that runs entirely in your browser. There's no server: you're signed in as a sample visitor, the other people are simulated and keep posting while you look around, and anything you do stays in your browser.
+
 ## Recording (November 2026)
 
 ![PostStream: typing a post into a plain text box, the post showing up at the top of the stream in pink monospace, scrolling past other posts in different colors, then the about page listing what PostStream leaves out](.github/readme/2026-11-recording.gif)
@@ -55,6 +57,10 @@ The seeders create three users, all with the password `password123`:
 - `npm start`: serve the API and the built frontend (`NODE_ENV=production`, `PORT`, `DATABASE_URL`)
 - `npm run lint` / `npm run type-check`
 - `npm run db:migrate`, `npm run db:seed`, `npm run db:reset`
+
+## The static demo
+
+`npm run build:demo` builds the app into `dist-demo/` with an in-browser stand-in for the API (`app/demo/`), so it runs on GitHub Pages with no server. It starts from the sample data in `app/demo/demoData.ts`, signs the visitor in, keeps their changes in `localStorage`, and has the sample cast post and reply on timers. CI deploys it to [poststream.joekarlsson.com](https://poststream.joekarlsson.com) after every check passes on `master`. The custom domain is set in the repo's Pages settings, with a DNS-only CNAME from `poststream.joekarlsson.com` to `joekarlsson.github.io`.
 
 ## Tests
 

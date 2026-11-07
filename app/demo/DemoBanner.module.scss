@@ -1,0 +1,12 @@
+.banner {
+  margin: 0;
+  padding: 0.5rem var(--page-padding);
+  color: var(--color-bg);
+  background-color: var(--color-muted);
+
+  button:hover,
+  button:focus-visible {
+    color: var(--color-muted);
+    background-color: var(--color-bg);
+  }
+}

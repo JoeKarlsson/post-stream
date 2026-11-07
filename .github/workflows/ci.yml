@@ -36,7 +36,7 @@ jobs:
       VISUAL: "1"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install dependencies
         run: npm ci
@@ -67,9 +67,17 @@ jobs:
           export CHROME_PATH=$(node -p "require('@playwright/test').chromium.executablePath()")
           npx -y @lhci/cli@0.16.0 autorun
 
+      # The static demo for GitHub Pages (also exercised by the "demo" Playwright project)
+      - name: Build the static demo
+        run: npm run build:demo
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist-demo
+
       - name: Keep reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: reports
           path: |
@@ -78,3 +86,21 @@ jobs:
             .lighthouseci/
             coverage/
           if-no-files-found: ignore
+
+  # Publishes the static demo to https://poststream.joekarlsson.com once every check passes
+  deploy-demo:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

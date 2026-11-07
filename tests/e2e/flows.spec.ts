@@ -213,3 +213,25 @@ test("the people page lists everyone and links to their profiles", async ({ page
   await page.getByRole("link", { name: SEED_USERS.jane.username }).click();
   await expect(page.locator("h1")).toHaveText(SEED_USERS.jane.username);
 });
+
+test("new posts from people you follow show up without a reload", async ({ page }) => {
+  // Fake timers: the feed checks every 15 seconds; skip ahead instead of waiting
+  await page.clock.install();
+  await loginAs(page, SEED_USERS.john.email);
+  await page.goto("/");
+  await expect(page.locator("article").first()).toBeVisible();
+
+  const janeToken = (await (await page.request.post("/auth/login", {
+    data: { email: SEED_USERS.jane.email, password: "password123" },
+  })).json()).token;
+  const marker = `e2e live post ${Date.now()}`;
+  await page.request.post("/post/new", { headers: { Authorization: `Bearer ${janeToken}` }, data: { body: marker } });
+
+  try {
+    await page.clock.runFor(16_000);
+    await page.getByRole("button", { name: "1 new post" }).click();
+    await expect(page.locator("article").first()).toContainText(marker);
+  } finally {
+    await query('DELETE FROM "Posts" WHERE body = $1', [marker]);
+  }
+});

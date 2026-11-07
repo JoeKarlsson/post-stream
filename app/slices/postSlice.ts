@@ -41,6 +41,10 @@ export const fetchMorePosts = thunk(
     fetchPostPage(username, offset) as Promise<Post[]>
 );
 
+// Checks the top of your feed for posts that arrived since it loaded, and
+// for new reply counts on the posts already shown
+export const checkFeed = thunk("posts/checkFeed", () => fetchPostPage(undefined, 0) as Promise<Post[]>);
+
 // One post with its replies open, for its permalink page
 export const fetchPost = thunk("posts/fetchPost", async (id: number) => ({
   post: (await request(`/post/${id}`)) as Post,
@@ -118,6 +122,8 @@ interface PostState {
   submittingNewPost: boolean;
   lastUpdated: number | null;
   newPostBody: string;
+  // Posts that arrived since the feed loaded, waiting behind "[ N new posts ]"
+  incoming: Post[];
   error: string | null;
 }
 
@@ -128,6 +134,7 @@ const initialState: PostState = {
   submittingNewPost: false,
   lastUpdated: null,
   newPostBody: "",
+  incoming: [],
   error: null,
 };
 
@@ -179,12 +186,19 @@ const postSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    // "[ N new posts ]": put the waiting posts at the top of the feed
+    showIncoming: (state) => {
+      const newestFirst = [...state.incoming].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      state.posts.unshift(...newestFirst.map(toFeedPost));
+      state.incoming = [];
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPosts.pending, (state) => {
         state.isFetchingPosts = true;
         state.posts = [];
+        state.incoming = [];
         state.error = null;
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
@@ -232,6 +246,21 @@ const postSlice = createSlice({
         }
       })
 
+      .addCase(checkFeed.fulfilled, (state, action) => {
+        const shown = new Map(state.posts.map((post) => [post.id, post]));
+        const waiting = new Set(state.incoming.map((post) => post.id));
+        const newest = state.posts[0];
+        for (const post of action.payload) {
+          const existing = shown.get(post.id);
+          if (existing) {
+            existing.commentCount = post.commentCount;
+          } else if (!waiting.has(post.id) && (!newest || post.createdAt > newest.createdAt)) {
+            state.incoming.push(post);
+          }
+        }
+        state.lastUpdated = Date.now();
+      })
+
       .addCase(fetchPost.pending, (state) => {
         state.isFetchingPosts = true;
         state.posts = [];
@@ -276,7 +305,10 @@ const postSlice = createSlice({
       // Any failed request shows its message above the post list
       .addMatcher(
         (action): action is PayloadAction<string> =>
-          action.type.startsWith("posts/") && action.type.endsWith("/rejected"),
+          action.type.startsWith("posts/") &&
+          action.type.endsWith("/rejected") &&
+          // A background check that fails will just try again; don't alarm anyone
+          !action.type.startsWith("posts/checkFeed"),
         (state, action) => {
           state.error = action.payload ?? "Something went wrong";
         }
@@ -293,6 +325,7 @@ export const {
   updateReply,
   toggleExpanded,
   clearError,
+  showIncoming,
 } = postSlice.actions;
 
 export default postSlice.reducer;

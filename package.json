@@ -25,7 +25,7 @@
     "express"
   ],
   "license": "MIT",
-  "homepage": "https://poststream.herokuapp.com/",
+  "homepage": "https://poststream.joekarlsson.com",
   "scripts": {
     "start": "node server/server.js",
     "dev": "concurrently \"vite\" \"NODE_ENV=development node --watch server/server.js\"",
@@ -43,7 +43,8 @@
     "lint": "eslint app server tests",
     "test:e2e": "playwright test",
     "test:visual": "scripts/visual-tests.sh",
-    "test:coverage": "c8 --reporter=text-summary --reporter=html mocha"
+    "test:coverage": "c8 --reporter=text-summary --reporter=html mocha",
+    "build:demo": "vite build --mode demo && node scripts/demo-text-files.mjs"
   },
   "bugs": {
     "url": "https://github.com/JoeKarlsson/post-stream/issues"
