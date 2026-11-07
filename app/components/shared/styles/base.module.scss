@@ -23,7 +23,10 @@
 
     --font-body: "Courier New", Courier, monospace;
     --gutter: 1.6rem;
-    --content-width: 96rem;
+    // One centered column for header, main and footer at every width.
+    // 70ch keeps lines readable; ch resolves against the 16px body font.
+    --page-max: 70ch;
+    --page-padding: max(var(--gutter), calc((100% - var(--page-max)) / 2));
     --tap-target: 2.4rem; // WCAG 2.2 minimum target size (24px)
   }
 
@@ -135,8 +138,5 @@
 }
 
 .container {
-  width: 100%;
-  max-width: var(--content-width);
-  margin: 0 auto;
-  padding: 2rem var(--gutter) 4rem;
+  padding: 2rem var(--page-padding) 4rem;
 }

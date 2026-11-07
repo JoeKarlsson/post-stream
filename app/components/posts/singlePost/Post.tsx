@@ -1,8 +1,6 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Remarkable } from "remarkable";
-import twemoji from "twemoji";
 import {
   deletePost,
   fetchComments,
@@ -11,6 +9,7 @@ import {
 } from "../../../slices/postSlice";
 import { AppDispatch, RootState } from "../../../slices";
 import { Post as PostType } from "../../../types";
+import { renderPostHtml } from "../../../utils/markdown";
 import TextButton from "../../shared/textButton/TextButton";
 import CommentCount from "./CommentCount";
 import Reply from "./Reply";
@@ -27,10 +26,7 @@ const COLORS = [
   "forrestGreen",
 ];
 
-const renderMarkup = (body: string) => {
-  const html = new Remarkable().render(body.toString());
-  return { __html: twemoji.parse(html, { folder: "svg", ext: ".svg" }) };
-};
+const renderMarkup = (body: string) => ({ __html: renderPostHtml(body) });
 
 type PostProps = Pick<PostType, "id" | "body" | "userID" | "createdAt" | "commentCount"> & {
   index: number;
@@ -63,7 +59,7 @@ const Post = ({ id, body, userID, createdAt, commentCount = 0, index }: PostProp
   };
 
   return (
-    <div className={styles.post}>
+    <article>
       {editMode ? (
         <EditPost id={id} index={index} />
       ) : (
@@ -126,7 +122,7 @@ const Post = ({ id, body, userID, createdAt, commentCount = 0, index }: PostProp
       )}
 
       <hr />
-    </div>
+    </article>
   );
 };
 

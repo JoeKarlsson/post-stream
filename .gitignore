@@ -67,3 +67,8 @@ Thumbs.db
 
 # Webpack stats
 webpack.stats.json
+# Lighthouse CI and Playwright output
+.lighthouseci/
+test-results/
+playwright-report/
+coverage/

@@ -18,9 +18,22 @@ const thunk = <Arg, Result>(type: string, run: (arg: Arg) => Promise<Result>) =>
     }
   });
 
+// The server sends this many posts per page
+export const PAGE_SIZE = 10;
+
 // No username: the main feed. With one: that user's posts (profile page).
+const postsUrl = (username: string | undefined, offset: number) =>
+  `${username ? `/post/user/${encodeURIComponent(username)}` : "/post"}?offset=${offset}`;
+
 export const fetchPosts = thunk("posts/fetchPosts", (username: string | undefined) =>
-  request(username ? `/post/user/${encodeURIComponent(username)}` : "/post") as Promise<Post[]>
+  request(postsUrl(username, 0)) as Promise<Post[]>
+);
+
+// The next page after what's already loaded
+export const fetchMorePosts = thunk(
+  "posts/fetchMorePosts",
+  ({ username, offset }: { username?: string; offset: number }) =>
+    request(postsUrl(username, offset)) as Promise<Post[]>
 );
 
 export const createPost = thunk("posts/createPost", ({ body }: { body: string }) =>
@@ -84,6 +97,7 @@ const toFeedPost = (post: Post): FeedPost => ({
 interface PostState {
   posts: FeedPost[];
   isFetchingPosts: boolean;
+  hasMore: boolean;
   submittingNewPost: boolean;
   lastUpdated: number | null;
   newPostBody: string;
@@ -93,6 +107,7 @@ interface PostState {
 const initialState: PostState = {
   posts: [],
   isFetchingPosts: false,
+  hasMore: false,
   submittingNewPost: false,
   lastUpdated: null,
   newPostBody: "",
@@ -149,8 +164,23 @@ const postSlice = createSlice({
         state.isFetchingPosts = false;
         state.lastUpdated = Date.now();
         state.posts = action.payload.map(toFeedPost);
+        state.hasMore = action.payload.length === PAGE_SIZE;
       })
       .addCase(fetchPosts.rejected, (state) => {
+        state.isFetchingPosts = false;
+      })
+
+      .addCase(fetchMorePosts.pending, (state) => {
+        state.isFetchingPosts = true;
+      })
+      .addCase(fetchMorePosts.fulfilled, (state, action) => {
+        state.isFetchingPosts = false;
+        // Skip any post already shown (one posted since the first page loaded)
+        const shown = new Set(state.posts.map((post) => post.id));
+        state.posts.push(...action.payload.filter((post) => !shown.has(post.id)).map(toFeedPost));
+        state.hasMore = action.payload.length === PAGE_SIZE;
+      })
+      .addCase(fetchMorePosts.rejected, (state) => {
         state.isFetchingPosts = false;
       })
 

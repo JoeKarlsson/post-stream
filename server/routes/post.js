@@ -7,6 +7,14 @@ const { authenticateJWT } = require('./../middleware/jwt');
 
 const { Post, Comment } = db;
 const FEED_LIMIT = 10;
+// Newest first; id breaks ties so paging is stable when timestamps match
+const NEWEST_FIRST = [['createdAt', 'DESC'], ['id', 'DESC']];
+
+// ?offset=N skips the first N posts, for "show more"
+const pageOf = (req) => {
+  const offset = Number.parseInt(req.query.offset ?? '0', 10);
+  return { limit: FEED_LIMIT, offset: Number.isNaN(offset) || offset < 0 ? 0 : offset, order: NEWEST_FIRST };
+};
 
 // Loads req.params[paramName] from Model into req.found, or answers 404.
 // With ownerOnly, answers 403 unless the logged-in user wrote it.
@@ -24,7 +32,7 @@ const loadRecord = (Model, paramName, { ownerOnly = false } = {}) =>
   };
 
 router.get('/', async (req, res) => {
-  const posts = await Post.findAll({ limit: FEED_LIMIT, order: [['createdAt', 'DESC']] });
+  const posts = await Post.findAll(pageOf(req));
   res.json(posts);
 });
 
@@ -34,11 +42,7 @@ router.post('/new', authenticateJWT, async (req, res) => {
 });
 
 router.get('/user/:username', async (req, res) => {
-  const posts = await Post.findAll({
-    where: { userID: req.params.username },
-    limit: FEED_LIMIT,
-    order: [['createdAt', 'DESC']]
-  });
+  const posts = await Post.findAll({ where: { userID: req.params.username }, ...pageOf(req) });
   res.json(posts);
 });
 

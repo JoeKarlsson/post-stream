@@ -15,6 +15,7 @@ const Login = () => {
 
   return (
     <div>
+      <title>{`${isRegister ? "create an account" : "sign in"} · PostStream`}</title>
       <h1>{isRegister ? "create an account" : "sign in"}</h1>
 
       {/* key resets the form's fields when switching modes */}

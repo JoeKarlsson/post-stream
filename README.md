@@ -31,7 +31,7 @@ This builds the production bundle, runs migrations and seeds, and serves everyth
 ### Local development
 
     npm install
-    docker compose up -d postgres        # or point server/config/config.json at your own Postgres
+    docker compose up -d postgres        # or point server/config/config.js at your own Postgres
     echo "JWT_SECRET=$(openssl rand -hex 32)" > .env
     npm run db:migrate
     npm run db:seed
@@ -50,12 +50,20 @@ The seeders create three users, all with the password `password123`:
 
 ## Scripts
 
-- `npm run dev`: Vite and the API together
+- `npm run dev`: Vite and the API together (the API restarts when server files change)
 - `npm run build`: production build into `server/dist`
 - `npm start`: serve the API and the built frontend (`NODE_ENV=production`, `PORT`, `DATABASE_URL`)
-- `npm test`: API and unit tests (needs the dev database, migrated and seeded)
 - `npm run lint` / `npm run type-check`
 - `npm run db:migrate`, `npm run db:seed`, `npm run db:reset`
+
+## Tests
+
+All of these need the dev database, migrated and seeded. CI runs every one on each push.
+
+- `npm test`: API and unit tests (`npm run test:coverage` adds a coverage report in `coverage/`)
+- `npm run test:e2e`: Playwright on desktop Chrome, an iPhone (WebKit) and a Pixel: page smoke tests, user flows, axe accessibility checks, metadata, header alignment at 1280 and 2560px, phone widths and tap targets, links, and forced dark mode. Starts `npm run dev` if it isn't running
+- `npm run test:visual`: screenshot tests against the production build. They run inside the pinned Playwright Docker image so the baselines match CI; add `-- --update-snapshots` after a deliberate design change
+- Lighthouse runs in CI on the production build (`lighthouserc.json`): every category must score 90 or more on mobile, with a JavaScript budget of 140KB
 
 ## Stack
 
@@ -88,27 +96,25 @@ Routes marked *auth* need an `Authorization: Bearer <token>` header from `/auth/
 - No public metrics
   - No visible follower/following numbers
   - No visible like/dislike numbers
-- No global public feed
-  - No "moments" or news-related feeds
-  - No trending topics to browse
-- Character limit
-  - Brevity
-  - Accessibility
-  - Stream shows 256 characters with "read more" expandable to 2048 character limit
-- No video/images/gifs
+- No "moments" or news-related feeds
+- No trending topics to browse
+- Brevity: posts top out at 255 characters
+- Accessibility
+- No video/images/gifs (markdown image syntax renders as a plain link)
   - Unicode support 🆗
-- Contextual responses
-  - agree
-  - agree for $reason
-  - disagree
-  - disagree for $reason
-  - tell me more about $thought / $opinion
-  - thank you for sharing
-  - brilliant
 - No ads or sponsored posts
 
 ## Stretch Goals
 
+- Contextual responses instead of free-form replies
+  - agree
+  - agree for $reason
+  - disagree
+  - disagree for $reason
+  - tell me more about $thought / $opinion
+  - thank you for sharing
+  - brilliant
+- A longer post limit (2048 characters) with the stream showing the first 256 and "read more"
 - Possible fuzzy metrics (Your engagement is {very high} {high} {average})
 - SMS-support
 - Filtering of topics

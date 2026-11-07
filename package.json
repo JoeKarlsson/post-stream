@@ -28,10 +28,10 @@
   "homepage": "https://poststream.herokuapp.com/",
   "scripts": {
     "start": "node server/server.js",
-    "dev": "concurrently \"vite\" \"NODE_ENV=development node server/server.js\"",
+    "dev": "concurrently \"vite\" \"NODE_ENV=development node --watch server/server.js\"",
     "dev:client": "vite",
-    "dev:server": "NODE_ENV=development node server/server.js",
-    "test": "mocha --exit -R spec 'tests/**/*.spec.{js,mjs}'",
+    "dev:server": "NODE_ENV=development node --watch server/server.js",
+    "test": "mocha",
     "build": "vite build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
@@ -40,7 +40,10 @@
     "db:seed": "npx sequelize-cli db:seed:all",
     "db:seed:undo": "npx sequelize-cli db:seed:undo:all",
     "db:reset": "npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:seed:all",
-    "lint": "eslint app server tests"
+    "lint": "eslint app server tests",
+    "test:e2e": "playwright test",
+    "test:visual": "scripts/visual-tests.sh",
+    "test:coverage": "c8 --reporter=text-summary --reporter=html mocha"
   },
   "bugs": {
     "url": "https://github.com/JoeKarlsson/post-stream/issues"
@@ -51,7 +54,9 @@
     "url": "https://github.com/JoeKarlsson/post-stream"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@eslint/js": "^9.39.5",
+    "@playwright/test": "1.65.0",
     "@types/bcrypt": "^6.0.0",
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
@@ -72,6 +77,7 @@
     "@typescript-eslint/eslint-plugin": "^8.72.1",
     "@typescript-eslint/parser": "^8.72.1",
     "@vitejs/plugin-react": "^6.2.1",
+    "c8": "12.0.0",
     "chai": "^6.3.0",
     "concurrently": "^10.0.6",
     "eslint": "^9.39.5",
@@ -90,6 +96,7 @@
     "@reduxjs/toolkit": "^2.14.0",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.4.0",
+    "compression": "^1.8.2",
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
     "errorhandler": "^1.5.2",
@@ -108,8 +115,7 @@
     "react-router-dom": "^7.18.5",
     "redux-logger": "^3.0.6",
     "remarkable": "^2.0.1",
-    "sequelize": "^6.37.8",
-    "twemoji": "^14.0.2"
+    "sequelize": "^6.37.8"
   },
   "overrides": {
     "sequelize": {

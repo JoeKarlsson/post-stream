@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The same pinned image `npm run test:visual` uses locally, so screenshot
+    # baselines and browsers match exactly
+    container: mcr.microsoft.com/playwright:v1.65.0-noble
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: poststream_development
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      CI: "true"
+      DB_HOST: postgres
+      JWT_SECRET: ci-only-secret
+      VISUAL: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up the database
+        run: |
+          npx sequelize-cli db:migrate
+          npx sequelize-cli db:seed:all
+
+      - name: Lint and type-check
+        run: |
+          npm run lint
+          npm run type-check
+
+      - name: API and unit tests, with coverage
+        run: npm run test:coverage
+
+      - name: End-to-end, accessibility and visual tests
+        run: npx playwright test
+
+      - name: Lighthouse (production build, mobile)
+        env:
+          NODE_ENV: production
+          PORT: "4173"
+          DATABASE_URL: postgres://postgres:password@postgres:5432/poststream_development
+        run: |
+          npm run build
+          export CHROME_PATH=$(node -p "require('@playwright/test').chromium.executablePath()")
+          npx -y @lhci/cli@0.16.0 autorun
+
+      - name: Keep reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            playwright-report/
+            test-results/
+            .lighthouseci/
+            coverage/
+          if-no-files-found: ignore

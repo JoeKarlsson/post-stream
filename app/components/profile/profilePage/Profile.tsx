@@ -27,10 +27,11 @@ const Profile = () => {
 
   return (
     <div>
+      <title>{`${userName} · PostStream`}</title>
       <h1>{userName}</h1>
 
       {errorMessage && !isLoaded && <p role="alert">{errorMessage}</p>}
-      {isFetching && !isLoaded && <p>Loading profile...</p>}
+      {isFetching && !isLoaded && <p>loading profile...</p>}
 
       {isLoaded && (
         <>
@@ -45,7 +46,8 @@ const Profile = () => {
       )}
       <hr />
 
-      <PostList posts={posts} />
+      {/* Wait for the profile so the posts don't jump down when it arrives */}
+      {isLoaded && <PostList posts={posts} username={userName} />}
     </div>
   );
 };

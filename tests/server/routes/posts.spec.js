@@ -89,6 +89,34 @@ describe('Post routes', () => {
     expect(edited.body.body).to.equal('edited by owner');
   });
 
+  it('lets the author delete a post, and only edit their own comments', async () => {
+    const comment = await request(app)
+      .post(`/post/${createdPostId}/comments/0/new`)
+      .set('Authorization', `Bearer ${jane}`)
+      .send({ body: 'janes comment' })
+      .expect(200);
+    await request(app)
+      .put(`/post/${createdPostId}/comments/${comment.body.id}/edit`)
+      .set('Authorization', `Bearer ${john}`)
+      .send({ body: 'not yours' })
+      .expect(403);
+    await request(app)
+      .put(`/post/${createdPostId}/comments/${comment.body.id}/edit`)
+      .set('Authorization', `Bearer ${jane}`)
+      .send({ body: 'edited' })
+      .expect(200);
+
+    await request(app).delete(`/post/${createdPostId}`).set('Authorization', `Bearer ${john}`).expect(200);
+    await request(app).get(`/post/${createdPostId}`).expect(404);
+    expect(await db.Comment.count({ where: { PostId: createdPostId } })).to.equal(0);
+  });
+
+  it("lists one user's posts", async () => {
+    const res = await request(app).get('/post/user/johndoe131').expect(200);
+    expect(res.body.length).to.be.greaterThan(0);
+    expect(res.body.every((p) => p.userID === 'johndoe131')).to.equal(true);
+  });
+
   it('returns 404 for a post that does not exist', async () => {
     await request(app).get('/post/999999').expect(404);
   });
@@ -135,5 +163,20 @@ describe('Profile and follow routes', () => {
       .post('/auth/user/janedoe343/follow')
       .set('Authorization', `Bearer ${jane}`)
       .expect(400);
+  });
+});
+
+describe('Feed paging', () => {
+  it('pages through posts newest first with no repeats', async () => {
+    const first = await request(app).get('/post').expect(200);
+    const second = await request(app).get('/post?offset=5').expect(200);
+    expect(first.body).to.have.length.at.most(10);
+    expect(first.body.slice(5).map((p) => p.id)).to.deep.equal(second.body.slice(0, first.body.length - 5).map((p) => p.id));
+  });
+
+  it('treats a bad offset as the first page', async () => {
+    const first = await request(app).get('/post').expect(200);
+    const bad = await request(app).get('/post?offset=-3').expect(200);
+    expect(bad.body.map((p) => p.id)).to.deep.equal(first.body.map((p) => p.id));
   });
 });

@@ -54,59 +54,26 @@ const generateToken = (user) => {
     );
 };
 
-// Register new user
+// Register new user (invalid fields come back as 400 from the error handler in server.js)
 router.post('/register', async (req, res) => {
-    try {
-        const { username, email, password, first_name, last_name, bio } = req.body;
+    const { username, email, password, first_name, last_name, bio } = req.body;
 
-        // Check if user already exists
-        const existingUser = await User.findOne({
-            where: {
-                [Op.or]: [
-                    { email: email },
-                    { username: username }
-                ]
-            }
-        });
-
-        if (existingUser) {
-            return res.status(400).json({
-                error: 'User with this email or username already exists'
-            });
-        }
-
-        // Create new user
-        const user = await User.create({
-            username,
-            email,
-            password,
-            first_name,
-            last_name,
-            bio
-        });
-
-        // Generate token
-        const token = generateToken(user);
-
-        res.status(201).json({
-            success: true,
-            token,
-            user: user.toJSON()
-        });
-    } catch (error) {
-        if (error.name === 'SequelizeValidationError') {
-            return res.status(400).json({ error: error.errors.map((e) => e.message).join('; ') });
-        }
-        console.error('Registration error:', error);
-        res.status(500).json({ error: 'Registration failed' });
+    const existingUser = await User.findOne({
+        where: { [Op.or]: [{ email }, { username }] }
+    });
+    if (existingUser) {
+        return res.status(400).json({ error: 'User with this email or username already exists' });
     }
+
+    const user = await User.create({ username, email, password, first_name, last_name, bio });
+    res.status(201).json({ success: true, token: generateToken(user), user: user.toJSON() });
 });
 
 // Login user
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', { session: false }, (err, user, info) => {
         if (err) {
-            return res.status(500).json({ error: 'Login failed' });
+            return next(err);
         }
 
         if (!user) {
@@ -134,45 +101,19 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), (req, r
 
 // Update user profile
 router.put('/profile', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    try {
-        const { first_name, last_name, bio } = req.body;
-
-        await req.user.update({
-            first_name,
-            last_name,
-            bio
-        });
-
-        res.json({
-            success: true,
-            user: req.user.toJSON()
-        });
-    } catch (error) {
-        console.error('Profile update error:', error);
-        res.status(500).json({ error: 'Profile update failed' });
-    }
+    const { first_name, last_name, bio } = req.body;
+    await req.user.update({ first_name, last_name, bio });
+    res.json({ success: true, user: req.user.toJSON() });
 });
 
 // Change password
 router.put('/change-password', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    try {
-        const { currentPassword, newPassword } = req.body;
-
-        // Validate current password
-        const isValidPassword = await req.user.validatePassword(currentPassword);
-
-        if (!isValidPassword) {
-            return res.status(400).json({ error: 'Current password is incorrect' });
-        }
-
-        // Update password
-        await req.user.update({ password: newPassword });
-
-        res.json({ success: true });
-    } catch (error) {
-        console.error('Password change error:', error);
-        res.status(500).json({ error: 'Password change failed' });
+    const { currentPassword, newPassword } = req.body;
+    if (!(await req.user.validatePassword(currentPassword))) {
+        return res.status(400).json({ error: 'Current password is incorrect' });
     }
+    await req.user.update({ password: newPassword });
+    res.json({ success: true });
 });
 
 const PUBLIC_USER_FIELDS = ['id', 'username', 'first_name', 'last_name', 'bio', 'createdAt'];

@@ -113,6 +113,7 @@ module.exports = [
             ...typescriptEslint.configs.recommended.rules,
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 'off', // TypeScript handles prop validation
+            'no-undef': 'off', // TypeScript checks undefined names (typescript-eslint's advice)
             '@typescript-eslint/no-unused-vars': 'warn',
             '@typescript-eslint/no-explicit-any': 'warn',
             'no-console': 'warn',

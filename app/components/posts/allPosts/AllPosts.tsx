@@ -16,7 +16,8 @@ const AllPosts = () => {
   }, [dispatch]);
 
   return (
-    <div className={styles.allPosts}>
+    <div>
+      <title>PostStream</title>
       <h1>PostStream</h1>
 
       <p className={styles.lastUpdated}>

@@ -9,11 +9,13 @@ const logger = require('morgan');
 const errorhandler = require('errorhandler');
 const passport = require('passport');
 const cors = require('cors');
+const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const db = require('./models');
 const post = require('./routes/post');
 const auth = require('./routes/auth');
+const { securityHeaders } = require('./middleware/securityHeaders');
 const port = isDeveloping ? 3001 : process.env.PORT;
 const host = '0.0.0.0';
 
@@ -46,13 +48,12 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
+app.disable('x-powered-by');
+app.use(securityHeaders);
+app.use(compression());
 app.use(cors(corsOptions));
 if (isDeveloping && require.main === module) {
   app.use(logger('dev'));
-}
-// Only apply rate limiting in production
-if (!isDeveloping) {
-  app.use(limiter);
 }
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -83,17 +84,15 @@ app.get('/health', async (req, res) => {
   }
 });
 
-app.use('/post', post);
-// Only apply auth rate limiting in production
-if (!isDeveloping) {
-  app.use('/auth', authLimiter, auth);
-} else {
-  app.use('/auth', auth);
-}
+// Rate limits cover the API only (not static files), and only in production
+const noLimit = (req, res, next) => next();
+app.use('/post', isDeveloping ? noLimit : limiter, post);
+app.use('/auth', isDeveloping ? noLimit : limiter, isDeveloping ? noLimit : authLimiter, auth);
 
 // Bad input from any route (model validation) is the client's fault, not a 500
 app.use((err, req, res, next) => {
-  if (err.name === 'SequelizeValidationError') {
+  // UniqueConstraintError (two sign-ups racing for one username) is a validation error too
+  if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
     return res.status(400).json({ error: err.errors.map((e) => e.message).join('; ') });
   }
   next(err);
@@ -103,7 +102,10 @@ if (isDeveloping) {
   // In development, Vite serves the frontend on port 3000; this server only handles the API
   app.use(errorhandler());
 } else {
-  app.use(express.static(path.join(__dirname, 'dist')));
+  // Vite puts a content hash in every file under /assets, so they never change
+  app.use('/assets', express.static(path.join(__dirname, 'dist', 'assets'), { immutable: true, maxAge: '1y' }));
+  // Everything else (index.html, icons) revalidates so a new deploy shows up
+  app.use(express.static(path.join(__dirname, 'dist'), { maxAge: 0 }));
   app.get('/{*splat}', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
   });

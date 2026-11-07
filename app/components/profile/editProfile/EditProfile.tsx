@@ -37,6 +37,7 @@ const EditProfile = () => {
 
   return (
     <div>
+      <title>edit profile · PostStream</title>
       <h1>edit profile</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <label htmlFor="first_name">first name</label>

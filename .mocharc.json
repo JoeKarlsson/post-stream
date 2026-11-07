@@ -1,0 +1,6 @@
+{
+  "spec": ["tests/client/**/*.spec.mjs", "tests/server/**/*.spec.js"],
+  "exit": true,
+  "reporter": "spec",
+  "node-option": ["disable-warning=MODULE_TYPELESS_PACKAGE_JSON"]
+}

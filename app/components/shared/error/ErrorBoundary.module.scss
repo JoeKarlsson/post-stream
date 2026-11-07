@@ -1,7 +1,5 @@
 .errorBoundary {
-  max-width: var(--content-width);
-  margin: 0 auto;
-  padding: 4rem var(--gutter);
+  padding: 4rem var(--page-padding);
 
   h1 {
     color: var(--color-red);
