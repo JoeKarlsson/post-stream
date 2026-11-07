@@ -1,28 +1,17 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import { RootState } from "../../../../slices";
 
-const Login = ({ history }) => {
+const Login = () => {
   const [isRegister, setIsRegister] = useState(false);
-  const profile = useSelector((state: RootState) => state.profile);
-  const user = useSelector((state: RootState) => state.user);
-
-  const isAuthenticated = user.isAuthenticated;
-  const isFetching = user.isFetching;
-  const errorMessage = user.errorMessage;
-
-  const handleSuccess = () => {
-    if (history) {
-      history.push("/");
-    }
-  };
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated
+  );
 
   if (isAuthenticated) {
-    if (history) {
-      history.push("/");
-    }
-    return null;
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -31,7 +20,7 @@ const Login = ({ history }) => {
         <h1>PostStream</h1>
         <p>{isRegister ? "Create your account" : "Sign in to your account"}</p>
 
-        <LoginForm isRegister={isRegister} onSuccess={handleSuccess} />
+        <LoginForm isRegister={isRegister} />
 
         <div className="auth-switch">
           <p>

@@ -2,6 +2,11 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Post, Comment } from "../types";
 import { logError } from "../utils/errorLogger";
 
+const authJsonHeaders = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+});
+
 // Async thunks for API calls
 export const fetchPosts = createAsyncThunk(
   "posts/fetchPosts",
@@ -24,27 +29,19 @@ export const fetchPosts = createAsyncThunk(
 export const createPost = createAsyncThunk(
   "posts/createPost",
   async (
-    postData: { body: string; user_id: number; name: string },
+    postData: { body: string },
     { rejectWithValue }
   ) => {
     try {
       const response = await fetch("/post/new", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `body=${encodeURIComponent(postData.body)}&userID=${
-          postData.user_id
-        }`,
+        headers: authJsonHeaders(),
+        body: JSON.stringify({ body: postData.body }),
       });
       if (!response.ok) {
         throw new Error("Failed to create post");
       }
-      const data = await response.json();
-      return {
-        post: data,
-        userData: { name: postData.name, user_id: postData.user_id },
-      };
+      return await response.json();
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : "Unknown error"
@@ -59,10 +56,8 @@ export const updatePost = createAsyncThunk(
     try {
       const response = await fetch(`/post/${id}/edit`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `body=${encodeURIComponent(body)}`,
+        headers: authJsonHeaders(),
+        body: JSON.stringify({ body }),
       });
       if (!response.ok) {
         throw new Error("Failed to update post");
@@ -83,6 +78,7 @@ export const deletePost = createAsyncThunk(
     try {
       const response = await fetch(`/post/${id}`, {
         method: "DELETE",
+        headers: authJsonHeaders(),
       });
       if (!response.ok) {
         throw new Error("Failed to delete post");
@@ -117,20 +113,14 @@ export const fetchComments = createAsyncThunk(
 export const createReply = createAsyncThunk(
   "posts/createReply",
   async (
-    {
-      postId,
-      body,
-      user_id,
-    }: { postId: number; body: string; user_id: number },
+    { postId, body }: { postId: number; body: string },
     { rejectWithValue }
   ) => {
     try {
       const response = await fetch(`/post/${postId}/comments/0/new`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `body=${encodeURIComponent(body)}&userID=${user_id}`,
+        headers: authJsonHeaders(),
+        body: JSON.stringify({ body }),
       });
       if (!response.ok) {
         throw new Error("Failed to create reply");
@@ -259,7 +249,7 @@ const postSlice = createSlice({
             ...post,
             showComments: false,
             isParentPost: true,
-            realName: "Joe Karlsson",
+            realName: post.userID,
             username: post.userID,
             comments: [],
             childId: 0,
@@ -295,16 +285,16 @@ const postSlice = createSlice({
         state.newPostBody = "";
 
         const newPost = {
-          ...action.payload.post,
+          ...action.payload,
           showComments: false,
           isParentPost: true,
-          realName: action.payload.userData.name,
-          username: action.payload.userData.user_id,
+          realName: action.payload.userID,
+          username: action.payload.userID,
           comments: [],
           childId: 0,
           childContext: null,
           didInvalidate: false,
-          updatedPostBody: action.payload.post.body,
+          updatedPostBody: action.payload.body,
           editMode: false,
           replyMode: false,
           replyBody: "",
@@ -399,6 +389,7 @@ const postSlice = createSlice({
           post.replyBody = "";
           post.comments = [action.payload.comment, ...(post.comments || [])];
           post.replyMode = false;
+          post.showComments = true;
         }
       })
       .addCase(createReply.rejected, (state, action) => {

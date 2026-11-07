@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { destroyPost } from '../../../actions/posts/destroyPostActions';
+import { deletePost } from '../../../slices/postSlice';
 import styles from './DestroyPostButton.module.scss';
 
-const DestroyPostButton = ({ id, index }) => {
+const DestroyPostButton = ({ id }) => {
   const dispatch = useDispatch();
 
   const handleDeletingPost = () => {
-    dispatch(destroyPost(id, index));
+    dispatch(deletePost(id));
   };
 
   const handleKeyDown = (event) => {
@@ -33,7 +33,6 @@ const DestroyPostButton = ({ id, index }) => {
 
 DestroyPostButton.propTypes = {
   id: PropTypes.number,
-  index: PropTypes.number,
 };
 
 export default DestroyPostButton;

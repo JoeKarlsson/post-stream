@@ -12,7 +12,7 @@ const handleUnauth = handleUnauthorized;
 
 const exists = (req) => {
   if (typeof parseInt(req.params.id) === 'number') {
-    Post.findById(req.params.id)
+    Post.findByPk(req.params.id)
       .then((post) => {
         if (post) {
           return true;
@@ -40,7 +40,7 @@ router.route('/')
         res.json(posts);
       })
       .catch((err) => {
-        res.json({ error: err });
+        res.status(500).json({ error: err.message });
       });
   })
 
@@ -55,7 +55,7 @@ router.route('/:id')
           res.json(post);
         })
         .catch((err) => {
-          res.json({ error: err });
+          res.status(500).json({ error: err.message });
         })
     } else {
       res.json({ success: false });
@@ -73,7 +73,7 @@ router.route('/:id')
           res.json({ success: true });
         })
         .catch((err) => {
-          res.json({ error: err });
+          res.status(500).json({ error: err.message });
         })
     } else {
       res.json({ success: false });
@@ -84,7 +84,7 @@ router.route('/:id/edit')
   // find by id and update the post
   .put(authenticate, handleUnauth, (req, res) => {
     if (exists) {
-      Post.findById(req.params.id)
+      Post.findByPk(req.params.id)
         .then((foundPost) => {
           // then update
           foundPost.update({
@@ -94,11 +94,11 @@ router.route('/:id/edit')
               res.json(newPost);
             })
             .catch((err) => {
-              res.json({ error: err });
+              res.status(500).json({ error: err.message });
             })
         })
         .catch((err) => {
-          res.json({ error: err });
+          res.status(500).json({ error: err.message });
         })
     } else {
       res.json({ success: false });
@@ -121,7 +121,7 @@ router.route('/user/:username')
         res.json(userPosts);
       })
       .catch((err) => {
-        res.json({ error: err });
+        res.status(500).json({ error: err.message });
       })
   })
 
@@ -130,13 +130,13 @@ router.route('/new')
   .post(authenticate, handleUnauth, (req, res) => {
     Post.create({
       body: req.body.body,
-      userID: req.body.userID
+      userID: req.user.username
     })
       .then((post) => {
         res.json(post);
       })
       .catch((err) => {
-        res.json({ error: err });
+        res.status(500).json({ error: err.message });
       })
   })
 
@@ -164,14 +164,14 @@ router.route('/:PostId/comments/:CommentId/new')
     }
     Comment.create({
       body: req.body.body,
-      userID: req.body.userID,
+      userID: req.user.username,
       PostId: req.params.PostId,
       parentId
     })
       .then((comment) => {
         res.json(comment);
 
-        Post.findById(req.params.PostId)
+        Post.findByPk(req.params.PostId)
           .then((foundPost) => {
             // then update
             foundPost.update({
@@ -183,7 +183,7 @@ router.route('/:PostId/comments/:CommentId/new')
           })
       })
       .catch((err) => {
-        res.json({ error: err });
+        res.status(500).json({ error: err.message });
       })
   })
 
@@ -191,7 +191,7 @@ router.route('/:PostId/comments/:CommentId/edit')
   // find comment by id and update the comment
   .put(authenticate, handleUnauth, (req, res) => {
     if (exists) {
-      Comment.findById(req.params.CommentId)
+      Comment.findByPk(req.params.CommentId)
         .then((foundComment) => {
           // then update
           foundComment.update({
@@ -201,11 +201,11 @@ router.route('/:PostId/comments/:CommentId/edit')
               res.json(updatedComment);
             })
             .catch((err) => {
-              res.json({ error: err });
+              res.status(500).json({ error: err.message });
             })
         })
         .catch((err) => {
-          res.json({ error: err });
+          res.status(500).json({ error: err.message });
         })
     } else {
       res.json({ success: false });

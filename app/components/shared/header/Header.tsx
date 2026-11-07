@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import NavLink from '../navigation/NavLink';
 import LogoutButton from '../auth/logout/LogoutButton';
 import ErrorDisplay from '../error/ErrorDisplay';
-import { logoutUser } from '../../../actions/auth/logoutActions';
+import { logout, clearError } from '../../../slices/userSlice';
 import styles from './Header.module.scss';
 
 const Header = ({ dispatch, isAuthenticated, user, errorMessage, errorCode }) => {
   const handleErrorDismiss = () => {
     // Dispatch action to clear error message
-    dispatch({ type: 'CLEAR_ERROR' });
+    dispatch(clearError());
   };
 
   return (
@@ -25,7 +25,7 @@ const Header = ({ dispatch, isAuthenticated, user, errorMessage, errorCode }) =>
             <li>[ <NavLink to={`/user/${user.username}`}>profile</NavLink> ]</li>
           }
           {isAuthenticated &&
-            <LogoutButton onLogoutClick={() => dispatch(logoutUser())} />
+            <LogoutButton onLogoutClick={() => dispatch(logout())} />
           }
         </ul>
       </header>
@@ -46,7 +46,7 @@ const Header = ({ dispatch, isAuthenticated, user, errorMessage, errorCode }) =>
 Header.propTypes = {
   dispatch: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   errorMessage: PropTypes.string,
   errorCode: PropTypes.string,
 };

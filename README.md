@@ -54,7 +54,8 @@ The Docker setup automatically handles:
     npm install
 
 1. **Setup PostgreSQL:**
-   - Create a new database called `poststream_development`
+   - Easiest: `docker compose up -d postgres` (matches the credentials already in `server/config/config.json`)
+   - Or create a new database called `poststream_development`
    - Update `server/config/config.json` with your database credentials:
 
    {
@@ -73,20 +74,11 @@ The Docker setup automatically handles:
    npm run db:migrate
    npm run db:seed
 
-1. **Setup Auth0 credentials:**
-   - Create an account at [Auth0](https://auth0.com/docs/overview)
-   - Create a new application in your Auth0 dashboard
-   - Create a `.env` file with your Auth0 credentials:
+1. **Set a JWT secret** (login is local email/password, no Auth0 needed):
 
-   AUTH0_CLIENT_ID=your_client_id
-   AUTH0_CLIENT_SECRET=your_client_secret
-   AUTH0_DOMAIN=your_domain.auth0.com
-   AUTH0_CALLBACK_URL=<http://localhost:3000/>
-   AUTH0_TOKEN=your_token
+   echo "JWT_SECRET=$(openssl rand -hex 32)" >> .env
 
-1. **Build the application (first time only):**
-
-   npm run build
+   Seeded accounts: `john@example.com`, `jane@example.com`, `joe@example.com`, all with password `password123`.
 
 1. **Start the development server:**
 

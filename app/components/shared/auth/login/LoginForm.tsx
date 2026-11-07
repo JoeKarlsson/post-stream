@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { loginUser, registerUser } from "../../../../slices/userSlice";
 import "./LoginForm.module.scss";
 
-const LoginForm = ({ onSuccess, isRegister = false }) => {
+const LoginForm = ({ isRegister = false }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -82,21 +82,18 @@ const LoginForm = ({ onSuccess, isRegister = false }) => {
             nickname: formData.username,
             name: `${formData.first_name} ${formData.last_name}`.trim(),
           })
-        );
+        ).unwrap();
       } else {
         await dispatch(
           loginUser({
             email: formData.email,
             password: formData.password,
           })
-        );
-      }
-
-      if (onSuccess) {
-        onSuccess();
+        ).unwrap();
       }
     } catch (error) {
-      setErrors({ general: error.message || "An error occurred" });
+      // unwrap() rejects with the thunk's rejectWithValue string
+      setErrors({ general: String(error) || "An error occurred" });
     } finally {
       setIsLoading(false);
     }

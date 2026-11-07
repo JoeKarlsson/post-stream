@@ -18,13 +18,13 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       required: true
     },
-  }, {
-    associate: function (models) {
-      Post.hasMany(models.Comment, {
-        onDelete: 'cascade'
-      });
-    }
   });
+
+  Post.associate = function (models) {
+    Post.hasMany(models.Comment, {
+      onDelete: 'cascade'
+    });
+  };
 
   return Post;
 };

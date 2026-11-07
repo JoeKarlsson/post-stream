@@ -17,13 +17,7 @@ const NewPostForm = () => {
   const handleSubmitPost = (e) => {
     e.preventDefault();
     if (user && newPostBody.trim()) {
-      dispatch(
-        createPost({
-          body: newPostBody,
-          user_id: user.id,
-          name: user.user_metadata?.name || user.nickname || "Anonymous",
-        })
-      );
+      dispatch(createPost({ body: newPostBody }));
     }
   };
 

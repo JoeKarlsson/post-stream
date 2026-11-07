@@ -73,3 +73,9 @@ $forrestGreen: #00CE58;
     color: $forrestGreen;
   }
 }
+
+.comment {
+  margin: 1rem 0 0 2rem;
+  padding-left: 1rem;
+  border-left: 1px solid color.adjust($blue, $lightness: -30%);
+}

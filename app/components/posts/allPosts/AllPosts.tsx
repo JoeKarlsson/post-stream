@@ -14,11 +14,12 @@ interface AllPostsProps {
 const AllPosts: React.FC<AllPostsProps> = ({ auth }) => {
   const dispatch = useDispatch();
   const post = useSelector((state: RootState) => state.post);
-  const profile = useSelector((state: RootState) => state.profile);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated
+  );
 
   const posts = post.posts;
   const lastUpdated = post.lastUpdated;
-  const isAuthenticated = profile.isAuthenticated;
 
   useEffect(() => {
     dispatch(fetchPosts() as any);

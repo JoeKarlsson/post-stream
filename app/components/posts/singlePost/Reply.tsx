@@ -2,10 +2,10 @@ import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  onToggleReplyMode,
-  handleReplyBodyChange,
-  submitNewReply,
-} from "../../../actions/posts/replyActions";
+  toggleReplyMode,
+  updateReplyBody,
+  createReply,
+} from "../../../slices/postSlice";
 import styles from "./Reply.module.scss";
 
 const Reply = ({ index, id }) => {
@@ -16,23 +16,18 @@ const Reply = ({ index, id }) => {
   const replyBody = useSelector((state) => state.post.posts[index]?.replyBody);
 
   const handleToggleReplyMode = () => {
-    dispatch(onToggleReplyMode(index));
+    dispatch(toggleReplyMode(index));
   };
 
   const handleBodyChange = (e) => {
-    dispatch(handleReplyBodyChange(e.target.value, index));
+    dispatch(updateReplyBody({ index, body: e.target.value }));
   };
 
   const handleSubmitReply = (e) => {
     e.preventDefault();
-    const actionData = {
-      replyBody,
-      index,
-      id,
-      commentId: 0,
-      userID: "JoeJoebinks131",
-    };
-    dispatch(submitNewReply(actionData));
+    if (replyBody?.trim()) {
+      dispatch(createReply({ postId: id, body: replyBody }));
+    }
   };
 
   const handleKeyDown = (event) => {

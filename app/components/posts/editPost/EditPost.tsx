@@ -2,10 +2,10 @@ import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  submitUpdatedPost,
-  handleUpdatedPostBodyChange,
+  updatePost,
+  updatePostBody,
   toggleEditMode,
-} from "../../../actions/posts/editPostActions";
+} from "../../../slices/postSlice";
 import styles from "./EditPost.module.scss";
 
 const EditPost = ({ id, index }) => {
@@ -17,16 +17,16 @@ const EditPost = ({ id, index }) => {
   );
 
   const handleCancel = () => {
-    dispatch(toggleEditMode(index, false));
+    dispatch(toggleEditMode({ index, editState: false }));
   };
 
   const handleBodyChange = (e) => {
-    dispatch(handleUpdatedPostBodyChange(e.target.value, index));
+    dispatch(updatePostBody({ index, body: e.target.value }));
   };
 
   const handleSubmitUpdatedPost = (e) => {
     e.preventDefault();
-    dispatch(submitUpdatedPost(updatedPostBody, id, index));
+    dispatch(updatePost({ id, body: updatedPostBody }));
   };
 
   const handleKeyDown = (event) => {

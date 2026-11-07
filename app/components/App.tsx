@@ -14,12 +14,12 @@ import { RootState } from "../slices";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
-  const profile = useSelector((state: RootState) => state.profile);
-  const user = useSelector((state: RootState) => state.user.profile);
-
-  const isAuthenticated: boolean = profile.isAuthenticated || false;
-  const errorMessage: string = profile.errorMessage || "";
-  const errorCode: string = profile.errorCode || "";
+  const {
+    profile: user,
+    isAuthenticated,
+    errorMessage,
+    errorCode,
+  } = useSelector((state: RootState) => state.user);
 
   return (
     <ErrorBoundary>
@@ -27,7 +27,7 @@ const App: React.FC = () => {
         <Header
           isAuthenticated={isAuthenticated}
           errorMessage={errorMessage}
-          errorCode={errorCode}
+          errorCode={errorCode || ""}
           dispatch={dispatch}
           user={user}
         />
