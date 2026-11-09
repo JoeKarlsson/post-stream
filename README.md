@@ -2,11 +2,10 @@
 
 ![PostStream: typing a post into a plain text box while a character counter fills in, the post showing up at the top of the feed under an IRC-style log line, replying to someone with "agree, because it is always the third one" picked from a list, scrolling past posts colored by author, then the about page laid out like a man page](.github/readme/2026-11-recording.gif)
 
-PostStream is a social network with the numbers taken out. Every social network
-puts a number on everything you post, and Ray Farias, Jacoby Young and I built
-this one in 2016 with no like counts, no follower counts and no trending topics.
-You can only post text, and you don't write replies, you pick one: agree,
-disagree, tell me more, thank you for sharing, or brilliant.
+PostStream is a social network with the numbers taken out. There are no like
+counts, no follower counts and no trending topics, so you can't see how popular
+anyone is. You don't write replies, you pick one: agree, disagree, tell me more,
+thank you for sharing, or brilliant.
 
 [Try it at poststream.joekarlsson.com](https://poststream.joekarlsson.com) ·
 [Read the full statement](https://www.joekarlsson.com/work/poststream/)
