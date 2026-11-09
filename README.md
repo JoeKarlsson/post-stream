@@ -10,6 +10,12 @@ PostStream is an undesigned social network. It is a text-based response to the m
 
 The static demo in November 2026, recorded with `scripts/record-demo.mjs` for [its page on joekarlsson.com](https://www.joekarlsson.com/work/poststream/). The full-quality video is [2026-11-recording.mp4](.github/readme/2026-11-recording.mp4).
 
+## Artist statement
+
+Every social network puts a number on everything you post: likes, followers, shares, what's trending. Most of the work was deciding what to leave out. Ben Grosser's Facebook Demetricator, a browser extension from 2012, hides the like and friend counts on Facebook, and PostStream was built without them in the first place.
+
+[Read the full statement](https://www.joekarlsson.com/work/poststream/).
+
 ## Text-Based Social Network
 
 Tentative example post:

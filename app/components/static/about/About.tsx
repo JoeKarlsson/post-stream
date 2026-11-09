@@ -22,6 +22,27 @@ const About = () => (
       different!
     </p>
 
+    <h2>ARTIST STATEMENT</h2>
+    <p>
+      Every social network puts a number on everything you post: likes, followers, shares,
+      what&rsquo;s trending. Ray Farias, Jacoby Young and I built PostStream in 2016 as a response
+      to the social media we were all using, and we called it undesigned.
+    </p>
+    <p>
+      Most of the work was deciding what to leave out. It shows no like counts and no follower
+      counts, so you can&rsquo;t see how popular anyone is. There&rsquo;s no global feed, no
+      trending topics and no news to browse, and you can&rsquo;t post images, video or GIFs.
+    </p>
+    <p>
+      Replies work the same way. You don&rsquo;t write them, you pick one: agree, disagree, agree
+      or disagree because of something, tell me more about something, thank you for sharing, or
+      brilliant.
+    </p>
+    <p>
+      Ben Grosser&rsquo;s Facebook Demetricator, a browser extension from 2012, hides the like and
+      friend counts on Facebook, and PostStream was built without them in the first place.
+    </p>
+
     <h2>CONCEPTS</h2>
     <ul>
       <li>no public metrics</li>
@@ -68,13 +89,17 @@ const About = () => (
       timestamp.
     </p>
 
+    <h2>AUTHORS</h2>
+    <p>Joe Karlsson, with Ray Farias and Jacoby Young.</p>
+
     <h2>SEE ALSO</h2>
     <p>
       PostStream is{" "}
       <a href="https://github.com/JoeKarlsson/post-stream" target="_blank" rel="noopener noreferrer">
         completely open source
       </a>
-      , feel free to fork it or contribute new features.
+      , feel free to fork it or contribute new features. More about it on{" "}
+      <a href="https://www.joekarlsson.com/work/poststream/">its page on joekarlsson.com</a>.
     </p>
   </div>
 );
