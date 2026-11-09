@@ -25,8 +25,7 @@ const About = () => (
     <h2>ARTIST STATEMENT</h2>
     <p>
       Every social network puts a number on everything you post: likes, followers, shares,
-      what&rsquo;s trending. Ray Farias, Jacoby Young and I built PostStream in 2016 as a response
-      to the social media we were all using, and we called it undesigned.
+      what&rsquo;s trending. PostStream is an undesigned social network, built without any of them.
     </p>
     <p>
       Most of the work was deciding what to leave out. It shows no like counts and no follower
@@ -34,13 +33,13 @@ const About = () => (
       trending topics and no news to browse, and you can&rsquo;t post images, video or GIFs.
     </p>
     <p>
+      Ben Grosser&rsquo;s Facebook Demetricator, a browser extension from 2012, hides the like and
+      friend counts on Facebook, and PostStream was built without them in the first place.
+    </p>
+    <p>
       Replies work the same way. You don&rsquo;t write them, you pick one: agree, disagree, agree
       or disagree because of something, tell me more about something, thank you for sharing, or
       brilliant.
-    </p>
-    <p>
-      Ben Grosser&rsquo;s Facebook Demetricator, a browser extension from 2012, hides the like and
-      friend counts on Facebook, and PostStream was built without them in the first place.
     </p>
 
     <h2>CONCEPTS</h2>
