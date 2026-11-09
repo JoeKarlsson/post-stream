@@ -1,21 +1,15 @@
 # PostStream
 
-PostStream is an undesigned social network: text posts only, with no like
-counts, follower counts or trending topics. This repo has the React front end,
-the Express and PostgreSQL API, and a static demo build that runs entirely in
-the browser at [poststream.joekarlsson.com](https://poststream.joekarlsson.com).
-
 ![PostStream: typing a post into a plain text box while a character counter fills in, the post showing up at the top of the feed under an IRC-style log line, replying to someone with "agree, because it is always the third one" picked from a list, scrolling past posts colored by author, then the about page laid out like a man page](.github/readme/2026-11-recording.gif)
 
-## Artist statement
+PostStream is a social network with the numbers taken out. Every social network
+puts a number on everything you post, and Ray Farias, Jacoby Young and I built
+this one in 2016 with no like counts, no follower counts and no trending topics.
+You can only post text, and you don't write replies, you pick one: agree,
+disagree, tell me more, thank you for sharing, or brilliant.
 
-Every social network puts a number on everything you post: likes, followers,
-shares, what's trending. Most of the work was deciding what to leave out. Ben
-Grosser's Facebook Demetricator, a browser extension from 2012, hides the like
-and friend counts on Facebook, and PostStream was built without them in the
-first place.
-
-[Read the full statement](https://www.joekarlsson.com/work/poststream/).
+[Try it at poststream.joekarlsson.com](https://poststream.joekarlsson.com) ·
+[Read the full statement](https://www.joekarlsson.com/work/poststream/)
 
 ## Quick start
 
